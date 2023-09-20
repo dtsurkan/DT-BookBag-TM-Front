@@ -1,65 +1,100 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useRouter } from "next/router";
+// import { Layout, Menu } from "antd";
+import Layout, { Header } from "antd/lib/layout/layout";
+import { MailOutlined } from "@ant-design/icons";
+import Title from "antd/lib/typography/Title";
+import { AutoComplete, Button, Input, Menu, Select } from "antd";
 
-export default function Home() {
+const options = [
+  {
+    value: "Burns Bay Road",
+  },
+  {
+    value: "Downing Street",
+  },
+  {
+    value: "Walerfl Street",
+  },
+  {
+    value: "Wallerfer Street",
+  },
+  {
+    value: "Wgergereall Street",
+  },
+  {
+    value: "Wergergall Street",
+  },
+  {
+    value: "Wergegrall Street",
+  },
+  {
+    value: "Wall Strergergeet",
+  },
+  {
+    value: "Wall Strergerget",
+  },
+  {
+    value: "Wall Stergregergreet",
+  },
+  {
+    value: "Wall Streregergegreet",
+  },
+];
+
+const Home = () => {
+  const router = useRouter();
+  const onSearch = (value) => alert(value);
+  const onSelect = (value) => {
+    console.log("onSelect", value);
+  };
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Layout style={{ background: "none" }}>
+      <Header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-evenly",
+          //   padding: "16px ",
+          background: "none",
+        }}
+      >
+        <Title level={2}>BookBag</Title>
+        <AutoComplete
+          notFoundContent="Not Found"
+          style={{
+            minWidth: 500,
+          }}
+          options={options}
+          onSelect={onSelect}
+          //   placeholder="Введите автора или названия книги..."
+          filterOption={(inputValue, option) =>
+            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          }
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
-}
+          <Input
+            allowClear
+            placeholder="Введите автора или названия книги..."
+          />
+        </AutoComplete>
+        <Menu mode="horizontal">
+          <Menu.Item></Menu.Item>
+          <Menu.Item key="mail" icon={<MailOutlined />}>
+            Книги
+          </Menu.Item>
+          <Menu.Item key="app">О BookBag</Menu.Item>
+        </Menu>
+        <Select bordered={false} defaultValue="ukr">
+          <Select.Option value="ukr">Ukr</Select.Option>
+          <Select.Option value="rus">Rus</Select.Option>
+        </Select>
+        <Button onClick={() => router.push("/login")} size="large">
+          Присоединиться
+        </Button>
+      </Header>
+      {/* <Content>131e</Content> */}
+      {/* <Footer>131</Footer> */}
+    </Layout>
+  );
+};
+
+export default Home;

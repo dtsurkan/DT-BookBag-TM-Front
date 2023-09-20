@@ -2,14 +2,30 @@
   "name": "book-bag",
   "version": "0.1.0",
   "private": true,
+  "main": "nextjs-server.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "serve": "npm run build && firebase emulators:start --only functions,hosting",
+    "shell": "npm run build && firebase functions:shell",
+    "deploy": "firebase deploy --only functions,hosting",
+    "logs": "firebase functions:log"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.3.0",
+    "antd": "^4.10.0",
+    "firebase": "^8.2.1",
+    "firebase-admin": "^9.4.2",
+    "firebase-functions": "^3.13.0",
     "next": "10.0.4",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0"
   }
 }
