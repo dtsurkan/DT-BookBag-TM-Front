@@ -15,6 +15,12 @@ const firebaseConfig = {
   appId: "1:283136433519:web:ace6725081bb342d62dc9a",
   measurementId: "G-R8KVLDNDP1",
 };
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+  // firebase.analytics();
+}
+console.log(
+  firebase.app.name ? "Firebase Mode Activated!" : "Firebase not working :("
+);
 export default firebase;

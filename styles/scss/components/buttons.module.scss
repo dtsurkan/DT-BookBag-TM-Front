@@ -1,0 +1,39 @@
+/* Primary Button */
+.primaryBtn {
+  height: 52px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-size: 14px;
+}
+.primaryOutlinedBtn {
+  border: 1px solid #f37800;
+  border-radius: 2px;
+  color: #f37800;
+  text-transform: uppercase;
+  padding: 12.4px 24px;
+  font-size: 14px;
+}
+/* -------------- */
+
+/* AuthProvider Buttons */
+.authProviderBtn {
+  width: 100%;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  background: white;
+}
+.facebookBtn {
+  background: #1877f2;
+  margin-right: 16px;
+  &:hover {
+    background: #438be9;
+    svg {
+      color: white;
+    }
+  }
+}
+// --------------------

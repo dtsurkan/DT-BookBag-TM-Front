@@ -11,7 +11,7 @@ let store;
 const persistConfig = {
   key: "primary",
   storage,
-  whitelist: ["testReducer"], // place to select which state you want to persist
+  whitelist: ["user"], // place to select which state you want to persist
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

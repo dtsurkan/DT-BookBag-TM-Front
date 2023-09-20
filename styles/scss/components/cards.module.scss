@@ -1,0 +1,39 @@
+@import "../utilities/index";
+
+.bookCard {
+  height: 300px;
+  .row {
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+  img {
+    width: 230px;
+    height: 250px;
+  }
+}
+
+@include media-breakpoint-down($screen-lg-max) {
+  .bookCard {
+    height: fit-content;
+    .row {
+      justify-content: space-evenly;
+    }
+    img {
+      width: 170px;
+      height: 200px;
+    }
+  }
+}
+@include media-breakpoint-down($screen-xs) {
+  .bookCard {
+    .row {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    img {
+      width: 100%;
+      margin: 0 auto 16px;
+    }
+  }
+}

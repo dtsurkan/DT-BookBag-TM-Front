@@ -1,0 +1,28 @@
+@import "../utilities/index";
+
+.container {
+  width: 100%;
+  display: flex;
+  align-self: center;
+  margin: auto;
+  overflow: hidden;
+}
+
+.appLayout {
+  min-height: 100vh;
+  background: transparent;
+  /* padding: 0 80px; */
+}
+
+@include media-breakpoint-down($screen-lg-max) {
+  .appLayout {
+    padding: 0 16px;
+  }
+}
+
+@include make-container($screen-xs-min, $screen-xs);
+@include make-container($screen-sm-min, $screen-sm);
+@include make-container($screen-md-min, $screen-md);
+@include make-container($screen-lg-min, $screen-lg);
+@include make-container($screen-xl-min, $screen-xl);
+@include make-container($screen-xxl-min, $screen-xxl); // Optional

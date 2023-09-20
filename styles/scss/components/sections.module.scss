@@ -1,0 +1,40 @@
+@import "../utilities/index";
+
+.subscribeSectionWrapper {
+  max-width: 850px;
+  width: 100%;
+  text-align: center;
+
+  .subscribeSectionTitle {
+    margin-top: 16px;
+  }
+  .subscribeSectionForm {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 55px;
+    min-width: 600px;
+    .subscribeSectionFormInput {
+      width: 60%;
+      margin-right: 16px;
+    }
+  }
+}
+@include media-breakpoint-down($screen-md-max) {
+  .subscribeSectionWrapper {
+    text-align: left;
+    .subscribeSectionTitle {
+      padding: 0px;
+    }
+    .subscribeSectionForm {
+      min-width: initial;
+      .subscribeSectionFormInput {
+        width: 100%;
+        margin-right: 0;
+      }
+    }
+    .subscribeSectionFormBtn {
+      width: 100%;
+    }
+  }
+}
