@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Col, Row } from 'antd';
-import { isEmpty as _isEmpty } from 'lodash';
-import AppLayout from 'components/AppLayout/AppLayout';
-import ContentComponent from 'components/AppLayout/ContentComponent';
+import _isEmpty from 'lodash/isEmpty';
+import AppLayout from 'components/Layout/AppLayout';
+import MainContent from 'components/Layout/MainContent';
 import BooksList from 'components/Lists/BooksList';
 import CategoryList from 'components/Lists/CategoryList';
-import BookFilters from 'components/Filters/BookFilters';
+import BookFilters from 'components/Book/BookFilters';
 import { getSubcategoryBySlug } from 'lib/strapi/services/subcategories';
 import { getCategoryBySlug } from 'lib/strapi/services/categories';
 import { getBooksCount, getBooksWithFilters } from 'lib/strapi/services/books';
@@ -17,6 +17,8 @@ const Category = ({ category = {}, books = [], count = 0 }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
+  console.log(`category`, category);
+  console.log(`books`, books);
   useEffect(() => {
     if (!_isEmpty(router.query)) {
       const start = router.query.start ? +router.query.start : 1;
@@ -40,26 +42,27 @@ const Category = ({ category = {}, books = [], count = 0 }) => {
 
   return (
     <AppLayout globalDivStyles={{ background: '#F9FEFD' }}>
-      <ContentComponent>
+      <MainContent>
         <Row justify="space-around">
           <Col xs={24} lg={6}>
             <CategoryList category={category} />
           </Col>
           <Col xs={24} lg={17}>
-            <BookFilters title={category.name} booksCount={count} />
+            <BookFilters title={`components:categories.${category.slug}`} booksCount={count} />
             <BooksList
               dataSource={books}
               pagination={{
                 total: count,
                 pageSize: PAGE_SIZE,
                 hideOnSinglePage: true,
+                showSizeChanger: false,
                 current: currentPage,
                 onChange: handlePagination,
               }}
             />
           </Col>
         </Row>
-      </ContentComponent>
+      </MainContent>
     </AppLayout>
   );
 };
@@ -78,7 +81,9 @@ export async function getServerSideProps({ query }) {
       ...otherQueryParams,
     };
     const subCategory = await getSubcategoryBySlug(subcategorySlug);
+    console.log(`subCategory`, subCategory);
     const books = await getBooksWithFilters(newQueryString);
+    console.log(`books`, books);
     const count = await getBooksCount(newQueryString);
     if (!subCategory.data.length) {
       return {
@@ -91,7 +96,11 @@ export async function getServerSideProps({ query }) {
       };
     }
     return {
-      props: { category: subCategory.data[0], books: books.data, count: count.data },
+      props: {
+        category: subCategory.data[0],
+        books: books.data,
+        count: count.data,
+      },
     };
   } else {
     const newQueryString = {
@@ -99,7 +108,9 @@ export async function getServerSideProps({ query }) {
       ...otherQueryParams,
     };
     const category = await getCategoryBySlug(categorySlug);
+    console.log(`category`, category);
     const books = await getBooksWithFilters(newQueryString);
+    console.log(`books`, books);
     const count = await getBooksCount(newQueryString);
     if (!category.data.length) {
       return {
@@ -112,7 +123,11 @@ export async function getServerSideProps({ query }) {
       };
     }
     return {
-      props: { category: category.data[0], books: books.data, count: count.data },
+      props: {
+        category: category.data[0],
+        books: books.data,
+        count: count.data,
+      },
     };
   }
 }

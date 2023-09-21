@@ -1,33 +1,46 @@
-import { useShowConfigModal } from 'hooks';
-import AppLayout from 'components/AppLayout/AppLayout';
-import ConfigBookModal from 'components/Modals/ConfigBookModal';
-import ContentComponent from 'components/AppLayout/ContentComponent';
-import Intro from 'components/Sections/Intro';
-import Advantages from 'components/Sections/Advantages';
-import Opportunities from 'components/Sections/Opportunities';
-import NewCollectionBooks from 'components/Sections/NewCollectionBooks';
-import Subscribe from 'components/Sections/Subscribe';
+import dynamic from 'next/dynamic';
+import { useSession } from 'next-auth/client';
+import useTwilioClient from 'hooks/useTwilioClient';
+import useShowConfigModal from 'hooks/useShowConfigModal';
+import AppLayout from 'components/Layout/AppLayout';
+import MainContent from 'components/Layout/MainContent';
 import { getBooks } from 'lib/strapi/services/books';
+import Intro from 'components/Sections/Intro';
+const DynamicAdvantages = dynamic(() => import('components/Sections/Advantages'));
+const DynamicOpportunities = dynamic(() => import('components/Sections/Opportunities'));
+const DynamicNewCollectionBooks = dynamic(() => import('components/Sections/NewCollectionBooks'));
+const DynamicSubscribe = dynamic(() => import('components/Sections/Subscribe'));
+const DynamicConfigBookModal = dynamic(() => import('components/Modals/ConfigBook'));
 
 const Home = ({ books = [] }) => {
+  const [session] = useSession();
   const {
     isConfigBookModal,
     showConfigBookModal,
     handleCancelConfigBookModal,
   } = useShowConfigModal();
-
+  const { client } = useTwilioClient();
   return (
     <>
       <AppLayout>
-        <ContentComponent>
+        <MainContent>
           <Intro showModal={showConfigBookModal} />
-          <Advantages />
-          <Opportunities />
-          <NewCollectionBooks books={books} showModal={showConfigBookModal} />
-          <Subscribe />
-        </ContentComponent>
+          <DynamicAdvantages />
+          <DynamicOpportunities />
+          <DynamicNewCollectionBooks
+            client={client}
+            books={books}
+            showModal={showConfigBookModal}
+          />
+          <DynamicSubscribe />
+        </MainContent>
       </AppLayout>
-      <ConfigBookModal visible={isConfigBookModal} onCancel={handleCancelConfigBookModal} />
+      {session && (
+        <DynamicConfigBookModal
+          visible={isConfigBookModal}
+          onCancel={handleCancelConfigBookModal}
+        />
+      )}
     </>
   );
 };

@@ -1,14 +1,20 @@
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { getSession } from 'next-auth/client';
 import useTranslation from 'next-translate/useTranslation';
+import { createUseStyles } from 'react-jss';
 import { useMediaQuery } from 'react-responsive';
-import { useTwilioClient } from 'hooks';
-import { Alert, Col, Form, message, PageHeader, Row, Spin } from 'antd';
-import AppLayout from 'components/AppLayout/AppLayout';
-import DesktopHeader from 'components/Navigation/components/DesktopHeader';
-import AsideDescription from 'components/Chat/AsideDescription';
-import SendMessageForm from 'components/Chat/SendMessageForm';
-import MessagesList from 'components/Chat/MessagesList';
+import useTwilioClient from 'hooks/useTwilioClient';
+import useShowSimpleModal from 'hooks/useShowSimpleModal';
+import { Alert, Col, Form, message, PageHeader, Row, Space, Spin, Modal } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import AppLayout from 'components/Layout/AppLayout';
+import DesktopHeader from 'components/Navigation/Desktop/DesktopHeader';
+import AsideBookDescription from 'components/Chat/AsideBookDescription';
+import SendMessageForm from 'components/Chat/Forms/SendMessage';
+import MessagesList from 'components/Chat/Lists/MessagesList';
+import MobileHeader from 'components/Navigation/Mobile/MobileHeader';
+import PrimaryButton from 'components/Buttons/PrimaryButton';
 import { getBookBySlug } from 'lib/strapi/services/books';
 import { fetchConversationBySid, getUserByIdentity } from 'lib/twilio-conversation/services/client';
 import {
@@ -17,10 +23,52 @@ import {
 } from 'lib/twilio-conversation/services/conversation';
 import { scrollToBottom } from 'utils/functions';
 
+const useStyles = createUseStyles((theme) => ({
+  chat: {
+    minHeight: '100vh',
+    background: '#F9FEFD',
+    padding: '30px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  chatWrapper: { marginTop: '25px', flexDirection: 'column', flex: '5 5 auto' },
+  [theme.breakpoints.down(theme.breakpoints.xl)]: {
+    chat: {
+      padding: 0,
+    },
+    chatWrapper: {
+      marginTop: '100px',
+    },
+  },
+  [theme.breakpoints.down(theme.breakpoints.sm)]: {
+    chatWrapper: {
+      marginTop: '170px',
+    },
+  },
+}));
+
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
+
 const Chat = () => {
+  const classes = useStyles();
   const { t } = useTranslation();
   const router = useRouter();
   const { client, isLoadingTwilio } = useTwilioClient();
+  const { isModalVisible, showModal, cancelModal } = useShowSimpleModal();
   const [conversation, setConversation] = useState(null);
   const [book, setBook] = useState({});
   const [messages, setMessages] = useState([]);
@@ -154,19 +202,13 @@ const Chat = () => {
     <Spin spinning={isLoadingTwilio || isLoadingInitialMesssages}>
       <AppLayout isHasNavigation={false} isHasFooter={false}>
         <Row justify="center">
-          <AsideDescription onlineStatus={onlineStatus} book={book} buyer={buyer} />
-          <Col
-            xs={24}
-            md={19}
-            style={{
-              minHeight: '100vh',
-              background: '#F9FEFD',
-              padding: '30px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            {isTabletOrMobile ? null : (
+          {isTabletOrMobile ? null : (
+            <AsideBookDescription onlineStatus={onlineStatus} book={book} buyer={buyer} />
+          )}
+          <Col xs={24} xl={19} className={classes.chat}>
+            {isTabletOrMobile ? (
+              <MobileHeader />
+            ) : (
               <DesktopHeader
                 hasLogo={false}
                 // hasProfile={false}
@@ -180,17 +222,24 @@ const Chat = () => {
                 }}
               />
             )}
-            <Row
-              gutter={[0, 16]}
-              style={{ marginTop: '25px', flexDirection: 'column', flex: '5 5 auto' }}
-            >
+            <Row gutter={[0, 16]} className={classes.chatWrapper}>
               <Col>
-                <PageHeader
-                  // onBack={() => router.push(`/books/${router.query.slug}`)}
-                  onBack={() => router.push(`/profile/my-messages`)}
-                  title={t('components:buttons.return')}
-                  style={{ padding: '0' }}
-                />
+                <Space direction="horizontal">
+                  <PageHeader
+                    onBack={() => router.push(`/profile/my-messages`)}
+                    title={t('components:buttons.return')}
+                    style={{ padding: '0' }}
+                  />
+                  {isTabletOrMobile && (
+                    <PrimaryButton
+                      isOutlinedStyles={false}
+                      type="text"
+                      icon={<InfoCircleOutlined />}
+                      onClick={showModal}
+                      btnText="components:others.about-good-item"
+                    />
+                  )}
+                </Space>
               </Col>
               <Col>
                 <Alert
@@ -230,6 +279,21 @@ const Chat = () => {
           </Col>
         </Row>
       </AppLayout>
+      <Modal
+        title={t('components:others.about-good-item')}
+        centered
+        visible={isModalVisible}
+        footer={null}
+        onCancel={cancelModal}
+        zIndex={1100}
+      >
+        <AsideBookDescription
+          hasHeaderLogo={false}
+          onlineStatus={onlineStatus}
+          book={book}
+          buyer={buyer}
+        />
+      </Modal>
     </Spin>
   );
 };

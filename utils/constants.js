@@ -1,9 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
-import { DefenceIcon, LeavesIcon } from 'components/Icons';
+import LeavesIcon from 'components/Icons/LeavesIcon';
+import DefenceIcon from 'components/Icons/DefenceIcon';
 import {
+  AlertOutlined,
   BookOutlined,
   CarryOutOutlined,
   CloseOutlined,
+  InfoCircleOutlined,
   LikeOutlined,
   LogoutOutlined,
   MailOutlined,
@@ -13,8 +16,8 @@ import {
 } from '@ant-design/icons';
 
 // For book pagination
-export const PAGE_SIZE = 20;
-export const PAGE_BOOK_LIMIT = 20;
+export const PAGE_SIZE = 30;
+export const PAGE_BOOK_LIMIT = 30;
 
 export const DEFAULT_ALLOWED_IMAGE_TYPES = [
   'image/jpeg',
@@ -62,16 +65,25 @@ export const getCreateAtFilterList = (t) => [
 
 // Advantages list
 export const ADVANTAGES_LIST = [
-  { id: uuidv4(), title: 'index:advantages.list.first-item' },
   {
     id: uuidv4(),
-    title: 'index:advantages.list.second-item',
-    icon: LeavesIcon,
+    title: 'components:advantages.list.first-item',
+    'data-aos': 'fade-right',
+    'data-aos-duration': '500',
   },
   {
     id: uuidv4(),
-    title: 'index:advantages.list.third-item',
+    title: 'components:advantages.list.second-item',
+    icon: LeavesIcon,
+    'data-aos': 'fade-right',
+    'data-aos-duration': '800',
+  },
+  {
+    id: uuidv4(),
+    title: 'components:advantages.list.third-item',
     icon: DefenceIcon,
+    'data-aos': 'fade-right',
+    'data-aos-duration': '1000',
   },
 ];
 // Menu lists
@@ -92,9 +104,9 @@ export const MENU_LIST = [
   },
   {
     id: uuidv4(),
-    key: '/about',
-    href: '/about',
-    icon: false,
+    key: '/about-bookbag',
+    href: '/about-bookbag',
+    icon: <InfoCircleOutlined />,
     title: 'components:lists.menu.about-bookbag',
   },
 ];
@@ -235,4 +247,69 @@ export const BOOK_SETTINGS_LIST = [
     icon: <CloseOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.book-settings.delete',
   },
+];
+
+export const FOOTER_LINKS_LIST = [
+  {
+    id: uuidv4(),
+    key: '/books',
+    href: '/books',
+    icon: <BookOutlined style={{ fontSize: 18 }} />,
+    title: 'components:lists.footer.books',
+  },
+  {
+    id: uuidv4(),
+    key: '/about-bookbag',
+    href: '/about-bookbag',
+    icon: <InfoCircleOutlined style={{ fontSize: 18 }} />,
+    title: 'components:lists.footer.about-bookbag',
+  },
+  {
+    id: uuidv4(),
+    key: false,
+    href: false,
+    icon: false,
+    title: 'components:lists.footer.contact-email',
+  },
+];
+
+export const FOOTER_CONTACTS_LIST = [
+  {
+    id: uuidv4(),
+    key: false,
+    href: false,
+    icon: false,
+    title: 'components:lists.footer.contact-number',
+  },
+
+  {
+    id: uuidv4(),
+    key: '/privacy-policy',
+    href: '/privacy-policy',
+    icon: <AlertOutlined style={{ fontSize: 18 }} />,
+    title: 'components:lists.footer.privacy-policy',
+  },
+  {
+    id: uuidv4(),
+    key: '/terms-of-service',
+    href: '/terms-of-service',
+    icon: <AlertOutlined style={{ fontSize: 18 }} />,
+    title: 'components:lists.footer.terms-of-service',
+  },
+];
+
+export const RESTRICTED_PATHS = [
+  { route: '/profile/added-books' },
+  { route: '/profile/bought-books' },
+  { route: '/profile/sold-books' },
+  { route: '/profile/liked-books' },
+  { route: '/profile/my-messages/[sid]' },
+  { route: '/profile/setup-profile' },
+  { route: '/profile/my-messages' },
+];
+export const ONLY_UNREGISTERED_PATHS = [
+  { route: '/auth/login' },
+  { route: '/auth/register' },
+  { route: '/auth/forgot-password' },
+  { route: '/auth/reset-password' },
 ];

@@ -1,39 +1,39 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty as _isEmpty } from 'lodash';
-import ProfileLayout from 'components/AppLayout/ProfileLayout';
-import ProfileList from 'components/Lists/ProfileList';
-import { getCurrentUserProfile } from 'state/actions/user/profile';
+import { getSession, useSession } from 'next-auth/client';
+import useCustomSwr from 'hooks/useCustomSwr';
+import ProfileLayout from 'components/Layout/ProfileLayout';
+import ProfileList from 'components/Lists/ProfileBooksList';
+
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
 
 const BoughtBooks = () => {
-  const { profile } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const [session] = useSession();
+  console.log(`session`, session);
+  const { response: bought_books, isLoading } = useCustomSwr({
+    url: `/books?buyer.id=${session?.profile?.id}&book_status_ne=added`,
+  });
 
-  useEffect(() => {
-    if (profile?.id) {
-      dispatch(getCurrentUserProfile(profile?.id));
-    }
-  }, [profile.id, dispatch]);
-
-  useEffect(() => {
-    if (_isEmpty(profile)) {
-      router.push('/login');
-    }
-  }, [profile, router]);
-
-  //   if (!profile) {
-  //     router.push("/login");
-  //     return null;
-  //   }
   return (
     <ProfileLayout>
       <ProfileList
         listTitle="components:lists.profile.bought-books-title"
         renderKey="bought"
-        books={!_isEmpty(profile) ? profile?.bought_books : []}
+        books={bought_books}
         hasAddingBook={false}
+        isLoading={isLoading}
       />
     </ProfileLayout>
   );

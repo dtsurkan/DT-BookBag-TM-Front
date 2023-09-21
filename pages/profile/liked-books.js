@@ -1,39 +1,39 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { isEmpty as _isEmpty } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
-import ProfileLayout from 'components/AppLayout/ProfileLayout';
-import ProfileList from 'components/Lists/ProfileList';
-import { getCurrentUserProfile } from 'state/actions/user/profile';
+import useCustomSwr from 'hooks/useCustomSwr';
+import { getSession, useSession } from 'next-auth/client';
+import ProfileLayout from 'components/Layout/ProfileLayout';
+import ProfileList from 'components/Lists/ProfileBooksList';
+
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
 
 const LikedBooks = () => {
-  const { profile } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (profile?.id) {
-      dispatch(getCurrentUserProfile(profile?.id));
-    }
-  }, [profile.id, dispatch]);
-
-  useEffect(() => {
-    if (_isEmpty(profile)) {
-      router.push('/login');
-    }
-  }, [profile, router]);
-
-  //   if (!profile) {
-  //     router.push("/login");
-  //     return null;
-  //   }
+  const [session] = useSession();
+  console.log(`session`, session);
+  const { response: liked_books, isLoading } = useCustomSwr({
+    url: `/users/${session?.profile.id}/liked-books`,
+    token: session.jwt,
+  });
   return (
     <ProfileLayout>
       <ProfileList
         listTitle="components:lists.profile.liked-books-title"
         renderKey="liked"
-        books={!_isEmpty(profile) ? profile?.liked_books : []}
+        books={liked_books}
         hasAddingBook={false}
+        isLoading={isLoading}
       />
     </ProfileLayout>
   );

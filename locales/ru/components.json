@@ -1,11 +1,91 @@
 {
   "categories": {
-    "dramaturgiya": "Драматургия",
-    "antichnaya-drama": "Античная драма",
-    "drama-pesa": "Драма, пьеса",
-    "komediya": "Комедия",
-    "pesy-i-dramaturgiya": "Пьесы и драматургия",
-    "sczenarij": "Сценарий"
+    "hudozhnya-literatura": "Художественная литература",
+    "dilova-literatura": "Деловая литература",
+    "dityacha-literatura": "Детская литература",
+    "zdorovya-ta-fitnes": "Здоровье и фитнес",
+    "medicina": "Медицина",
+    "religiyi-svitu": "Религии мира",
+    "podorozhi-ta-turizm": "Путешествия и туризм",
+    "psihologiya-i-vidnosini": "Психология и отношения",
+    "kulinariya": "Кулинария",
+    "nauka-i-tehnika": "Наука и техника",
+    "vivchennya-mov-svitu": "Изучение языков мира",
+    "hobi-ta-dozvillya": "Хобби и досуг",
+    "mistectvo-i-kultura": "Искусство и культура",
+    "detektiv": "Детектив",
+    "suchasna-proza": "Современная проза",
+    "mifi-i-folklor": "Мифы и фольклор",
+    "poeziya": "Поэзия",
+    "fantastika-i-fentezi": "Фантастика и фентези",
+    "ukrayinska-literatura": "Украинская литература",
+    "shkilna-programa": "Школьная программа",
+    "zarubizhna-literatura": "Зарубежная литература",
+    "drevnij-rim-i-greciya": "Древний Рим и Греция",
+    "gumor-i-satira": "Юмор и Сатира",
+    "ekonomika-i-biznes": "Экономика и бизнес",
+    "marketing-i-reklama": "Маркетинг и реклама",
+    "menedzhment": "Менеджмент",
+    "zakon-i-pravo": "Закон и право",
+    "biografiyi-uspishnih-lyudej": "Биографии успешных людей",
+    "prigodi-i-podorozhi": "Приключения и путешествия",
+    "mifi-i-kazki": "Мифы и сказки",
+    "istoriya-dlya-ditej": "История для детей",
+    "piznavalna-literatura": "Познавательная литература",
+    "doroslishannya": "Взросление",
+    "tvarini": "Животные",
+    "kompyuteri-ta-tehnologiyi": "Компьютеры и технологии",
+    "shkidlivi-zvichki": "Вредные привычки",
+    "persha-dopomoga": "Первая помощь",
+    "zhinoche-zdorovya": "Женское здоровье",
+    "choloviche-zdorovya": "Мужское здоровье",
+    "sport-i-fitnes": "Спорт и фитнес",
+    "diyeta-i-shudnennya": "Диета и похудение",
+    "hvorobi": "Болезни",
+    "dityacha-psihologiya": "Детская психология",
+    "pidlitkova-psihologiya": "Подростковая психология",
+    "testi": "Подростковая психология",
+    "lyubov-i-romantichni-vidnosini": "Любовь и романтические отношения",
+    "nlp": "НЛП",
+    "klasika-psihologiyi": "Классика психологии",
+    "psihoanaliz": "Психоанализ",
+    "kuhni-krayin-svitu": "Кухни стран мира",
+    "gotuvannya-dlya-novachkiv": "Готовка для новичков",
+    "prigotuvannya-napoyiv": "Приготовление напитков",
+    "deserti": "Десерты",
+    "recepti-vidomih-lyudej": "Рецепты известных людей",
+    "zbirniki-receptiv": "Сборники рецептов",
+    "yizha-dlya-vegetarianciv": "Еда для вегетарианцев",
+    "diyetichne-harchuvannya": "Диетическое питание",
+    "matematika": "Математика",
+    "fizika": "Физика",
+    "geografiya": "География",
+    "ekologiya-i-priroda": "Экология и природа",
+    "astronomiya": "Астрономия",
+    "himiya": "Химия",
+    "biologichni-nauki": "Биологические науки",
+    "mehanika": "Механика",
+    "promislovist": "Промышленность",
+    "inzheneriya-i-budivnictvo": "Инженерия и строительство",
+    "teoriyi-evolyuciyi": "Теории эволюции",
+    "silske-gospodarstvo": "Сельское хозяйство",
+    "navchalna-literatura": "Учебная литература",
+    "slovniki": "Словари",
+    "rozmovniki": "Разговорники",
+    "rukodillya": "Рукоделие",
+    "sad-i-gorod": "Сад и огород",
+    "ribolovlya-ta-polyuvannya": "Рыболовля и охота",
+    "remont-i-dizajn": "Ремонт и дизайн",
+    "domashni-tvarini-ta-doglyad-za-nimi": "Домашние животные и уход за ними",
+    "organizaciya-svyat": "Организация праздников",
+    "kolekcionuvannya": "Коллекционирование",
+    "fotografiya": "Фотография",
+    "muzika": "Музыка",
+    "teatr-i-kino": "Театр и Кино",
+    "arhitektura": "Архитектура",
+    "zhivopis-i-skulptura": "Живопись и скульптура",
+    "tanec-i-horeografiya": "Танец и хореография",
+    "grafichnij-dizajn": "Графический дизайн"
   },
   "buttons": {
     "add-book": "Добавить книгу",
@@ -31,7 +111,8 @@
     "remove-profile": "Удалить свой профиль",
     "sell": "Продать",
     "save-changes": "Сохранить все изменения",
-    "join": "Присоединиться"
+    "join": "Присоединиться",
+    "designer": "Design by Aleh Klimchuk"
   },
   "data-entries": {
     "fullname-placeholder": "Полное имя",
@@ -83,13 +164,16 @@
     "city-placeholder": "Город",
     "city-error-required": "Укажите свой город!",
     "city-extra-text": "Ваш город автоматически подтягивается из профиля. Если хотите изменить, перейдите в профиль.",
-    "author-bookname-search-placeholder": "Введите автора или названия книги..."
+    "author-bookname-search-placeholder": "Введите автора или названия книги...",
+    "mailing-switch": "Получать рассылки о новых книгах"
   },
   "empty": {
     "empty-string": "",
+    "empty-space": " ",
     "no-books": "Нет книг",
     "no-messages": "Нет сообщений",
-    "no-results": "Нет результатов по данному запросу"
+    "no-results": "Нет результатов по данному запросу",
+    "no-subcategories": "Нет подкатегорий для этой категории"
   },
   "loading": {
     "tip": "Подождите..."
@@ -112,6 +196,7 @@
     "register-title": "Регистрация аккаунта",
     "forgot-password-title": "Восстановить пароль",
     "reset-password-title": "Сбросить пароль",
+    "success-login-title": "Вы успешно зашли в систему. Подождите пару секунд для обработки информации.",
     "success-register-title": "Вы успешно зарегистрировались. Для верификации перейдите на почту и нажмите на ссылку и зайдите в систему.",
     "success-register-text": "Спасибо что остаетесь с нами!",
     "success-forgot-password-title": "Вам отправлено на почту ссылку для восстановления пароля. Пожалуйста, проверьте емейл.",
@@ -124,7 +209,7 @@
     "signout-title": "Вы вышли из аккаунта"
   },
   "auth-providers": {
-    "divider-text": "Или продолжить",
+    "divider-text": "Или продолжить с",
     "additional-login-text": "У вас еще нет аккаунта? Нажмите ",
     "additional-register-text": "Уже есть аккаунт? Нажмите "
   },
@@ -133,6 +218,14 @@
       "books": "Книги",
       "categories": "Категории",
       "about-bookbag": "О BookBag"
+    },
+    "footer": {
+      "books": "Книги",
+      "about-bookbag": "О BookBag",
+      "privacy-policy": "Privacy Policy",
+      "terms-of-service": "Terms of Service",
+      "contact-number": "+380 50 193 53 56",
+      "contact-email": "BookBag@support.com"
     },
     "profile": {
       "my-books": "Мои книги",
@@ -184,7 +277,7 @@
       "name": "Название",
       "author": "Автор",
       "author-with-name": "Автор {{author}}",
-      "categories": "Категории",
+      "categories": "Категория",
       "subcategories": "Подкатегории",
       "language": "Язык",
       "language-with-name": "Язык {{language}}",
@@ -247,9 +340,9 @@
     "seller": "Продавец:",
     "good-item": "Ваш товар:",
     "categories-title": "Категории книг",
-    "catalog-title": "Каталог книг ({{booksCount}})",
+    "catalog-title": "Каталог книг",
     "success-sold-book-title": "Успешно продано",
-    "success-bought-book-title": "Успешно куплено ({{buyer}}",
+    "success-bought-book-title": "Успешно куплено {{buyer}}",
     "your-book-title": "Это ваша книга!",
     "others-seller-books-title": "Другие книги продавца",
     "others-seller-books-text": "Если вам понравилось творчество данного автора, не забывайте, что вы можете следить за выходом его новых книг нажав подписаться на автора.",
@@ -258,6 +351,48 @@
     "upload-title": "Загрузите фотографии книги",
     "upload-description": "До 10 фотографий не более 200Мб. PNG, JPEG, WEBP",
     "required-fields-text": "Общая информация о книге",
-    "general-information": "Все поля обязательны для заполнения"
+    "general-information": "Все поля обязательны для заполнения",
+    "about-good-item": "О товаре"
+  },
+  "intro": {
+    "suptitle": "Добро пожаловать!",
+    "title": "BookBag - платформа которая экономит ваши деньги и природные ресурсы",
+    "subtitle": "Регистрируйся и переходы к покупке своих любимых книг по вигодной цене, а если ты писатель, то спеши поделиться своим творчеством с людьми.",
+    "facebook": "Facebook бот - ваш надежний помощник",
+    "arrow-text": "Вниз"
+  },
+  "advantages": {
+    "suptitle": "Преимущества",
+    "title": "Почему стоит использовать нашу платформу",
+    "list": {
+      "first-item": "Гараздо дешевле чем в интернет-магазинах",
+      "second-item": "Экономия природных ресурсов на печать новых изданий",
+      "third-item": "Удобное и безопасное использование платформи"
+    }
+  },
+  "opportunities": {
+    "suptitle": "Узнай что ты можешь",
+    "title": "Ваши возможности на платформе",
+    "first-paragraph": "<0> Став участником платформы, вы можете <1> публиковать свои книги </1> для их дальнейшей продажи на данной платформе, возможно вы писатель и хотите поделиться своими произведениями, тогда вы в нужном месте. </0>",
+    "second-paragraph": "<0> Так же эта платформа дает вам возможность покупать книги <1> дешевле чем в каком-либо интернет-магазине </1>, а покупая их здесь, вы так же <1> участвуете в сбережении природных ресурсов </1>, ведь все мы знаем что на печать новых изданий требуются природные ресурсы и все что вам необходимо, это просто присоединиться к нам </0>"
+  },
+  "newCollectionBooks": {
+    "suptitle": "Новинки",
+    "title": "Новые пополнения книг",
+    "text": "<0>Хотите чтобы ваша книга тоже была здесь? Тогда нажмите <1>добавить свою книгу</1></0>"
+  },
+  "subscribe": {
+    "suptitle": "Подписка на уведомления",
+    "title": "Подписывайся и получай первым уведомления о публикации новых книг",
+    "success-subscribing": "Вы успешно подписались на рассылку новых пополнений книг на нашем сервисе",
+    "success-unsubscribing": "Вы успешно отписались на рассылку новых пополнений книг на нашем сервисе",
+    "error-subscribing": "Такой емейл уже существует в системе. Введите уникальный емейл"
+  },
+  "about": {
+    "title": "О BookBag",
+    "feedback-numbers": "100 K +",
+    "feedback-text": "Отзывов от наших пользователей",
+    "first-paragraph": "Платформа BookBag - создавалась нашей талантливой креативной командой для людей которые ценят свои деньги и экологию.",
+    "second-paragraph": "Основана платформа в 2021 году и за этот небольшой срок мы уже получили сотни тысяч отзывов от наших пользователей, а так это лучшая и единственная платформа в Украине."
   }
 }

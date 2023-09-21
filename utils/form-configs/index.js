@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import MainInput from 'components/DataEntry/MainInput';
-import MainSelectSearch from 'components/DataEntry/MainSelectSearch';
-import MainInputNumber from 'components/DataEntry/MainInputNumber';
-import MainTextAreaInput from 'components/DataEntry/MainTextAreaInput';
-import DepandantCategorySelect from 'components/DataEntry/DepandantCategorySelect';
-import DepandantBookNameAuthorSelect from 'components/DataEntry/DepandantBookNameAuthorSelect';
-import DebounceSelectSearch from 'components/DataEntry/DebounceSelectSearch';
+import MainInput from 'components/DataEntries/Main/MainInput';
+import MainSelectSearch from 'components/DataEntries/Main/MainSelectSearch';
+import MainInputNumber from 'components/DataEntries/Main/MainInputNumber';
+import MainTextAreaInput from 'components/DataEntries/Main/MainTextAreaInput';
+import DepandantCategorySelect from 'components/DataEntries/Depandant/DepandantCategorySelect';
+import DepandantBookNameAuthorSelect from 'components/DataEntries/Depandant/DepandantBookNameAuthorSelect';
+import DebounceDataEntry from 'components/DataEntries/DebounceDataEntry';
 import { getCities } from 'lib/nova-poshta/services/cities';
 import { getBookConditionList, getLanguageList } from 'utils/constants';
 
@@ -72,7 +72,7 @@ export const getBookInputsList = (profile, categories, t) => [
       },
     ],
     placeholder: 'components:data-entries.city-placeholder',
-    component: DebounceSelectSearch,
+    component: DebounceDataEntry,
     fetchOptions: async (city) => {
       const response = await getCities(city);
       return response?.data?.data[0]?.Addresses.map((city) => {
@@ -84,8 +84,8 @@ export const getBookInputsList = (profile, categories, t) => [
     isChildrenOptions: true,
     optionFilterProp: 'children',
     filterOption: false,
-    disabled: profile.user_city ? true : false,
-    extra: profile.user_city
+    disabled: profile?.user_city ? true : false,
+    extra: profile?.user_city
       ? 'components:data-entries.city-extra-text'
       : 'components:empty.empty-string',
     // initialValue: profile.user_city ? profile.user_city : undefined,
@@ -158,7 +158,7 @@ export const getSettingsInputList = () => [
     // ],
     hasFeedback: false,
     placeholder: 'components:data-entries.city-placeholder',
-    component: DebounceSelectSearch,
+    component: DebounceDataEntry,
     fetchOptions: async (city) => {
       const response = await getCities(city);
       return response?.data?.data[0]?.Addresses.map((city) => {

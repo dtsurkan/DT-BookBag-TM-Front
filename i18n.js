@@ -3,7 +3,5 @@ module.exports = {
   defaultLocale: 'uk',
   pages: {
     '*': ['components'],
-    '/': ['index'],
-    '/about': ['about'],
   },
 };

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { isEmpty as _isEmpty } from 'lodash';
+import _isEmpty from 'lodash/isEmpty';
 import { Col, Row } from 'antd';
-import AppLayout from 'components/AppLayout/AppLayout';
-import ContentComponent from 'components/AppLayout/ContentComponent';
+import AppLayout from 'components/Layout/AppLayout';
+import MainContent from 'components/Layout/MainContent';
 import BooksList from 'components/Lists/BooksList';
 import CategoryList from 'components/Lists/CategoryList';
-import BookFilters from 'components/Filters/BookFilters';
+import BookFilters from 'components/Book/BookFilters';
 import { getCategories } from 'lib/strapi/services/categories';
 import { getBooksCount, getBooksWithFilters } from 'lib/strapi/services/books';
 import { stringifyQueryParams } from 'lib/qs';
@@ -15,7 +15,8 @@ import { PAGE_SIZE } from 'utils/constants';
 const Books = ({ categories = [], books = [], count = 0 }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-
+  console.log(`categories`, categories);
+  console.log('books', books);
   useEffect(() => {
     if (!_isEmpty(router.query)) {
       const start = router.query.start ? +router.query.start : 1;
@@ -32,7 +33,7 @@ const Books = ({ categories = [], books = [], count = 0 }) => {
   };
   return (
     <AppLayout globalDivStyles={{ background: '#F9FEFD' }}>
-      <ContentComponent>
+      <MainContent>
         <Row justify="space-around">
           <Col xs={24} lg={6}>
             <CategoryList categories={categories} />
@@ -44,6 +45,7 @@ const Books = ({ categories = [], books = [], count = 0 }) => {
               pagination={{
                 total: count,
                 pageSize: PAGE_SIZE,
+                showSizeChanger: false,
                 hideOnSinglePage: true,
                 current: currentPage,
                 onChange: handlePagination,
@@ -51,7 +53,7 @@ const Books = ({ categories = [], books = [], count = 0 }) => {
             />
           </Col>
         </Row>
-      </ContentComponent>
+      </MainContent>
     </AppLayout>
   );
 };
@@ -64,7 +66,8 @@ export const getServerSideProps = async ({ query }) => {
     getBooksCount(query),
   ]);
   // console.log(`count`, count);
-  // console.log('books', books);
+  console.log(`categories`, categories);
+  console.log('books', books);
   if (books.data.statusCode === 500 || books.data.statusCode === 400) {
     return {
       notFound: true,

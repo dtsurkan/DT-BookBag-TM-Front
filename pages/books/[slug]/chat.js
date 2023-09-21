@@ -1,15 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { getSession } from 'next-auth/client';
+import { createUseStyles } from 'react-jss';
 import { useMediaQuery } from 'react-responsive';
-import { useTwilioClient } from 'hooks';
-import { Alert, Col, Form, message, PageHeader, Row, Spin } from 'antd';
-import AppLayout from 'components/AppLayout/AppLayout';
-import DesktopHeader from 'components/Navigation/components/DesktopHeader';
-import AsideDescription from 'components/Chat/AsideDescription';
-import SendMessageForm from 'components/Chat/SendMessageForm';
-import MessagesList from 'components/Chat/MessagesList';
+import useTwilioClient from 'hooks/useTwilioClient';
+import useShowSimpleModal from 'hooks/useShowSimpleModal';
+import { Alert, Col, Form, message, PageHeader, Row, Spin, Space, Modal } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import AppLayout from 'components/Layout/AppLayout';
+import DesktopHeader from 'components/Navigation/Desktop/DesktopHeader';
+import AsideBookDescription from 'components/Chat/AsideBookDescription';
+import SendMessageForm from 'components/Chat/Forms/SendMessage';
+import MessagesList from 'components/Chat/Lists/MessagesList';
+import MobileHeader from 'components/Navigation/Mobile/MobileHeader';
+import PrimaryButton from 'components/Buttons/PrimaryButton';
 import { getBookBySlug } from 'lib/strapi/services/books';
 import {
   addUserToConversation,
@@ -23,17 +28,40 @@ import {
 } from 'lib/twilio-conversation/services/client';
 import { getLastElementInArray, scrollToBottom } from 'utils/functions';
 
-const ChatComponent = ({ book = {} }) => {
+const useStyles = createUseStyles((theme) => ({
+  chat: {
+    minHeight: '100vh',
+    background: '#F9FEFD',
+    padding: '30px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  chatWrapper: { marginTop: '25px', flexDirection: 'column', flex: '5 5 auto' },
+  [theme.breakpoints.down(theme.breakpoints.xl)]: {
+    chat: {
+      padding: 0,
+    },
+    chatWrapper: {
+      marginTop: '100px',
+    },
+  },
+  [theme.breakpoints.down(theme.breakpoints.sm)]: {
+    chatWrapper: {
+      marginTop: '170px',
+    },
+  },
+}));
+
+const ChatComponent = ({ book = {}, session }) => {
   const { t } = useTranslation();
-  const {
-    profile: { email, id, username },
-  } = useSelector((state) => state.user);
+  const classes = useStyles();
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1200 });
   const scrollToBottomRef = useRef(null);
   const router = useRouter();
   // Connect with Twilio
   const [form] = Form.useForm();
   const { client, isLoadingTwilio } = useTwilioClient();
+  const { isModalVisible, showModal, cancelModal } = useShowSimpleModal();
   const [isLoadingMessage, setIsLoadingMessage] = useState(false);
   const [isLoadingInitialMesssages, setIsLoadingInitialMesssages] = useState(false);
   const [conversation, setConversation] = useState(null);
@@ -110,9 +138,9 @@ const ChatComponent = ({ book = {} }) => {
       setIsLoadingInitialMesssages(true);
       const slug = getLastElementInArray(router.query.slug);
       console.log(`router.query.slug`, parseInt(slug));
-      console.log(`id`, id);
+      console.log(`session?.profile?.id,`, session?.profile?.id);
       console.log(`seller.id`, book.seller.id);
-      const roomId = id + book.seller.id + parseInt(slug);
+      const roomId = session?.profile?.id + book.seller.id + parseInt(slug);
       console.log(`roomId`, roomId);
       const stringifyRoomId = roomId.toString();
       console.log(`stringifyRoomId`, stringifyRoomId);
@@ -137,7 +165,11 @@ const ChatComponent = ({ book = {} }) => {
                 userName: book.seller.username,
                 id: book.seller.id,
               },
-              buyer: { email, userName: username, id },
+              buyer: {
+                email: session?.profile?.email,
+                userName: session?.profile?.username,
+                id: session?.profile?.id,
+              },
               bookSlug: router.query.slug,
               book: { book_name: book.book_name, author: book.author },
             },
@@ -163,7 +195,7 @@ const ChatComponent = ({ book = {} }) => {
     if (client) {
       initTwilioClient();
     }
-  }, [client, email, id, username, router.query.slug, book]);
+  }, [client, session, router.query.slug, book]);
 
   useEffect(() => {
     const getUserOnlineStatus = async () => {
@@ -206,23 +238,21 @@ const ChatComponent = ({ book = {} }) => {
     <Spin spinning={isLoadingTwilio || isLoadingInitialMesssages}>
       <AppLayout isHasNavigation={false} isHasFooter={false}>
         <Row justify="center">
-          <AsideDescription
-            onlineStatus={onlineStatus}
-            book={book}
-            buyer={{ email, userName: username, id }}
-          />
-          <Col
-            xs={24}
-            md={19}
-            style={{
-              minHeight: '100vh',
-              background: '#F9FEFD',
-              padding: '30px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            {isTabletOrMobile ? null : (
+          {isTabletOrMobile ? null : (
+            <AsideBookDescription
+              onlineStatus={onlineStatus}
+              book={book}
+              buyer={{
+                email: session?.profile?.email,
+                userName: session?.profile?.username,
+                id: session?.profile?.id,
+              }}
+            />
+          )}
+          <Col xs={24} xl={19} className={classes.chat}>
+            {isTabletOrMobile ? (
+              <MobileHeader />
+            ) : (
               <DesktopHeader
                 hasLogo={false}
                 // hasProfile={false}
@@ -236,16 +266,27 @@ const ChatComponent = ({ book = {} }) => {
                 }}
               />
             )}
-            <Row
-              gutter={[0, 16]}
-              style={{ marginTop: '25px', flexDirection: 'column', flex: '5 5 auto' }}
-            >
+            <Row gutter={[0, 16]} className={classes.chatWrapper}>
               <Col>
-                <PageHeader
-                  onBack={() => router.push(`/books/${router.query.slug}`)}
-                  title={t('components:buttons.return')}
-                  style={{ padding: '0' }}
-                />
+                <Space
+                  direction="horizontal"
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <PageHeader
+                    onBack={() => router.push(`/books/${router.query.slug}`)}
+                    title={t('components:buttons.return')}
+                    style={{ padding: '0' }}
+                  />
+                  {isTabletOrMobile && (
+                    <PrimaryButton
+                      isOutlinedStyles={false}
+                      type="text"
+                      icon={<InfoCircleOutlined />}
+                      onClick={showModal}
+                      btnText="components:others.about-good-item"
+                    />
+                  )}
+                </Space>
               </Col>
               <Col>
                 <Alert
@@ -285,13 +326,43 @@ const ChatComponent = ({ book = {} }) => {
           </Col>
         </Row>
       </AppLayout>
+      <Modal
+        title={t('components:others.about-good-item')}
+        centered
+        visible={isModalVisible}
+        footer={null}
+        onCancel={cancelModal}
+        zIndex={1100}
+      >
+        <AsideBookDescription
+          hasHeaderLogo={false}
+          onlineStatus={onlineStatus}
+          book={book}
+          buyer={{
+            email: session?.profile?.email,
+            userName: session?.profile?.username,
+            id: session?.profile?.id,
+          }}
+        />
+      </Modal>
     </Spin>
   );
 };
 // Think about removing server-side in this position in order to avoid indexing with chat
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, req }) {
   console.log(`params`, params);
   const book = await getBookBySlug(params.slug);
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+
   if (!book?.data?.length) {
     return {
       notFound: true,
@@ -301,6 +372,7 @@ export async function getServerSideProps({ params }) {
   return {
     props: {
       book: book.data[0],
+      session,
     },
   };
 }

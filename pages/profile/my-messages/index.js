@@ -1,14 +1,31 @@
 /* eslint-disable react/display-name */
 import { useEffect, useState } from 'react';
 import useTranslation from 'next-translate/useTranslation';
+import { getSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
-import { useTwilioClient } from 'hooks';
+import useTwilioClient from 'hooks/useTwilioClient';
 import format from 'date-fns/format';
 import { Badge, message, Spin, Table } from 'antd';
 import Title from 'antd/lib/typography/Title';
-import ProfileLayout from 'components/AppLayout/ProfileLayout';
-import CustomEmptyComponent from 'components/Empty/CustomEmptyComponent';
+import ProfileLayout from 'components/Layout/ProfileLayout';
+import CustomEmpty from 'components/Empty/CustomEmpty';
 import { fetchSubscribedConversations } from 'lib/twilio-conversation/services/client';
+
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
 
 const MyMessages = () => {
   const router = useRouter();
@@ -113,11 +130,12 @@ const MyMessages = () => {
     <ProfileLayout>
       <Spin spinning={isLoadingTwilio || isLoadingConversations}>
         <Table
+          scroll={{ x: 1000 }}
           loading={isLoadingConversations}
           title={() => <Title>{t('components:lists.profile.my-messages-title')}</Title>}
           style={{ height: '100%' }}
           locale={{
-            emptyText: <CustomEmptyComponent />,
+            emptyText: <CustomEmpty />,
           }}
           pagination={{
             hideOnSinglePage: dataSource.length ? false : true,

@@ -1,42 +1,39 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty as _isEmpty } from 'lodash';
-import ProfileLayout from 'components/AppLayout/ProfileLayout';
-import ProfileList from 'components/Lists/ProfileList';
-import { getCurrentUserProfile } from 'state/actions/user/profile';
+import { getSession, useSession } from 'next-auth/client';
+import useCustomSwr from 'hooks/useCustomSwr';
+import ProfileLayout from 'components/Layout/ProfileLayout';
+import ProfileList from 'components/Lists/ProfileBooksList';
+
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
 
 const SoldBooks = () => {
-  const { profile } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const [session] = useSession();
+  console.log(`session`, session);
+  const { response: sold_books, isLoading } = useCustomSwr({
+    url: `/books?seller.id=${session?.profile?.id}&book_status_ne=added`,
+    token: session.jwt,
+  });
 
-  const sold_books = !_isEmpty(profile)
-    ? profile.added_books.filter((book) => book.book_status !== 'added')
-    : [];
-
-  useEffect(() => {
-    if (profile?.id) {
-      dispatch(getCurrentUserProfile(profile?.id));
-    }
-  }, [profile.id, dispatch]);
-
-  useEffect(() => {
-    if (_isEmpty(profile)) {
-      router.push('/login');
-    }
-  }, [profile, router]);
-
-  //   if (!profile) {
-  //     router.push("/login");
-  //     return null;
-  //   }
   return (
     <ProfileLayout>
       <ProfileList
         listTitle="components:lists.profile.sold-books-title"
         renderKey="sold"
         books={sold_books}
+        isLoading={isLoading}
         hasAddingBook={false}
       />
     </ProfileLayout>
