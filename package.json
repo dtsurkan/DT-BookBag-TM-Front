@@ -12,7 +12,8 @@
     "format": "prettier --write './**/*'",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
+    "ngrok": "ngrok http 3000"
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.4",

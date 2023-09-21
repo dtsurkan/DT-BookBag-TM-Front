@@ -22,7 +22,7 @@ import {
   handleDeleteBookFromLikedBooks,
 } from 'logics/books/liked-books';
 
-const BookItem = ({ book = {}, booksWithTheSameSeller = [], session, isLiked }) => {
+const BookItem = ({ book = {}, booksWithTheSameSeller = [], session, isLiked = false }) => {
   const { client } = useTwilioClient();
   const { t } = useTranslation();
   console.log(`bookefewfwfewfwefewfwffewfwefwefwefewfewfweff`, book);
@@ -138,7 +138,7 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [], session, isLiked }) 
                     style={{ marginRight: '16px' }}
                   />
                 )}
-                {session && (
+                {session && book.buyingID.buying_status !== 'sold' && (
                   <Button
                     type={isChecked ? 'primary' : 'default'}
                     shape="circle"
@@ -176,9 +176,7 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [], session, isLiked }) 
           books={booksWithTheSameSeller}
           client={client}
           title="components:others.others-seller-books-title"
-          subtitle="components:others.others-seller-books-text"
           route={`/sellers/${book.buyingID.sellerID}`}
-          hasSubtitle={true}
           hasSuptitle={false}
           isAdditionalParagraph={false}
         />
@@ -192,12 +190,14 @@ export async function getServerSideProps({ params, req }) {
   const book = await getBookBySlug(params.slug);
   const session = await getSession({ req });
   const booksWithTheSameSeller = await getBookBySellerID(book?.data[0]?.buyingID.sellerID);
-  const likedBook = await getBookFromLikedBooks(
-    book?.data[0]?.id,
-    session?.profile.id,
-    session?.jwt
-  );
-  const isLiked = likedBook?.data[0]?.userID === session?.profile?.id;
+
+  let likedBook = null;
+  let isLiked = false;
+  if (session) {
+    console.log('TESTING');
+    likedBook = await getBookFromLikedBooks(book?.data[0]?.id, session?.profile.id, session?.jwt);
+    isLiked = likedBook?.data[0]?.userID === session?.profile?.id;
+  }
 
   if (!book?.data?.length) {
     return {

@@ -5,6 +5,7 @@ import { notification } from 'antd';
 import { postTokenFromStrapi, sendEmailWithTwilioData } from 'lib/strapi/services/twilio';
 import { doShutDown, getUserByIdentity } from 'lib/twilio-conversation/services/client';
 import { updateUserFriendlyName } from 'lib/twilio-conversation/services/user';
+import MessageDescription from 'components/Notifications/MessageDescription';
 const Conversations = require('@twilio/conversations');
 
 const useTwilioClient = (hasNotifications = false) => {
@@ -74,29 +75,25 @@ const useTwilioClient = (hasNotifications = false) => {
         client.on('messageAdded', async (message) => {
           console.log(`message`, message);
           const key = `open${Date.now()}`;
-          const theSameAuthor = session?.profile.email === message.state.author;
+          // NOTE!
+          // TheSameAuthor = who send email (you or not) = boolean
+          // isSeller = whether seller or not (you, current user)
+          // recepientEmail = whom you want to send email
+          // senderEmail = who send email
           const messageIndex = message.state.index;
-
+          const theSameAuthor = session?.profile.email === message.state.author;
+          const isSeller =
+            session?.profile.email === message.conversation.channelState.attributes.seller.email;
+          const recepientEmail = isSeller
+            ? message.conversation.channelState.attributes.buyer.email
+            : message.conversation.channelState.attributes.seller.email;
+          const senderEmail = message.state.author;
+          console.log(`recepientEmail`, recepientEmail);
+          console.log(`senderEmail`, senderEmail);
           if (!theSameAuthor) {
             notification.open({
               message: `Відправник: ${message.state.author}`,
-              description: messageIndex ? (
-                <div>
-                  <p
-                    style={{ fontWeight: 700 }}
-                  >{`По книзі: ${message.conversation.friendlyName.toUpperCase()}`}</p>
-                  <p
-                    style={{ fontWeight: 700 }}
-                  >{`Автор: ${message.conversation.channelState.attributes.book.author.toUpperCase()}`}</p>
-                  <p>{`Повідомлення: ${message.state.body}`}</p>
-                </div>
-              ) : (
-                <div>
-                  {`Користувач ${
-                    message.conversation.channelState.createdBy
-                  } створив чат для обговорення деталей по книзі ${message.conversation.friendlyName.toUpperCase()}, автора(ів) ${message.conversation.channelState.attributes.book.author.toUpperCase()} та відправив декілька повідомлень. Перейдіть будь ласка в мої повідомлення в своєму профілі або натисніть на це повідомлення.`}
-                </div>
-              ),
+              description: <MessageDescription messageIndex={messageIndex} message={message} />,
               duration: messageIndex ? 3.5 : 7,
               style: {
                 cursor: 'pointer',
@@ -106,19 +103,15 @@ const useTwilioClient = (hasNotifications = false) => {
                 notification.close(key);
               },
             });
-          } else {
-            console.log('_-----w-rgwr-gwrg-wrg-wr-gw-gwr-grw-');
-            // Send email to another user exactly when created chat and send first message
-            // if (!messageIndex) {
-            await sendEmailWithTwilioData(
-              {
-                conversation: message.conversation.channelState,
-                email: message.conversation.channelState.attributes.seller.email,
-              },
-              session.jwt
-            );
-            // }
           }
+          await sendEmailWithTwilioData(
+            {
+              conversation: message.conversation.channelState,
+              recepientEmail,
+              senderEmail,
+            },
+            session.jwt
+          );
         });
       }
     };

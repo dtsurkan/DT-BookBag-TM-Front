@@ -1,19 +1,22 @@
-import { useRouter } from 'next/router';
 import useTranslation from 'next-translate/useTranslation';
-import useCustomSwr from 'hooks/useCustomSwr';
 import { Row, Col } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import AppLayout from 'components/Layout/AppLayout';
 import MainContent from 'components/Layout/MainContent';
 import BooksList from 'components/Lists/BooksList';
-import { getSellerBooks } from 'lib/swr/mutate/books';
+import { getBookBySellerID } from 'lib/strapi/services/books';
 
-const SellerPage = () => {
+export const getServerSideProps = async ({ params }) => {
+  console.log(`params`, params);
+  const booksWithTheSameSeller = await getBookBySellerID(params.id);
+  return {
+    props: { books: booksWithTheSameSeller.data },
+  };
+};
+
+const SellerPage = ({ books }) => {
+  console.log(`books`, books);
   const { t } = useTranslation();
-  const router = useRouter();
-  const { response: books, isLoading: isLoadingUserProfile } = useCustomSwr({
-    url: getSellerBooks(router?.query?.id, ''),
-  });
 
   return (
     <AppLayout>
@@ -23,15 +26,7 @@ const SellerPage = () => {
             <Title level={3}>{t('components:others.seller-all-books-title')}</Title>
           </Col>
           <Col xs={24} lg={20}>
-            <BooksList
-              dataSource={books}
-              customLoadingParams={{
-                size: 'large',
-                spinning: isLoadingUserProfile,
-                tip: t('components:loading.tip'),
-              }}
-              pagination={false}
-            />
+            <BooksList dataSource={books} hasLoading={false} pagination={false} />
           </Col>
         </Row>
       </MainContent>

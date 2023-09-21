@@ -7,12 +7,14 @@ import {
   CarryOutOutlined,
   CloseOutlined,
   DeliveredProcedureOutlined,
+  GoogleOutlined,
   InfoCircleOutlined,
   LikeOutlined,
   LogoutOutlined,
   MailOutlined,
   MessageOutlined,
   MoneyCollectOutlined,
+  PhoneOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
 
@@ -290,8 +292,8 @@ export const FOOTER_LINKS_LIST = [
   {
     id: uuidv4(),
     key: false,
-    href: false,
-    icon: false,
+    href: '',
+    icon: <GoogleOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.footer.contact-email',
   },
 ];
@@ -300,8 +302,8 @@ export const FOOTER_CONTACTS_LIST = [
   {
     id: uuidv4(),
     key: false,
-    href: false,
-    icon: false,
+    href: 'tel:+380-63-257-03-51',
+    icon: <PhoneOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.footer.contact-number',
   },
 
@@ -316,7 +318,7 @@ export const FOOTER_CONTACTS_LIST = [
     id: uuidv4(),
     key: '/terms-of-service',
     href: '/terms-of-service',
-    icon: <AlertOutlined style={{ fontSize: 18 }} />,
+    icon: <InfoCircleOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.footer.terms-of-service',
   },
 ];

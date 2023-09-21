@@ -10,6 +10,7 @@ import Title from 'antd/lib/typography/Title';
 import ProfileLayout from 'components/Layout/ProfileLayout';
 import CustomEmpty from 'components/Empty/CustomEmpty';
 import { fetchSubscribedConversations } from 'lib/twilio-conversation/services/client';
+import { getMessageCount } from 'utils/twilio';
 
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
@@ -75,17 +76,12 @@ const MyMessages = () => {
       align: 'center',
       dataIndex: ['channelState'],
       render: (record) => {
-        // NOTE! Message index begins at position 0. if first message doesn't read --- null
-        const lastMessageIndex = record.lastMessage.index ? record.lastMessage.index + 1 : 1;
-        const lastReadMessageIndex =
-          record.lastReadMessageIndex === null
-            ? 0
-            : record.lastReadMessageIndex
-            ? record.lastReadMessageIndex + 1
-            : 1;
-        const count = lastMessageIndex - lastReadMessageIndex;
+        const badgeUnreadCount = getMessageCount(record);
+        // NOTE! Message index begins at position 0.
+        const totalCountMessages = record?.lastMessage ? record.lastMessage.index + 1 : 0;
+
         return (
-          <Badge count={count}>
+          <Badge count={badgeUnreadCount}>
             <div
               style={{
                 background: 'azure',
@@ -96,7 +92,7 @@ const MyMessages = () => {
                 minWidth: '60px',
               }}
             >
-              {lastMessageIndex}
+              {totalCountMessages}
             </div>
           </Badge>
         );

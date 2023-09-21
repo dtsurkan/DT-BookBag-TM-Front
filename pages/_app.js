@@ -23,9 +23,9 @@ function MyApp({ Component, pageProps, router }) {
   useEffect(() => {
     AOS.init({
       easing: 'ease-out-cubic',
-      once: false,
+      once: true,
       offset: 50,
-      mirror: true,
+      // mirror: true,
     });
   }, []);
 

@@ -239,7 +239,7 @@ const ChatComponent = ({ book = {}, session, seller = {} }) => {
     <Spin spinning={isLoadingTwilio || isLoadingInitialMesssages}>
       <AppLayout isHasNavigation={false} isHasFooter={false}>
         <Row justify="center">
-          {isTabletOrMobile ? null : (
+          {!isTabletOrMobile && (
             <AsideBookDescription
               onlineStatus={onlineStatus}
               book={book}
@@ -328,26 +328,28 @@ const ChatComponent = ({ book = {}, session, seller = {} }) => {
           </Col>
         </Row>
       </AppLayout>
-      <Modal
-        title={t('components:others.about-good-item')}
-        centered
-        visible={isModalVisible}
-        footer={null}
-        onCancel={cancelModal}
-        zIndex={1100}
-      >
-        <AsideBookDescription
-          hasHeaderLogo={false}
-          onlineStatus={onlineStatus}
-          book={book}
-          seller={seller}
-          buyer={{
-            email: session?.profile?.email,
-            userName: session?.profile?.username,
-            id: session?.profile?.id,
-          }}
-        />
-      </Modal>
+      {isTabletOrMobile && (
+        <Modal
+          title={t('components:others.about-good-item')}
+          centered
+          visible={isModalVisible}
+          footer={null}
+          onCancel={cancelModal}
+          zIndex={1100}
+        >
+          <AsideBookDescription
+            hasHeaderLogo={false}
+            onlineStatus={onlineStatus}
+            book={book}
+            seller={seller}
+            buyer={{
+              email: session?.profile?.email,
+              userName: session?.profile?.username,
+              id: session?.profile?.id,
+            }}
+          />
+        </Modal>
+      )}
     </Spin>
   );
 };

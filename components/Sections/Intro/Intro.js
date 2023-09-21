@@ -39,7 +39,7 @@ const Intro = ({ showModal = () => {} }) => {
           <Title style={{ color: '#01504D' }} level={3}>
             {t('components:intro.suptitle')}
           </Title>
-          <Title level={1}>{t('components:intro.title')}</Title>
+          <Title level={2}>{t('components:intro.title')}</Title>
           <div style={{ maxWidth: '550px' }}>
             <Paragraph type="secondary">{t('components:intro.subtitle')}</Paragraph>
           </div>

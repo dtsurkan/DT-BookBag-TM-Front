@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useTwilioClient from 'hooks/useTwilioClient';
 import { fetchSubscribedConversations } from 'lib/twilio-conversation/services/client';
+import { getMessageCount } from 'utils/twilio';
 
 const useBadgeProfileCount = () => {
   const { client } = useTwilioClient();
@@ -15,17 +16,8 @@ const useBadgeProfileCount = () => {
       console.log(`items`, items);
       const result = items
         .map((item) => {
-          // NOTE! Message index begins at position 0
-          const lastMessageIndex = item.channelState.lastMessage.index
-            ? item.channelState.lastMessage.index + 1
-            : 1;
-          const lastReadMessageIndex =
-            item.channelState.lastReadMessageIndex === null
-              ? 0
-              : item.channelState.lastReadMessageIndex
-              ? item.channelState.lastReadMessageIndex + 1
-              : 1;
-          const count = lastMessageIndex - lastReadMessageIndex;
+          const count = getMessageCount(item.channelState);
+
           return count;
         })
         .reduce((previousValue, currentValue) => previousValue + currentValue, 0);

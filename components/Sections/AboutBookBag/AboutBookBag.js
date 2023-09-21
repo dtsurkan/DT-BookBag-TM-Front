@@ -37,15 +37,14 @@ const AboutBookBag = () => {
       <Row>
         <Col xs={24} lg={8} className={classes.aboutDescription} data-aos="fade-right">
           <Space direction="vertical">
-            <Title level={5}>
-              Hi!{' '}
+            <Title level={1}>{t('components:about.title')}</Title>
+            {/* <Title>{t('components:about.feedback-numbers')}</Title> */}
+            <Text>
+              {t('components:about.feedback-text')}
               <span role="img" aria-label="cheerful">
                 😉
               </span>
-            </Title>
-            <Title level={1}>{t('components:about.title')}</Title>
-            <Title>{t('components:about.feedback-numbers')}</Title>
-            <Text>{t('components:about.feedback-text')}</Text>
+            </Text>
           </Space>
         </Col>
         <Col xs={24} lg={8} style={{ margin: '30px 0' }} data-aos="zoom-in">

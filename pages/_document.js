@@ -3,11 +3,7 @@
 
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { SheetsRegistry, JssProvider, createGenerateId } from 'react-jss';
-import {
-  FACEBOOK_APP_ID,
-  FACEBOOK_CUSTOMER_PAGE_ID,
-  NEXT_PUBLIC_GOOGLE_ANALYTICS,
-} from 'lib/constants';
+import { FACEBOOK_CUSTOMER_PAGE_ID, NEXT_PUBLIC_GOOGLE_ANALYTICS } from 'lib/constants';
 
 export default class MyDocument extends Document {
   // SPECIAL FOR REACT JSS
@@ -17,11 +13,12 @@ export default class MyDocument extends Document {
     const originalRenderPage = ctx.renderPage;
     ctx.renderPage = () =>
       originalRenderPage({
-        enhanceApp: (App) => (props) => (
-          <JssProvider registry={registry} generateId={generateId}>
-            <App {...props} />
-          </JssProvider>
-        ),
+        enhanceApp: (App) => (props) =>
+          (
+            <JssProvider registry={registry} generateId={generateId}>
+              <App {...props} />
+            </JssProvider>
+          ),
       });
     const initialProps = await Document.getInitialProps(ctx);
     return {
@@ -76,34 +73,33 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          {/* FACEBOOK CUSTOMER PAGE */}
-          {/* In future, you need to change pageID and app ID */}
+          {/* <!-- Messenger Chat plugin Code --> */}
+          <div id="fb-root"></div>
+          {/* <!-- Your Chat plugin code --> */}
           <div
+            id="fb-customer-chat"
             className="fb-customerchat"
             page_id={FACEBOOK_CUSTOMER_PAGE_ID}
-            minimized="true"
+            attribution="biz_inbox"
           ></div>
           <script
             dangerouslySetInnerHTML={{
-              __html: `
-            window.fbAsyncInit = function() {
-              FB.init({
-                appId            : ${FACEBOOK_APP_ID},
-                autoLogAppEvents : true,
-                xfbml            : true,
-                version          : 'v2.11'
-              });
-            };
-            (function(d, s, id){
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) {return;}
-              js = d.createElement(s); js.id = id;
-              js.src = "https://connect.facebook.net/en_US/sdk.js";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-            `,
+              __html: `window.fbAsyncInit = function() {
+        FB.init({
+          xfbml            : true,
+          version          : 'v12.0'
+        });
+      };
+
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/ru_RU/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));`,
             }}
-          />
+          ></script>
         </body>
       </Html>
     );

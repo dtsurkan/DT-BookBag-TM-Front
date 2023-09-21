@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
-import { Select } from 'antd';
+import { Select, Skeleton } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
 import DebounceDataEntry from 'components/DataEntries/DebounceDataEntry';
@@ -15,7 +15,7 @@ import useStyles from './styles';
 
 const DesktopHeader = ({ hasLogo = true, hasProfile = true, headerStyles }) => {
   const router = useRouter();
-  const [session] = useSession();
+  const [session, loading] = useSession();
   const classes = useStyles();
   const { locale } = router;
   const onSearchBooks = async (value) => {
@@ -61,7 +61,9 @@ const DesktopHeader = ({ hasLogo = true, hasProfile = true, headerStyles }) => {
       </Select>
       {hasProfile && (
         <Fragment>
-          {session ? (
+          {loading ? (
+            <Skeleton.Input style={{ width: 200 }} active size="large" />
+          ) : session ? (
             <ProfileDropdown />
           ) : (
             <PrimaryButton

@@ -30,7 +30,10 @@ const AsideBookDescription = ({
 
   useEffect(() => {
     if (!_isEmpty(book)) {
-      const status = book.buyingID.buying_status === 'sold' ? true : false;
+      const status =
+        book.buyingID.buying_status === 'sold' || book.buyingID.buying_status === 'processing'
+          ? true
+          : false;
       console.log(`status`, status);
       setIsChecked(status);
     }
