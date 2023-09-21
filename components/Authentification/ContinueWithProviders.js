@@ -1,13 +1,12 @@
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
 import { Divider } from "antd";
 import Link from "antd/lib/typography/Link";
 import Text from "antd/lib/typography/Text";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { GoogleIcon } from "components/Icons";
 import AuthProviderButton from "components/Buttons/AuthProviderButton";
-import { doFacebookSignIn, doGoogleSignIn } from "state/actions/user";
 import classes from "styles/scss/components/buttons.module.scss";
+import { STRAPI_URL } from "lib/constants";
 
 const ContinueWithProviders = ({
   additionalText = " У вас еще нет аккаунта? Нажмите ",
@@ -15,22 +14,11 @@ const ContinueWithProviders = ({
   linkUrl = "/login",
 }) => {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const signInWithGoogle = async () => {
-    try {
-      await dispatch(doGoogleSignIn());
-      router.push("/");
-    } catch (error) {
-      console.log("error :>> ", error);
-    }
+  const signInWithGoogle = () => {
+    window.location.href = `${STRAPI_URL}/connect/google`;
   };
-  const signInWithFacebook = async () => {
-    try {
-      await dispatch(doFacebookSignIn());
-      router.push("/");
-    } catch (error) {
-      console.log("error :>> ", error);
-    }
+  const signInWithFacebook = () => {
+    window.location.href = `${STRAPI_URL}/connect/facebook`;
   };
   return (
     <>

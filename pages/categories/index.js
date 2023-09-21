@@ -1,23 +1,17 @@
 import { useRouter } from "next/router";
 import { Button, Card, Col, List, Row } from "antd";
-import { Content } from "antd/lib/layout/layout";
+import ContentComponent from "components/AppLayout/ContentComponent";
 import Title from "antd/lib/typography/Title";
 import AppLayout from "components/AppLayout/AppLayout";
 import { getCategories } from "lib/strapi/services/categories";
 import classes from "styles/scss/pages/categories.module.scss";
-
 const Categories = ({ categories = [] }) => {
   console.log("categories", categories);
   const router = useRouter();
   return (
     <AppLayout globalDivStyles={{ background: "#F9FEFD" }}>
-      <Content style={{ minHeight: "75vh" }}>
-        <Row
-          style={{
-            marginTop: "150px",
-          }}
-          gutter={[16, 16]}
-        >
+      <ContentComponent>
+        <Row gutter={[16, 16]}>
           <Col xs={24}>
             <Title level={1}>Категории книг</Title>
           </Col>
@@ -72,13 +66,19 @@ const Categories = ({ categories = [] }) => {
             </Col>
           ))}
         </Row>
-      </Content>
+      </ContentComponent>
     </AppLayout>
   );
 };
 
 export const getStaticProps = async ({ params }) => {
   const categories = await getCategories();
+  if (!categories)
+    return {
+      props: {
+        categories: [],
+      },
+    };
   // console.log("categories.data", categories.data);
   return { props: { categories: categories.data }, revalidate: 1 };
 };

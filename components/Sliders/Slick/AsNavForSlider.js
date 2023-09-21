@@ -150,7 +150,7 @@ const AsNavForSlider = ({
               >
                 <Image
                   className="img"
-                  src={getStrapiMedia(image)}
+                  src={getStrapiMedia(image.url)}
                   alt={image.name}
                 />
               </div>
@@ -165,7 +165,7 @@ const AsNavForSlider = ({
                   onClick={!screens.xl ? nextSlide : () => {}}
                   onDoubleClick={screens.xl ? nextSlide : () => {}}
                   className="img"
-                  src={getStrapiMedia(image)}
+                  src={getStrapiMedia(image.url)}
                   alt={image.name}
                 />
               </div>

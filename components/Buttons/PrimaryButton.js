@@ -7,11 +7,13 @@ const PrimaryButton = ({
   htmlType = "submit",
   isBlock = true,
   btnText = "Войти в аккаунт",
+  disabled = false,
   onClick = () => {},
   ...props
 }) => {
   return (
     <Button
+      disabled={disabled}
       className={classes.primaryBtn}
       size={size}
       type={type}

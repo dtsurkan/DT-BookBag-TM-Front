@@ -2,9 +2,20 @@ import { useState } from "react";
 import MainSelectSearch from "./MainSelectSearch";
 
 const DepandantCategorySelect = ({ options: categories, form }) => {
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [subCategories, setSubCategories] = useState(null);
-
+  const [isDisabled, setIsDisabled] = useState(
+    !!form.getFieldValue("subcategories") ? false : true
+  );
+  const [subCategories, setSubCategories] = useState(
+    categories
+      .filter((item) => item.id === form.getFieldValue("categories"))
+      .map((category) =>
+        category.subcategories.map((subCategory) => ({
+          value: subCategory.id,
+          label: subCategory.name,
+        }))
+      )
+      .flat()
+  );
   const filterCategories = categories.map((category) => ({
     value: category.id,
     label: category.name,

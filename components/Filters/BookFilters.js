@@ -8,7 +8,7 @@ import {
   LANGUAGE_LIST,
   PRICE_FILTER_LIST,
 } from "utils/constants";
-import { stringifyQueryParams } from "utils/qs";
+import { stringifyQueryParams } from "lib/qs";
 
 const BookFilters = ({ booksCount = 0, title = "Каталог книг" }) => {
   const [form] = Form.useForm();

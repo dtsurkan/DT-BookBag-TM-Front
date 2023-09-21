@@ -1,6 +1,9 @@
+import classNames from "classnames";
 import { AutoComplete, Avatar, Empty, Input, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
+import { getStrapiMedia } from "lib/strapi/shared/media";
+import classes from "styles/scss/components/dataEntries.module.scss";
 
 const MainAutoComplete = ({
   isCustomizedOptions = true,
@@ -23,7 +26,7 @@ const MainAutoComplete = ({
       <div key={option.slug}>
         <Avatar
           style={{ marginRight: "5px" }}
-          src={option.photos[0].url}
+          src={getStrapiMedia(option.photos[0].url)}
           alt={option.photos[0].name}
         />
         <Text>{option.value}</Text>
@@ -34,12 +37,10 @@ const MainAutoComplete = ({
 
   return (
     <AutoComplete
+      className={classNames(classes.autoComplete)}
       disabled={disabled}
       labelInValue={labelInValue}
       notFoundContent={isFetching ? <Spin size="large" /> : <Empty />}
-      style={{
-        minWidth: 500,
-      }}
       options={isCustomizedOptions ? customizedOptions : options}
       onSelect={onSelect}
       onSearch={onSearch}

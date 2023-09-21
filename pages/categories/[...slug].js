@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
 import { Col, Row } from "antd";
-import { Content } from "antd/lib/layout/layout";
-import Title from "antd/lib/typography/Title";
 import AppLayout from "components/AppLayout/AppLayout";
+import ContentComponent from "components/AppLayout/ContentComponent";
 import BooksList from "components/Lists/BooksList";
-import CategoryList from "components/Lists/CategoryLIst";
+import CategoryList from "components/Lists/CategoryList";
 import BookFilters from "components/Filters/BookFilters";
 import { getSubcategoryBySlug } from "lib/strapi/services/subcategories";
 import { getCategoryBySlug } from "lib/strapi/services/categories";
@@ -20,29 +19,17 @@ const Category = ({ category = {}, books = [] }) => {
 
   return (
     <AppLayout globalDivStyles={{ background: "#F9FEFD" }}>
-      <Content style={{ minHeight: "75vh", marginTop: "100px" }}>
+      <ContentComponent>
         <Row justify="space-around">
           <Col xs={24} lg={6}>
-            <div
-              className=""
-              style={{
-                background: "white",
-                padding: "25px 20px",
-                height: "100%",
-              }}
-            >
-              <Title level={2} type="secondary">
-                Категории книг
-              </Title>
-              <CategoryList category={category} />
-            </div>
+            <CategoryList category={category} />
           </Col>
           <Col xs={24} lg={17}>
             <BookFilters title={category.name} booksCount={books.length} />
             <BooksList dataSource={books} />
           </Col>
         </Row>
-      </Content>
+      </ContentComponent>
     </AppLayout>
   );
 };

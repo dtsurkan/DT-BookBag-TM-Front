@@ -6,24 +6,19 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: true,
 });
 
-module.exports = withPlugins(
+module.exports = withPlugins([
+  [withBundleAnalyzer],
   [
-    [withBundleAnalyzer],
-    [
-      withAntdLess({
-        lessVarsFilePath: "styles/less/variables.less",
-        cssLoaderOptions: {},
+    withAntdLess({
+      lessVarsFilePath: "styles/less/variables.less",
+      cssLoaderOptions: {},
 
-        webpack(config) {
-          return config;
-        },
-      }),
-    ],
+      webpack(config) {
+        return config;
+      },
+    }),
   ],
-  {
-    distDir: ".next",
-  }
-);
+]);
 // module.exports = {
 //   distDir: ".next",
 // };

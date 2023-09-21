@@ -6,5 +6,6 @@ export {
   doFacebookSignIn,
   doGoogleSignIn,
   doSignOut,
+  doForgotPassword,
   doResetPassword,
 } from "./auth";

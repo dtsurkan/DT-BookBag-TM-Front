@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Router, useRouter } from "next/router";
 import AppProviders from "components/Providers/AppProviders";
+import Auth from "components/Routing/Auth";
 import NProgress from "nprogress"; //nprogress module
 import AOS from "aos";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
@@ -28,7 +29,6 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [router.asPath]);
-
   return (
     <AppProviders>
       {/* {pageProps.error ? (
@@ -39,7 +39,9 @@ function MyApp({ Component, pageProps }) {
       ) : (
         <Component {...pageProps} />
       )} */}
-      <Component {...pageProps} />
+      <Auth>
+        <Component {...pageProps} />
+      </Auth>
     </AppProviders>
   );
 }

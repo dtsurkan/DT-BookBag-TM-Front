@@ -1,17 +1,15 @@
-import { useSelector } from "react-redux";
 import { Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import PrimaryButton from "components/Buttons/PrimaryButton";
 import MainSpinner from "components/Loading/Spinners/MainSpinner";
 
-const RegisterForm = ({ onFinish = () => {} }) => {
-  const { isLoadingAuth } = useSelector((state) => state.user);
+const RegisterForm = ({ onFinish = () => {}, isLoadingAuth }) => {
   return (
     <>
       <Form onFinish={onFinish} size="large">
         <Form.Item
           hasFeedback
-          name="displayName"
+          name="username"
           rules={[{ required: true, message: "Please input your Username!" }]}
         >
           <Input placeholder="Введите логин" />

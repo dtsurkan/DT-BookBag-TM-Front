@@ -9,7 +9,7 @@ const FooterComponent = () => {
   const screens = useBreakpoint();
 
   return (
-    <Footer style={{ background: "transparent", padding: "100px 0" }}>
+    <Footer style={{ background: "transparent", padding: "50px 0" }}>
       <Row align="middle">
         <Col xs={24} lg={16}>
           <PageHeaderLogo style={{ padding: "16px 0" }} />

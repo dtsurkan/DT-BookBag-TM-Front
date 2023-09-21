@@ -1,11 +1,12 @@
-import { useSelector } from "react-redux";
 import { Form, Input } from "antd";
 import PrimaryButton from "components/Buttons/PrimaryButton";
 import MainSpinner from "components/Loading/Spinners/MainSpinner";
 
-const ForgotPasswordForm = ({ onFinish = () => {} }) => {
-  const { isLoadingResetPassword } = useSelector((state) => state.user);
-
+const ForgotPasswordForm = ({
+  btnText = "",
+  isLoadingAuth,
+  onFinish = () => {},
+}) => {
   return (
     <>
       <Form onFinish={onFinish} size="large">
@@ -26,8 +27,8 @@ const ForgotPasswordForm = ({ onFinish = () => {} }) => {
           <Input allowClear placeholder="Введите ваш емейл" />
         </Form.Item>
         <Form.Item>
-          <MainSpinner spinning={isLoadingResetPassword}>
-            <PrimaryButton btnText="Отправить емейл" />
+          <MainSpinner spinning={isLoadingAuth}>
+            <PrimaryButton btnText={btnText} />
           </MainSpinner>
         </Form.Item>
       </Form>

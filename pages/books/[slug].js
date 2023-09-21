@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { Col, PageHeader, Row, Space } from "antd";
-import { Content } from "antd/lib/layout/layout";
+import ContentComponent from "components/AppLayout/ContentComponent";
 import Title from "antd/lib/typography/Title";
 import Text from "antd/lib/typography/Text";
 import Paragraph from "antd/lib/typography/Paragraph";
@@ -26,7 +26,7 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
   }
   return (
     <AppLayout>
-      <Content style={{ minHeight: "100vh", marginTop: "100px" }}>
+      <ContentComponent>
         <PageHeader
           className="site-page-header"
           onBack={() => router.push("/books")}
@@ -86,7 +86,7 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
         {/* <Row> */}
         <div style={{ margin: "100px 0" }}>
           <Space direction="vertical">
-            <Title>Другие книги автора</Title>
+            <Title>Другие книги продавца</Title>
             <Text style={{ color: "#01504D" }}>
               Если вам понравилось творчество данного автора, не забывайте, что
               вы можете следить за выходом его новых книг нажав подписаться на
@@ -103,7 +103,7 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
           {/* </Row> */}
         </div>
         {/* </Row> */}
-      </Content>
+      </ContentComponent>
     </AppLayout>
   );
 };

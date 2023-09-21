@@ -12,6 +12,8 @@ const FormWrapper = ({
   linkText,
   linkUrl,
   isNeededAuthProviders = true,
+  isLoadingAuth,
+  btnText = "",
   onFinish = () => {},
 }) => {
   return (
@@ -28,7 +30,11 @@ const FormWrapper = ({
           {formSubtitle && (
             <Title level={formSubtitleLevel}>{formSubtitle}</Title>
           )}
-          <FormComponent onFinish={onFinish} />
+          <FormComponent
+            btnText={btnText}
+            isLoadingAuth={isLoadingAuth}
+            onFinish={onFinish}
+          />
           {isNeededAuthProviders && (
             <ContinueWithProviders
               additionalText={additionalText}

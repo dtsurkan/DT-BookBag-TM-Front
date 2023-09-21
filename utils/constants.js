@@ -1,5 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { DefenceIcon, LeavesIcon } from "components/Icons";
+import {
+  BookOutlined,
+  CarryOutOutlined,
+  CloseOutlined,
+  LikeOutlined,
+  LogoutOutlined,
+  MailOutlined,
+  MessageOutlined,
+  MoneyCollectOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 
 export const YOUR_ORIGIN_URL =
   process.env.NODE_ENV === "production"
@@ -55,5 +66,160 @@ export const ADVANTAGES_LIST = [
     id: uuidv4(),
     title: "Удобное и безопасное использование платформи",
     icon: DefenceIcon,
+  },
+];
+// Menu lists
+export const MENU_LIST = [
+  {
+    id: uuidv4(),
+    key: "/books",
+    href: "/books",
+    icon: <BookOutlined style={{ fontSize: 18 }} />,
+    title: "Книги",
+  },
+  {
+    id: uuidv4(),
+    key: "/categories",
+    href: "/categories",
+    icon: <MailOutlined style={{ fontSize: 18 }} />,
+    title: "Категории",
+  },
+  {
+    id: uuidv4(),
+    key: "/about",
+    href: "/about",
+    icon: false,
+    title: "О BookBag",
+  },
+];
+
+export const PROFILE_DROPDOWN_LIST = [
+  {
+    id: uuidv4(),
+    key: "/profile/added-books",
+    href: "/profile/added-books",
+    icon: <BookOutlined style={{ fontSize: 18 }} />,
+    title: "Мои книги",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/sold-books",
+    href: "/profile/sold-books",
+    icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
+    title: "Продано",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/bought-books",
+    href: "/profile/bought-books",
+    icon: <MoneyCollectOutlined style={{ fontSize: 18 }} />,
+    title: "Куплено",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/liked-books",
+    href: "/profile/liked-books",
+    icon: <LikeOutlined style={{ fontSize: 18 }} />,
+    title: "Понравившиеся",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/my-messages",
+    href: "/profile/my-messages",
+    icon: <MessageOutlined style={{ fontSize: 18 }} />,
+    title: "Мои сообщения",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/settings",
+    href: "/profile/settings",
+    icon: <SettingOutlined style={{ fontSize: 18 }} />,
+    title: "Настройки",
+  },
+  {
+    id: uuidv4(),
+    key: "logout",
+    href: "logout",
+    icon: <LogoutOutlined style={{ fontSize: 18 }} />,
+    title: "Выйти",
+  },
+];
+
+export const PROFILE_ASIDE_TOP_LIST = [
+  {
+    id: uuidv4(),
+    key: "/profile/added-books",
+    href: "/profile/added-books",
+    icon: <BookOutlined style={{ fontSize: 18 }} />,
+    title: "Мои книги",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/sold-books",
+    href: "/profile/sold-books",
+    icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
+    title: "Продано",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/bought-books",
+    href: "/profile/bought-books",
+    icon: <MoneyCollectOutlined style={{ fontSize: 18 }} />,
+    title: "Куплено",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/liked-books",
+    href: "/profile/liked-books",
+    icon: <LikeOutlined style={{ fontSize: 18 }} />,
+    title: "Понравившиеся",
+  },
+  {
+    id: uuidv4(),
+    key: "/profile/my-messages",
+    href: "/profile/my-messages",
+    icon: <MessageOutlined style={{ fontSize: 18 }} />,
+    title: "Мои сообщения",
+  },
+];
+
+export const PROFILE_ASIDE_BOTTOM_LIST = [
+  {
+    id: uuidv4(),
+    key: "/profile/settings",
+    href: "/profile/settings",
+    icon: <SettingOutlined style={{ fontSize: 18 }} />,
+    title: "Настройки",
+  },
+  {
+    id: uuidv4(),
+    key: "logout",
+    href: "logout",
+    icon: <LogoutOutlined style={{ fontSize: 18 }} />,
+    title: "Выйти",
+  },
+];
+
+export const BOOK_SETTINGS_LIST = [
+  {
+    id: uuidv4(),
+    key: "edit",
+    href: false,
+    icon: <SettingOutlined style={{ fontSize: 18 }} />,
+    title: "Изменить",
+  },
+  {
+    id: uuidv4(),
+    key: "sold",
+    href: false,
+    icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
+    title: "Продано",
+  },
+  {
+    id: uuidv4(),
+    key: "delete",
+    href: false,
+    icon: <CloseOutlined style={{ fontSize: 18 }} />,
+    title: "Удалить",
   },
 ];

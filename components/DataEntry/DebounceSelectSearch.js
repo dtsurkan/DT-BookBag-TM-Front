@@ -1,5 +1,5 @@
 import MainSelectSearch from "./MainSelectSearch";
-import { useDebounceFetcher } from "utils/custom-hooks";
+import { useDebounceFetcher } from "hooks";
 import { SEARCH_CITY_DEBOUNCE_DELAY } from "utils/constants";
 
 const DebounceSelectSearch = ({

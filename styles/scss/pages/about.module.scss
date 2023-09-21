@@ -1,0 +1,48 @@
+@import "../utilities/index";
+
+.about {
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+  &__description {
+    margin: 25px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.aboutFounders {
+  background: #f9fefd;
+  margin: 50px 0;
+  padding: 50px 0;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  &__avatar {
+    margin-right: 16px;
+    width: 220px;
+    height: 220px;
+  }
+}
+
+._paddings {
+  padding: 0 40px;
+}
+@include media-breakpoint-down($screen-sm-max) {
+  ._paddings {
+    padding: 0;
+  }
+
+  .aboutFounders {
+    margin: 0;
+    padding: 25px 0;
+    & ._centered {
+      text-align: center;
+    }
+    &__avatar {
+      margin-right: 0;
+      width: 180px;
+      height: 180px;
+    }
+  }
+}

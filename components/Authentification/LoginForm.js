@@ -1,14 +1,12 @@
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 import { Form, Input } from "antd";
 import Link from "antd/lib/typography/Link";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import PrimaryButton from "components/Buttons/PrimaryButton";
 import MainSpinner from "components/Loading/Spinners/MainSpinner";
 
-const LoginForm = ({ onFinish = () => {} }) => {
+const LoginForm = ({ onFinish = () => {}, isLoadingAuth }) => {
   const router = useRouter();
-  const { isLoadingAuth } = useSelector((state) => state.user);
 
   return (
     <>

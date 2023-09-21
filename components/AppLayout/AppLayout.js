@@ -10,9 +10,11 @@ const AppLayout = ({
   title = "BookBag",
   style = {},
   globalDivStyles = { background: "transparent" },
+  isHasNavigation = true,
+  isHasFooter = true,
 }) => {
   return (
-    <div>
+    <>
       <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />
@@ -28,12 +30,12 @@ const AppLayout = ({
           className={classNames(classes.container, classes.appLayout)}
           style={style}
         >
-          <NavBar />
+          {isHasNavigation && <NavBar />}
           {children}
-          <FooterComponent />
+          {isHasFooter && <FooterComponent />}
         </Layout>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -16,7 +16,7 @@ const BookCard = ({ book = {}, gutter = [8, 0] }) => {
       <Row gutter={gutter} className={classes.row}>
         <Col>
           <img
-            src={getStrapiMedia(book?.photos[0])}
+            src={getStrapiMedia(book?.photos[0].url)}
             alt={book.photos[0]?.name}
           />
         </Col>

@@ -46,3 +46,26 @@
   }
 }
 // --------------------
+
+// Dropdown button
+
+.dropdownBtn {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s ease;
+}
+
+.card {
+  &:hover .dropdownBtn {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+.active {
+  visibility: visible;
+  opacity: 1;
+}
+// -------------

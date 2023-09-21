@@ -5,6 +5,7 @@ const PageHeaderLogo = ({
   title = " ",
   avatar = {
     src: "/assets/logo/Logo.svg",
+    alt: "Logo",
     size: "large",
     style: {
       width: "87px",

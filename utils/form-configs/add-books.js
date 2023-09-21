@@ -48,7 +48,6 @@ export const getBookInputsList = (categories) => [
       },
     ],
     placeholder: "Языки",
-    btnText: "Добавить язык",
     component: MainSelectSearch,
     options: LANGUAGE_LIST,
   },

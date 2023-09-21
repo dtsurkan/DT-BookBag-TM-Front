@@ -10,18 +10,60 @@
 
 .appLayout {
   min-height: 100vh;
-  background: transparent;
+  background: transparent !important;
   /* padding: 0 80px; */
 }
 
-.mainContent {
-  // padding-top: 130px;
-  padding-top: 10vh;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  // padding: 0 16px;
+  padding: 0;
+  background: none;
+  // min-height: 12vh;
+  min-height: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  width: 100%;
 }
 
+.mainContent {
+  // padding-top: 12vh;
+  padding-top: 100px;
+}
+@include media-breakpoint-down($screen-lg-max) {
+  .header {
+    z-index: 1010;
+    position: fixed;
+    background: white;
+  }
+}
 @include media-breakpoint-down($screen-md-max) {
   .appLayout {
     padding: 0 16px;
+  }
+  .header {
+    // min-height: 20vh;
+    min-height: 170px;
+    padding: 0 16px;
+  }
+  .mainContent {
+    // padding-top: 20vh;
+    padding-top: 170px;
+  }
+}
+@include media-breakpoint-down($screen-sm-max) {
+  .header {
+    min-height: 150px;
+    padding: 0 16px 16px;
+    background: white;
+  }
+  .mainContent {
+    padding-top: 140px;
   }
 }
 

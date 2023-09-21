@@ -2,15 +2,11 @@
   "name": "book-bag",
   "version": "0.1.0",
   "private": true,
-  "main": "nextjs-server.js",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "npm run build && next start",
-    "serve": "npm run build && cross-env NODE_ENV=production firebase emulators:start --only functions,hosting",
-    "shell": "npm run build && firebase functions:shell",
-    "deploy": "cross-env NODE_ENV=production firebase deploy --only functions,hosting",
-    "logs": "firebase functions:log"
+    "export": "next build && next export",
+    "start": "next start -H 0.0.0.0 -p ${PORT:-8080}"
   },
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
@@ -21,9 +17,8 @@
     "babel-plugin-import": "^1.13.3",
     "classnames": "^2.2.6",
     "cross-env": "^7.0.3",
-    "firebase": "^8.2.1",
-    "firebase-admin": "^9.4.2",
-    "firebase-functions": "^3.13.2",
+    "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1",
     "less": "^3.13.1",
     "lodash": "^4.17.20",
     "lottie-react": "^2.1.0",
@@ -45,6 +40,7 @@
     "sass": "^1.32.8",
     "slick-carousel": "^1.8.1",
     "slug": "^4.0.3",
+    "swr": "^0.5.3",
     "uuid": "^8.3.2"
   }
 }

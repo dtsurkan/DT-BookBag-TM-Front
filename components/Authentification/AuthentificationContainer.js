@@ -21,7 +21,13 @@ const AuthentificationContainer = ({
           </Row>
         </Col>
         <Col xs={0} xl={12}>
-          <Image alt={alt} src={srcImage} layout="fill" />
+          <Image
+            alt={alt}
+            src={srcImage}
+            layout="fill"
+            priority={true}
+            quality={100}
+          />
           <Button
             type="link"
             style={{

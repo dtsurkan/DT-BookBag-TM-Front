@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { message } from "antd";
 import FormWrapper from "components/Authentification/FormWrapper";
 import RegisterForm from "components/Authentification/RegisterForm";
 import AuthentificationContainer from "components/Authentification/AuthentificationContainer";
@@ -11,20 +12,28 @@ const Register = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.user);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
+
   const onFinish = async (values) => {
-    const { email, password, displayName } = values;
-    try {
-      await dispatch(doCustomSignUp(displayName, email, password));
+    setIsLoadingAuth(true);
+    const response = await dispatch(doCustomSignUp(values));
+    if (response.status === 400 || response.status === 429) {
+      response?.data?.data?.forEach((item) =>
+        item.messages.forEach((res) => message.error(res.message))
+      );
+      setIsLoadingAuth(false);
+      return;
+    }
+    if (response.status === 200) {
       setIsModalVisible(true);
-    } catch (error) {
-      console.log("error", error);
+      setIsLoadingAuth(false);
     }
   };
   useEffect(() => {
     if (profile) {
       router.push("/");
     }
-  }, []);
+  }, [profile]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -47,6 +56,7 @@ const Register = () => {
           linkText="войти"
           additionalText="Уже есть аккаунт? Нажмите "
           FormComponent={RegisterForm}
+          isLoadingAuth={isLoadingAuth}
           // formSubtitle="Для покупки книг, вам не нужно создавать аккаунт, но если ви хотите продавать книги, тогда добро пожаловать!"
         />
       </AuthentificationContainer>

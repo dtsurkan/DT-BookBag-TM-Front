@@ -39,7 +39,6 @@ const Intro = ({ showModal = () => {} }) => {
           <LottieComponent
             animationData={booksLottie}
             loop={false}
-            isHasClassName={true}
             styles={{ transform: "translate3d(-40px, 0px,0px)" }}
           />
         </div>

@@ -9,3 +9,5 @@ export { FilterIcon } from "./FilterIcon";
 export { AddImageIcon } from "./AddImageIcon";
 export { ArrowUpIcon } from "./ArrowUpIcon";
 export { ArrowDownIcon } from "./ArrowDownIcon";
+export { AlinaSignIcon } from "./AlinaSignIcon";
+export { DImaSignIcon } from "./DimaSignIcon";
