@@ -1,13 +1,11 @@
-import { useState } from "react";
-import MainSelectSearch from "./MainSelectSearch";
+import { useState } from 'react';
+import MainSelectSearch from './MainSelectSearch';
 
 const DepandantCategorySelect = ({ options: categories, form }) => {
-  const [isDisabled, setIsDisabled] = useState(
-    !!form.getFieldValue("subcategories") ? false : true
-  );
+  const [isDisabled, setIsDisabled] = useState(form.getFieldValue('subcategories') ? false : true);
   const [subCategories, setSubCategories] = useState(
     categories
-      .filter((item) => item.id === form.getFieldValue("categories"))
+      .filter((item) => item.id === form.getFieldValue('categories'))
       .map((category) =>
         category.subcategories.map((subCategory) => ({
           value: subCategory.id,
@@ -31,7 +29,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
             label: subCategory.name,
           }))
         );
-      console.log("subCategories", subCategories[0]);
+      console.log('subCategories', subCategories[0]);
       setSubCategories(subCategories[0]);
       setIsDisabled(false);
     } else {
@@ -48,7 +46,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
         rules={[
           {
             required: true,
-            message: "Выберите категорию!",
+            message: 'Выберите категорию!',
           },
         ]}
       />
@@ -61,7 +59,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
         rules={[
           {
             required: true,
-            message: "Выберите подкатегорию!",
+            message: 'Выберите подкатегорию!',
           },
         ]}
       />

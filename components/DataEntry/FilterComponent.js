@@ -1,14 +1,14 @@
-import { Col } from "antd";
-import Text from "antd/lib/typography/Text";
-import { FilterIcon } from "components/Icons";
-import MainSelectSearch from "./MainSelectSearch";
+import { Col } from 'antd';
+import Text from 'antd/lib/typography/Text';
+import { FilterIcon } from 'components/Icons';
+import MainSelectSearch from './MainSelectSearch';
 
 const FilterComponent = ({
-  filterText = "Состояние:",
-  name = "",
+  filterText = 'Состояние:',
+  name = '',
   options = [],
   bordered = false,
-  placeholder = "Состояние",
+  placeholder = 'Состояние',
   formStyles = { marginBottom: 0 },
   xs = 12,
   lg = 10,
@@ -17,14 +17,14 @@ const FilterComponent = ({
   return (
     <Col
       xs={24}
-      lg={8}
+      lg={6}
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <Col style={{ display: "flex", alignItems: "center" }}>
+      <Col style={{ display: 'flex', alignItems: 'center' }}>
         <FilterIcon />
         <Text>{filterText}</Text>
       </Col>
@@ -34,6 +34,7 @@ const FilterComponent = ({
         name={name}
         options={options}
         bordered={bordered}
+        hasFeedback={false}
         placeholder={placeholder}
         formStyles={formStyles}
         {...props}

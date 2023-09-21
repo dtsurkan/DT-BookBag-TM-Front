@@ -1,8 +1,8 @@
-import { useLottie } from "lottie-react";
+import { useLottie } from 'lottie-react';
 
 export const LottieComponent = ({
-  width = "100%",
-  height = "100%",
+  width = '100%',
+  height = '100%',
   animationData,
   loop = true,
   autoplay = true,

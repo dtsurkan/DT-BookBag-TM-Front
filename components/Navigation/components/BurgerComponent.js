@@ -1,13 +1,13 @@
-import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
+import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 
 const BurgerComponent = ({
   isVisible = false,
   handleTriggerMenuDrawer = () => {},
   styles = {
-    fontSize: "25px",
-    cursor: "pointer",
-    color: "#01504d",
-    marginRight: "16px",
+    fontSize: '25px',
+    cursor: 'pointer',
+    color: '#01504d',
+    marginRight: '16px',
   },
 }) => {
   return (

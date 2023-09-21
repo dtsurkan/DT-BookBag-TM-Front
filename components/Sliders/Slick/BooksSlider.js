@@ -1,6 +1,7 @@
-import Slider from "react-slick";
-import { Button } from "antd";
-import { useRouter } from "next/router";
+/* eslint-disable react/display-name */
+import Slider from 'react-slick';
+import { Button } from 'antd';
+import { useRouter } from 'next/router';
 
 const BooksSlider = ({
   children,
@@ -22,16 +23,15 @@ const BooksSlider = ({
     slidesToScroll,
     arrows,
     swipeToSlide,
-    dotsClass: "slick-dots booksSliderCustomDots",
+    dotsClass: 'slick-dots booksSliderCustomDots',
     appendDots: (dots) => (
       <span>
         <ul>{dots}</ul>
-        <Button type="link" onClick={() => router.push("/books")}>
+        <Button type="link" onClick={() => router.push('/books')}>
           См. все
         </Button>
       </span>
     ),
-
     responsive: [
       {
         breakpoint: 1599,

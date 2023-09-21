@@ -1,40 +1,41 @@
-import classNames from "classnames";
-import { AutoComplete, Avatar, Empty, Input, Spin } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import Text from "antd/lib/typography/Text";
-import { getStrapiMedia } from "lib/strapi/shared/media";
-import classes from "styles/scss/components/dataEntries.module.scss";
+import classNames from 'classnames';
+import { AutoComplete, Avatar, Empty, Input, Spin } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import Text from 'antd/lib/typography/Text';
+import { getStrapiMedia } from 'lib/strapi/shared/media';
+import classes from 'styles/scss/components/dataEntries.module.scss';
 
 const MainAutoComplete = ({
   isCustomizedOptions = true,
   allowClear = true,
-  size = "large",
-  placeholder = "Введите автора или названия книги...",
+  size = 'large',
+  placeholder = 'Введите автора или названия книги...',
   options = [],
   labelInValue = false,
   isFetching = false,
   disabled = false,
   bordered = true,
+  filterOption = false,
   onSearch = () => {},
   onChange = () => {},
   onSelect = () => {},
   ...props
 }) => {
   const customizedOptions = options.map((option) => ({
-    value: option.value,
+    key: option.slug,
+    value: option.slug,
     label: (
       <div key={option.slug}>
         <Avatar
-          style={{ marginRight: "5px" }}
+          style={{ marginRight: '5px' }}
           src={getStrapiMedia(option.photos[0].url)}
           alt={option.photos[0].name}
         />
-        <Text>{option.value}</Text>
+        <Text>{option.book_name}</Text>
       </div>
     ),
     ...option,
   }));
-
   return (
     <AutoComplete
       className={classNames(classes.autoComplete)}
@@ -44,9 +45,7 @@ const MainAutoComplete = ({
       options={isCustomizedOptions ? customizedOptions : options}
       onSelect={onSelect}
       onSearch={onSearch}
-      filterOption={(inputValue, option) =>
-        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-      }
+      filterOption={filterOption}
       {...props}
     >
       <Input

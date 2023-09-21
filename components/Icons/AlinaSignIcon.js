@@ -1,12 +1,7 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const AlinaSignSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="79.81"
-    height="54.247"
-    viewBox="0 0 79.81 54.247"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="79.81" height="54.247" viewBox="0 0 79.81 54.247">
     <path
       id="Artboard_1"
       data-name="Artboard 1"
@@ -20,6 +15,4 @@ const AlinaSignSvg = () => (
   </svg>
 );
 
-export const AlinaSignIcon = (props) => (
-  <Icon component={AlinaSignSvg} {...props} />
-);
+export const AlinaSignIcon = (props) => <Icon component={AlinaSignSvg} {...props} />;

@@ -1,15 +1,15 @@
-import { useRouter } from "next/router";
-import { Button, Card, Col, List, Row } from "antd";
-import ContentComponent from "components/AppLayout/ContentComponent";
-import Title from "antd/lib/typography/Title";
-import AppLayout from "components/AppLayout/AppLayout";
-import { getCategories } from "lib/strapi/services/categories";
-import classes from "styles/scss/pages/categories.module.scss";
+import { useRouter } from 'next/router';
+import { Button, Card, Col, List, Row } from 'antd';
+import ContentComponent from 'components/AppLayout/ContentComponent';
+import Title from 'antd/lib/typography/Title';
+import AppLayout from 'components/AppLayout/AppLayout';
+import { getCategories } from 'lib/strapi/services/categories';
+import classes from 'styles/scss/pages/categories.module.scss';
 const Categories = ({ categories = [] }) => {
-  console.log("categories", categories);
+  console.log('categories', categories);
   const router = useRouter();
   return (
-    <AppLayout globalDivStyles={{ background: "#F9FEFD" }}>
+    <AppLayout globalDivStyles={{ background: '#F9FEFD' }}>
       <ContentComponent>
         <Row gutter={[16, 16]}>
           <Col xs={24}>
@@ -17,15 +17,11 @@ const Categories = ({ categories = [] }) => {
           </Col>
           {categories.map((category) => (
             <Col key={category.id} xs={24}>
-              <Card
-                bodyStyle={{ padding: 8 }}
-                bordered={false}
-                style={{ borderRadius: "10px" }}
-              >
+              <Card bodyStyle={{ padding: 8 }} bordered={false} style={{ borderRadius: '10px' }}>
                 <Button
                   onClick={() => router.push(`categories/${category.slug}`)}
                   type="text"
-                  style={{ fontSize: "25px", height: "60px" }}
+                  style={{ fontSize: '25px', height: '60px' }}
                 >
                   {category.name}
                 </Button>
@@ -34,7 +30,7 @@ const Categories = ({ categories = [] }) => {
                     <List.Item
                       style={{
                         // padding: "10px 0",
-                        margin: "0 16px",
+                        margin: '0 16px',
                       }}
                       key={subcategory.id}
                     >
@@ -51,9 +47,7 @@ const Categories = ({ categories = [] }) => {
                         // block
                         type="link"
                         onClick={() =>
-                          router.push(
-                            `categories/${category.slug}/${subcategory.slug}`
-                          )
+                          router.push(`categories/${category.slug}/${subcategory.slug}`)
                         }
                       >
                         {subcategory.name}
@@ -71,7 +65,7 @@ const Categories = ({ categories = [] }) => {
   );
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async () => {
   const categories = await getCategories();
   if (!categories)
     return {

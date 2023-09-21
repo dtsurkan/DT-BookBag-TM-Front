@@ -33,7 +33,6 @@ li.slick-active {
 }
 
 @include media-breakpoint-down($screen-sm-max) {
-
   .slick-dots.booksSliderCustomDots {
     left: 0;
     width: 100%;

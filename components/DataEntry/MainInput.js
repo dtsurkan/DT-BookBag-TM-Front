@@ -1,11 +1,11 @@
-import { Col, Form, Input } from "antd";
+import { Col, Form, Input } from 'antd';
 
 const MainInput = ({
   hasFeedback = true,
-  name = "",
+  name = '',
   rules = [],
   allowClear = true,
-  placeholder = "",
+  placeholder = '',
   xs = 24,
   lg = 12,
   ...props

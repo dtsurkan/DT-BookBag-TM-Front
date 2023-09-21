@@ -1,4 +1,4 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const ArrowDownSvg = () => (
   <svg
@@ -19,6 +19,4 @@ const ArrowDownSvg = () => (
   </svg>
 );
 
-export const ArrowDownIcon = (props) => (
-  <Icon component={ArrowDownSvg} {...props} />
-);
+export const ArrowDownIcon = (props) => <Icon component={ArrowDownSvg} {...props} />;

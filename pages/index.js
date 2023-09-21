@@ -1,13 +1,13 @@
-import { useShowConfigModal } from "hooks";
-import AppLayout from "components/AppLayout/AppLayout";
-import ConfigBookModal from "components/Modals/ConfigBookModal";
-import ContentComponent from "components/AppLayout/ContentComponent";
-import Intro from "components/Sections/Intro";
-import Advantages from "components/Sections/Advantages";
-import Opportunities from "components/Sections/Opportunities";
-import NewCollectionBooks from "components/Sections/NewCollectionBooks";
-import Subscribe from "components/Sections/Subscribe";
-import { getBooks } from "lib/strapi/services/books";
+import { useShowConfigModal } from 'hooks';
+import AppLayout from 'components/AppLayout/AppLayout';
+import ConfigBookModal from 'components/Modals/ConfigBookModal';
+import ContentComponent from 'components/AppLayout/ContentComponent';
+import Intro from 'components/Sections/Intro';
+import Advantages from 'components/Sections/Advantages';
+import Opportunities from 'components/Sections/Opportunities';
+import NewCollectionBooks from 'components/Sections/NewCollectionBooks';
+import Subscribe from 'components/Sections/Subscribe';
+import { getBooks } from 'lib/strapi/services/books';
 
 const Home = ({ books = [] }) => {
   const [
@@ -27,10 +27,7 @@ const Home = ({ books = [] }) => {
           <Subscribe />
         </ContentComponent>
       </AppLayout>
-      <ConfigBookModal
-        visible={isConfigBookModal}
-        onCancel={handleCancelConfigBookModal}
-      />
+      <ConfigBookModal visible={isConfigBookModal} onCancel={handleCancelConfigBookModal} />
     </>
   );
 };

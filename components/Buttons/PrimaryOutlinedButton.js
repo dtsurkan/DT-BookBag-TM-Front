@@ -1,12 +1,12 @@
-import { Button } from "antd";
-import classes from "styles/scss/components/buttons.module.scss";
+import { Button } from 'antd';
+import classes from 'styles/scss/components/buttons.module.scss';
 
 const PrimaryOutlinedButton = ({
-  size = "large",
-  type = "text",
-  htmlType = "submit",
+  size = 'large',
+  type = 'text',
+  htmlType = 'submit',
   isBlock = false,
-  btnText = "Присоедениться",
+  btnText = 'Присоедениться',
   onClick = () => {},
   ...props
 }) => {

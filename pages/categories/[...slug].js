@@ -1,13 +1,13 @@
-import { useRouter } from "next/router";
-import { Col, Row } from "antd";
-import AppLayout from "components/AppLayout/AppLayout";
-import ContentComponent from "components/AppLayout/ContentComponent";
-import BooksList from "components/Lists/BooksList";
-import CategoryList from "components/Lists/CategoryList";
-import BookFilters from "components/Filters/BookFilters";
-import { getSubcategoryBySlug } from "lib/strapi/services/subcategories";
-import { getCategoryBySlug } from "lib/strapi/services/categories";
-import { getBooksWithFilters } from "lib/strapi/services/books";
+import { useRouter } from 'next/router';
+import { Col, Row } from 'antd';
+import AppLayout from 'components/AppLayout/AppLayout';
+import ContentComponent from 'components/AppLayout/ContentComponent';
+import BooksList from 'components/Lists/BooksList';
+import CategoryList from 'components/Lists/CategoryList';
+import BookFilters from 'components/Filters/BookFilters';
+import { getSubcategoryBySlug } from 'lib/strapi/services/subcategories';
+import { getCategoryBySlug } from 'lib/strapi/services/categories';
+import { getBooksWithFilters } from 'lib/strapi/services/books';
 
 const Category = ({ category = {}, books = [] }) => {
   const router = useRouter();
@@ -18,7 +18,7 @@ const Category = ({ category = {}, books = [] }) => {
   }
 
   return (
-    <AppLayout globalDivStyles={{ background: "#F9FEFD" }}>
+    <AppLayout globalDivStyles={{ background: '#F9FEFD' }}>
       <ContentComponent>
         <Row justify="space-around">
           <Col xs={24} lg={6}>
@@ -34,17 +34,17 @@ const Category = ({ category = {}, books = [] }) => {
   );
 };
 
-export async function getServerSideProps({ params, query }) {
+export async function getServerSideProps({ query }) {
   const { slug, ...otherQueryParams } = query;
-  console.log("otherQueryParams", otherQueryParams);
-  console.log("query.slug[0]", slug[0]);
-  console.log("query.slug[1]", slug[1]);
+  console.log('otherQueryParams', otherQueryParams);
+  console.log('query.slug[0]', slug[0]);
+  console.log('query.slug[1]', slug[1]);
   const categorySlug = slug[0];
   const subcategorySlug = slug[1];
 
   if (subcategorySlug) {
     const newQueryString = {
-      "subcategories.slug": subcategorySlug,
+      'subcategories.slug': subcategorySlug,
       ...otherQueryParams,
     };
     const subCategory = await getSubcategoryBySlug(subcategorySlug);
@@ -64,7 +64,7 @@ export async function getServerSideProps({ params, query }) {
     };
   } else {
     const newQueryString = {
-      "categories.slug": categorySlug,
+      'categories.slug': categorySlug,
       ...otherQueryParams,
     };
     const category = await getCategoryBySlug(categorySlug);

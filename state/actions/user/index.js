@@ -8,4 +8,4 @@ export {
   doSignOut,
   doForgotPassword,
   doResetPassword,
-} from "./auth";
+} from './auth';

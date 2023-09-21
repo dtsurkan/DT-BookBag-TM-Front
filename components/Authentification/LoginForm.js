@@ -1,9 +1,9 @@
-import { useRouter } from "next/router";
-import { Form, Input } from "antd";
-import Link from "antd/lib/typography/Link";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import PrimaryButton from "components/Buttons/PrimaryButton";
-import MainSpinner from "components/Loading/Spinners/MainSpinner";
+import { useRouter } from 'next/router';
+import { Form, Input } from 'antd';
+import Link from 'antd/lib/typography/Link';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import PrimaryButton from 'components/Buttons/PrimaryButton';
+import MainSpinner from 'components/Loading/Spinners/MainSpinner';
 
 const LoginForm = ({ onFinish = () => {}, isLoadingAuth }) => {
   const router = useRouter();
@@ -16,12 +16,12 @@ const LoginForm = ({ onFinish = () => {}, isLoadingAuth }) => {
           name="email"
           rules={[
             {
-              type: "email",
-              message: "The input is not valid E-mail!",
+              type: 'email',
+              message: 'The input is not valid E-mail!',
             },
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: 'Please input your E-mail!',
             },
           ]}
         >
@@ -31,21 +31,16 @@ const LoginForm = ({ onFinish = () => {}, isLoadingAuth }) => {
           <Form.Item
             hasFeedback
             name="password"
-            rules={[{ required: true, message: "Please input your Password!" }]}
+            rules={[{ required: true, message: 'Please input your Password!' }]}
           >
             <Input.Password
               allowClear
               placeholder="Пароль"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
+              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
             />
           </Form.Item>
-          <div style={{ textAlign: "end", margin: "5px 0" }}>
-            <Link
-              onClick={() => router.push("/forgot-password")}
-              type="secondary"
-            >
+          <div style={{ textAlign: 'end', margin: '5px 0' }}>
+            <Link onClick={() => router.push('/forgot-password')} type="secondary">
               Восстановить пароль?
             </Link>
           </div>

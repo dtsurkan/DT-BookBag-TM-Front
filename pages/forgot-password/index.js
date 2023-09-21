@@ -1,12 +1,14 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { message } from "antd";
-import FormWrapper from "components/Authentification/FormWrapper";
-import AuthentificationContainer from "components/Authentification/AuthentificationContainer";
-import ForgotPasswordForm from "components/Authentification/ForgotPasswordForm";
-import InformModal from "components/Modals/InformModal";
-import { doForgotPassword } from "state/actions/user";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty as _isEmpty } from 'lodash';
+import { message } from 'antd';
+import FormWrapper from 'components/Authentification/FormWrapper';
+import AuthentificationContainer from 'components/Authentification/AuthentificationContainer';
+import ForgotPasswordForm from 'components/Authentification/ForgotPasswordForm';
+import InformModal from 'components/Modals/InformModal';
+import { doForgotPassword } from 'state/actions/user';
+import { checkErrorCode } from 'lib/strapi/shared/errors';
 
 const ForgotPassword = () => {
   const router = useRouter();
@@ -17,7 +19,7 @@ const ForgotPassword = () => {
   const onFinish = async ({ email }) => {
     setIsResettingPassword(true);
     const response = await dispatch(doForgotPassword(email));
-    if (response.status === 400 || response.status === 429) {
+    if (checkErrorCode(response.status)) {
       response?.data?.data?.forEach((item) =>
         item.messages.forEach((res) => message.error(res.message))
       );
@@ -32,25 +34,22 @@ const ForgotPassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const handleOk = () => {
     setIsModalVisible(false);
-    router.push("/login");
+    router.push('/login');
   };
   const handleCancel = () => {
     setIsModalVisible(false);
-    router.push("/login");
+    router.push('/login');
   };
 
   useEffect(() => {
-    if (profile) {
-      router.push("/");
+    if (!_isEmpty(profile)) {
+      router.push('/');
     }
-  }, [profile]);
+  }, [profile, router]);
 
   return (
     <>
-      <AuthentificationContainer
-        alt="Sign In Image"
-        srcImage="/assets/signup.png"
-      >
+      <AuthentificationContainer alt="Sign In Image" srcImage="/assets/signup.png">
         <FormWrapper
           isNeededAuthProviders={false}
           btnText="Восстановить пароль"

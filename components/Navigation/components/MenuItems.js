@@ -1,19 +1,19 @@
-import { Fragment } from "react";
-import { useRouter } from "next/router";
-import { Menu, message, Tabs } from "antd";
-import { MENU_LIST } from "utils/constants";
-import { useDispatch } from "react-redux";
-import { doSignOut } from "state/actions/user";
+import { Fragment } from 'react';
+import { useRouter } from 'next/router';
+import { Menu, message, Tabs } from 'antd';
+import { MENU_LIST } from 'utils/constants';
+import { useDispatch } from 'react-redux';
+import { doSignOut } from 'state/actions/user';
 
 const { TabPane } = Tabs;
 
 const MenuItems = ({
-  mode = "vertical",
+  mode = 'vertical',
   menuList = MENU_LIST,
   isTabs = false,
   tabsOptions = {
-    tabPosition: "top",
-    type: "card",
+    tabPosition: 'top',
+    type: 'card',
     tabBarGutter: 8,
   },
   hasSelectedKeys = true,
@@ -28,9 +28,9 @@ const MenuItems = ({
   const generalOnClick = async ({ key }) => {
     message.info(key);
     switch (key) {
-      case "logout":
+      case 'logout':
         await dispatch(doSignOut());
-        router.push("/");
+        router.push('/');
         break;
       default:
         router.push(key);
@@ -46,7 +46,7 @@ const MenuItems = ({
           defaultActiveKey={[router.pathname]}
           // because onTabClick doesn't get object, only string
           onTabClick={(key) => generalOnClick({ key })}
-          style={{ maxWidth: "100vw" }}
+          style={{ maxWidth: '100vw' }}
         >
           {menuList.map((item) => (
             <Fragment key={item.id}>
@@ -67,7 +67,7 @@ const MenuItems = ({
           mode={mode}
           selectedKeys={selectedKeys}
           onClick={onMenuClick}
-          style={{ border: "none" }}
+          style={{ border: 'none' }}
         >
           {menuList.map((item) => (
             <Fragment key={item.id}>

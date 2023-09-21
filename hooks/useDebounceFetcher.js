@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { debounce as _debounce } from "lodash";
+import { useMemo, useState } from 'react';
+import { debounce as _debounce } from 'lodash';
 
 export const useDebounceFetcher = (fetchOptions, debounceTimeout) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -15,7 +15,7 @@ export const useDebounceFetcher = (fetchOptions, debounceTimeout) => {
           setIsFetching(false);
         });
       } catch (error) {
-        console.log("error", error);
+        console.log('error', error);
         setIsFetching(false);
       }
     };

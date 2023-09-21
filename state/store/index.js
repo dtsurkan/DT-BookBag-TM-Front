@@ -1,17 +1,17 @@
-import { useMemo } from "react";
-import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunkMiddleware from "redux-thunk";
-import { persistReducer } from "redux-persist";
-import rootReducer from "../reducers";
-import storage from "./storage";
+import { useMemo } from 'react';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunkMiddleware from 'redux-thunk';
+import { persistReducer } from 'redux-persist';
+import rootReducer from '../reducers';
+import storage from './storage';
 
 let store;
 
 const persistConfig = {
-  key: "primary",
+  key: 'primary',
   storage,
-  whitelist: ["user"], // place to select which state you want to persist
+  whitelist: ['user'], // place to select which state you want to persist
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -39,7 +39,7 @@ export const initializeStore = (preloadedState) => {
   }
 
   // For SSG and SSR always create a new store
-  if (typeof window === "undefined") return _store;
+  if (typeof window === 'undefined') return _store;
   // Create the store once in the client
   if (!store) store = _store;
 

@@ -1,6 +1,6 @@
-import MainSelectSearch from "./MainSelectSearch";
-import { useDebounceFetcher } from "hooks";
-import { SEARCH_CITY_DEBOUNCE_DELAY } from "utils/constants";
+import MainSelectSearch from './MainSelectSearch';
+import { useDebounceFetcher } from 'hooks';
+import { SEARCH_CITY_DEBOUNCE_DELAY } from 'utils/constants';
 
 const DebounceSelectSearch = ({
   dataEntryComponent: DataEntryComponent = MainSelectSearch,
@@ -8,10 +8,7 @@ const DebounceSelectSearch = ({
   debounceTimeout = SEARCH_CITY_DEBOUNCE_DELAY,
   ...props
 }) => {
-  const [options, isFetching, debounceFetcher] = useDebounceFetcher(
-    fetchOptions,
-    debounceTimeout
-  );
+  const [options, isFetching, debounceFetcher] = useDebounceFetcher(fetchOptions, debounceTimeout);
 
   return (
     <DataEntryComponent

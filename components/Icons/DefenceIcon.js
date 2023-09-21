@@ -1,12 +1,7 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const DefenceSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="64"
-    height="64"
-    viewBox="0 0 64 64"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
     <g id="Group_19" data-name="Group 19" transform="translate(-1108 -1265)">
       <g id="Group_14" data-name="Group 14" transform="translate(80 -59)">
         <circle
@@ -19,12 +14,7 @@ const DefenceSvg = () => (
           fill="#d1ecff"
         />
         <g id="shield-check-line" transform="translate(1048 1344)">
-          <path
-            id="Path_18"
-            data-name="Path 18"
-            d="M0,0H24V24H0Z"
-            fill="none"
-          />
+          <path id="Path_18" data-name="Path 18" d="M0,0H24V24H0Z" fill="none" />
           <path
             id="Path_19"
             data-name="Path 19"
@@ -37,6 +27,4 @@ const DefenceSvg = () => (
   </svg>
 );
 
-export const DefenceIcon = (props) => (
-  <Icon component={DefenceSvg} {...props} />
-);
+export const DefenceIcon = (props) => <Icon component={DefenceSvg} {...props} />;

@@ -1,10 +1,10 @@
-import { Spin } from "antd";
+import { Spin } from 'antd';
 
 const MainSpinner = ({
   children,
   spinning = false,
-  size = "large",
-  tip = "",
+  size = 'large',
+  tip = '',
   delay,
   indicator,
 }) => {

@@ -1,39 +1,55 @@
-import { useState } from "react";
-import { Form, message, Modal, Upload } from "antd";
-import { AddImageIcon } from "components/Icons";
-import { DEFAULT_ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE } from "utils/constants";
-import { getBase64 } from "utils/FileReader";
-import { getStrapiMedia } from "lib/strapi/shared/media";
+import { useState } from 'react';
+import { Form, message, Modal, Upload } from 'antd';
+import Dragger from 'antd/lib/upload/Dragger';
+import DraggableUpload from './components/DraggableUpload';
+import DraggerContent from './components/DraggerContent';
+import { AddImageIcon } from 'components/Icons';
+import { getStrapiMedia } from 'lib/strapi/shared/media';
+import { getBase64 } from 'utils/FileReader';
+import { DEFAULT_ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE } from 'utils/constants';
 
 const PicturesWall = ({
-  form,
+  isDraggable = true,
+  isDragger = true,
+  // hasImageCrop = false,
+  // form,
   allowedFileTypes = DEFAULT_ALLOWED_IMAGE_TYPES,
   maxFileSize = MAX_FILE_SIZE,
-  name = "upload",
-  valuePropName = "fileList",
+  name = 'upload',
+  valuePropName = 'fileList',
   maxCount = 10,
-  listType = "picture-card",
-  rules = [],
+  listType = 'picture-card',
+  rules = [
+    {
+      required: true,
+      message: 'Загрузите хотя бы одну фото книги!',
+    },
+  ],
   multiple = true,
-  progress = { status: "active" },
+  progress = { status: 'active' },
+  uploadButton = <AddImageIcon />,
+  draggerContent = <DraggerContent />,
   ...props
 }) => {
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
   const handleClosePreview = () => setPreviewVisible(false);
 
   const normFile = (e) => {
-    console.log("Upload event:", e);
+    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
     return e && e.fileList;
   };
   const uploadProps = {
+    multiple,
+    progress,
     maxCount,
     listType,
+    accept: DEFAULT_ALLOWED_IMAGE_TYPES.join(', '),
     beforeUpload: (file) => {
       const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
       // console.log(fileSizeInMB + "MB");
@@ -58,38 +74,40 @@ const PicturesWall = ({
       }
       setPreviewImage(file.url || file.preview);
       setPreviewVisible(true);
-      setPreviewTitle(
-        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-      );
+      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     },
     onChange: ({ fileList }) => setFileList(fileList),
     isImageUrl: (file) => {
       file.url = getStrapiMedia(file.url);
       return file;
     },
+    ...props,
   };
 
-  const uploadButton = (
-    <div>
-      <AddImageIcon style={{ fontSize: "50px" }} />
-    </div>
-  );
+  const uploadDraggerChildren = isDragger
+    ? draggerContent
+    : fileList?.length < maxCount && uploadButton;
+
   return (
     <>
       <Form.Item
         name={name}
         valuePropName={valuePropName}
         getValueFromEvent={normFile}
-        rules={[
-          {
-            required: true,
-            message: "Загрузите хотя бы одну фото книги!",
-          },
-        ]}
+        rules={rules}
+        style={{ margin: 0 }}
       >
-        <Upload multiple={multiple} progress={progress} {...uploadProps}>
-          {fileList.length >= 10 ? null : uploadButton}
-        </Upload>
+        {isDraggable ? (
+          <DraggableUpload {...uploadProps}>{uploadDraggerChildren}</DraggableUpload>
+        ) : isDragger ? (
+          <Dragger style={{ margin: '20px 0' }} height={200} {...uploadProps}>
+            {uploadDraggerChildren}
+          </Dragger>
+        ) : (
+          // <UploadWrapper hasImageCrop={hasImageCrop}>
+          <Upload {...uploadProps}>{uploadDraggerChildren}</Upload>
+          // </UploadWrapper>
+        )}
       </Form.Item>
       <Modal
         zIndex={1021}
@@ -99,11 +117,7 @@ const PicturesWall = ({
         footer={null}
         onCancel={handleClosePreview}
       >
-        <img
-          alt={previewTitle}
-          style={{ width: "100%" }}
-          src={getStrapiMedia(previewImage)}
-        />
+        <img alt={previewTitle} style={{ width: '100%' }} src={getStrapiMedia(previewImage)} />
       </Modal>
     </>
   );

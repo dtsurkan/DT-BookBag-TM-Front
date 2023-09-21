@@ -69,3 +69,27 @@
   opacity: 1;
 }
 // -------------
+
+// Hover Liked books
+
+.likedBooksCardHover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #01504d;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s linear;
+}
+
+.card {
+  &:hover .likedBooksCardHover {
+    opacity: 0.85;
+    visibility: visible;
+  }
+}

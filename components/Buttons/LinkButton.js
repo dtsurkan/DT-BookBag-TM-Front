@@ -1,10 +1,10 @@
-import { Button } from "antd";
-import classes from "styles/scss/components/buttons.module.scss";
+import { Button } from 'antd';
+import classes from 'styles/scss/components/buttons.module.scss';
 
 const LinkButton = ({
-  size = "default",
-  type = "link",
-  btnText = "",
+  size = 'default',
+  type = 'link',
+  btnText = '',
   icon = null,
   onClick = () => {},
   ...props

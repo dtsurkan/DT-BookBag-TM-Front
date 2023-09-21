@@ -1,12 +1,7 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const LeavesSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="64"
-    height="64"
-    viewBox="0 0 64 64"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
     <g id="Group_16" data-name="Group 16" transform="translate(-591 -1324)">
       <circle
         id="Ellipse_3"

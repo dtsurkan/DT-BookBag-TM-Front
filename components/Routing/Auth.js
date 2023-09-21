@@ -1,8 +1,8 @@
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAuthenticationCookies } from "lib/cookies";
-import { doSignOut } from "state/actions/user";
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuthenticationCookies } from 'lib/cookies';
+import { doSignOut } from 'state/actions/user';
 
 const Auth = ({ children }) => {
   const dispatch = useDispatch();
@@ -14,12 +14,17 @@ const Auth = ({ children }) => {
   useEffect(() => {
     const signOut = async () => {
       await dispatch(doSignOut());
-      router.push("/login");
+      router.push('/login');
     };
     if (!token && isAuthenticated) {
       signOut();
     }
-  }, [token, isAuthenticated]);
+    console.log(`!token && !isAuthenticated`, !token && !isAuthenticated);
+    // if (!token && !isAuthenticated) {
+    //   console.log(`111`, 111);
+    //   router.push("/login");
+    // }
+  }, [dispatch, router, token, isAuthenticated]);
 
   return children;
 };

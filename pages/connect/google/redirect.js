@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { isEmpty as _isEmpty } from "lodash";
-import { message } from "antd";
-import LottieComponent from "components/Lottie/LottieComponent";
-import { doGoogleSignIn } from "state/actions/user";
-import loadingLottie from "lotties/loading.json";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty as _isEmpty } from 'lodash';
+import { message } from 'antd';
+import CenteredLottieWrapper from 'components/Lottie/CenteredLottieWrapper';
+import { doGoogleSignIn } from 'state/actions/user';
+import loadingGoogleLottie from 'lotties/google-loading.json';
 
 const LoginRedirect = () => {
   const dispatch = useDispatch();
@@ -16,20 +16,20 @@ const LoginRedirect = () => {
       const response = await dispatch(doGoogleSignIn(router.query));
       console.log(`response `, response);
       if (response.status === 200) {
-        setTimeout(() => router.push("/"), 2000);
+        setTimeout(() => router.push('/'), 1000);
       } else {
-        if (response.data.message.message === "No access_token.") {
+        if (response.data.message.message === 'No access_token.') {
           message.error(response.data.message.message);
-        } else if ((response.data.message.error = "invalid_token")) {
+        } else if (response.data.message.error === 'invalid_token') {
           message.error(response.data.message.error_description);
         } else {
           message.error(response.data.data);
         }
-        router.push("/login");
+        router.push('/login');
       }
     };
-    if (profile) {
-      router.push("/");
+    if (!_isEmpty(profile)) {
+      router.push('/');
     } else {
       if (!_isEmpty(router.query)) {
         getCallback();
@@ -37,20 +37,9 @@ const LoginRedirect = () => {
         // message.info("Empty url parameters. Please go to login page");
       }
     }
-  }, [router.query, profile]);
+  }, [router.query, profile, dispatch, router]);
 
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <LottieComponent animationData={loadingLottie} width="initial" />
-    </div>
-  );
+  return <CenteredLottieWrapper lottieData={loadingGoogleLottie} />;
 };
 
 export default LoginRedirect;

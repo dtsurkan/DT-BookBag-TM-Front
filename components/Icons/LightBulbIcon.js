@@ -1,4 +1,4 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const LightBulbSvg = () => (
   <svg
@@ -41,6 +41,4 @@ const LightBulbSvg = () => (
   </svg>
 );
 
-export const LightBulbIcon = (props) => (
-  <Icon component={LightBulbSvg} {...props} />
-);
+export const LightBulbIcon = (props) => <Icon component={LightBulbSvg} {...props} />;

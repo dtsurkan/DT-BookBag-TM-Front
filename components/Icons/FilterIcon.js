@@ -1,4 +1,4 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const FilterSvg = () => (
   <svg

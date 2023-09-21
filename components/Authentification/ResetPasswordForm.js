@@ -1,12 +1,8 @@
-import { Form, Input } from "antd";
-import PrimaryButton from "components/Buttons/PrimaryButton";
-import MainSpinner from "components/Loading/Spinners/MainSpinner";
+import { Form, Input } from 'antd';
+import PrimaryButton from 'components/Buttons/PrimaryButton';
+import MainSpinner from 'components/Loading/Spinners/MainSpinner';
 
-const ResetPasswordForm = ({
-  btnText = "",
-  isLoadingAuth,
-  onFinish = () => {},
-}) => {
+const ResetPasswordForm = ({ btnText = '', isLoadingAuth, onFinish = () => {} }) => {
   return (
     <>
       <Form onFinish={onFinish} size="large">
@@ -16,7 +12,7 @@ const ResetPasswordForm = ({
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: 'Please input your password!',
             },
           ]}
         >
@@ -24,20 +20,20 @@ const ResetPasswordForm = ({
         </Form.Item>
         <Form.Item
           name="passwordConfirmation"
-          dependencies={["password"]}
+          dependencies={['password']}
           hasFeedback
           rules={[
             {
               required: true,
-              message: "Please confirm your password!",
+              message: 'Please confirm your password!',
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
+                if (!value || getFieldValue('password') === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The two passwords that you entered do not match!")
+                  new Error('The two passwords that you entered do not match!')
                 );
               },
             }),

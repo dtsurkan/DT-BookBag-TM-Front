@@ -1,12 +1,8 @@
-import { Form, Input } from "antd";
-import PrimaryButton from "components/Buttons/PrimaryButton";
-import MainSpinner from "components/Loading/Spinners/MainSpinner";
+import { Form, Input } from 'antd';
+import PrimaryButton from 'components/Buttons/PrimaryButton';
+import MainSpinner from 'components/Loading/Spinners/MainSpinner';
 
-const ForgotPasswordForm = ({
-  btnText = "",
-  isLoadingAuth,
-  onFinish = () => {},
-}) => {
+const ForgotPasswordForm = ({ btnText = '', isLoadingAuth, onFinish = () => {} }) => {
   return (
     <>
       <Form onFinish={onFinish} size="large">
@@ -15,12 +11,12 @@ const ForgotPasswordForm = ({
           name="email"
           rules={[
             {
-              type: "email",
-              message: "The input is not valid E-mail!",
+              type: 'email',
+              message: 'The input is not valid E-mail!',
             },
             {
               required: true,
-              message: "Please input your E-mail!",
+              message: 'Please input your E-mail!',
             },
           ]}
         >

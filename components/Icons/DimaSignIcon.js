@@ -1,4 +1,4 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const DimaSignSvg = () => (
   <svg
@@ -7,11 +7,7 @@ const DimaSignSvg = () => (
     height="61.598"
     viewBox="0 0 59.965 61.598"
   >
-    <g
-      id="Layer_2"
-      data-name="Layer 2"
-      transform="translate(-2.782 10.159) rotate(-13)"
-    >
+    <g id="Layer_2" data-name="Layer 2" transform="translate(-2.782 10.159) rotate(-13)">
       <g id="Layer_1" data-name="Layer 1" transform="translate(0.17 3.16)">
         <path
           id="Path_96"
@@ -28,6 +24,4 @@ const DimaSignSvg = () => (
   </svg>
 );
 
-export const DImaSignIcon = (props) => (
-  <Icon component={DimaSignSvg} {...props} />
-);
+export const DImaSignIcon = (props) => <Icon component={DimaSignSvg} {...props} />;

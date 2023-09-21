@@ -1,12 +1,14 @@
-import { useState } from "react";
-import classNames from "classnames";
-import { Dropdown, message } from "antd";
-import { EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-import confirm from "antd/lib/modal/confirm";
-import MenuItems from "components/Navigation/components/MenuItems";
-import { BOOK_SETTINGS_LIST } from "utils/constants";
-import { deleteBook } from "lib/strapi/services/books";
-import classes from "styles/scss/components/buttons.module.scss";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import classNames from 'classnames';
+import { Dropdown, message } from 'antd';
+import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import confirm from 'antd/lib/modal/confirm';
+import MenuItems from 'components/Navigation/components/MenuItems';
+import { BOOK_SETTINGS_LIST } from 'utils/constants';
+import { addBookToLikedBooks, updateBookStatusToSold } from 'state/actions/user/profile';
+import { deleteBook } from 'lib/strapi/services/books';
+import classes from 'styles/scss/components/buttons.module.scss';
 
 const BookSettingsDropdown = ({
   book = {},
@@ -14,29 +16,40 @@ const BookSettingsDropdown = ({
   showConfigBookModal = () => {},
   showInformModal = () => {},
 }) => {
+  const { profile } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
   const onClickMenuItem = async ({ key }) => {
     message.info(key);
     switch (key) {
-      case "edit":
+      case 'edit':
         setIsVisibleDropdown(false);
         showConfigBookModal();
         break;
-      case "delete":
+      case 'liked':
+        setIsVisibleDropdown(false);
+        await dispatch(addBookToLikedBooks(profile.id, book));
+        break;
+      case 'sold':
+        setIsVisibleDropdown(false);
+        await dispatch(updateBookStatusToSold(profile.id, book));
+        break;
+      case 'delete':
         confirm({
-          title: "Вы действительно хотите удалить эту книгу?",
+          centered: true,
+          title: 'Вы действительно хотите удалить эту книгу?',
           icon: <ExclamationCircleOutlined />,
-          okText: "Да",
-          okType: "danger",
+          okText: 'Да',
+          okType: 'danger',
           //   because dropdown z-index === 1050
           zIndex: 1100,
-          cancelText: "Нет",
+          cancelText: 'Нет',
           async onOk() {
             await deleteBook(book.id);
             showInformModal();
           },
           onCancel() {
-            message.info("Cancel");
+            message.info('Cancel');
           },
         });
         break;
@@ -48,6 +61,9 @@ const BookSettingsDropdown = ({
   return (
     <div
       onClick={(event) => event.stopPropagation()}
+      onKeyDown={(event) => event.stopPropagation()}
+      role="button"
+      tabIndex="0"
       className={classNames(classes.dropdownBtn, {
         [classes.active]: isVisibleDropdown,
       })}
@@ -55,7 +71,7 @@ const BookSettingsDropdown = ({
       <Dropdown.Button
         visible={isVisibleDropdown}
         onVisibleChange={(flag) => setIsVisibleDropdown(flag)}
-        trigger={["click"]}
+        trigger={['click']}
         type="text"
         overlay={
           <MenuItems
@@ -68,9 +84,9 @@ const BookSettingsDropdown = ({
         icon={
           <EllipsisOutlined
             style={{
-              color: "white",
-              fontSize: "32px",
-              fontWeight: "700",
+              color: 'white',
+              fontSize: '32px',
+              fontWeight: '700',
             }}
           />
         }

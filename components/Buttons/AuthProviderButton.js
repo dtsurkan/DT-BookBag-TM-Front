@@ -1,11 +1,11 @@
-import { Button } from "antd";
-import classNames from "classnames";
-import { FacebookIcon } from "components/Icons";
-import classes from "styles/scss/components/buttons.module.scss";
+import { Button } from 'antd';
+import classNames from 'classnames';
+import { FacebookIcon } from 'components/Icons';
+import classes from 'styles/scss/components/buttons.module.scss';
 
 const AuthProviderButton = ({
   icon = <FacebookIcon />,
-  type = "default",
+  type = 'default',
   onClick = () => {},
   styles,
 }) => {

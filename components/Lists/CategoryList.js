@@ -1,29 +1,23 @@
-import { Fragment, useState } from "react";
-import { useRouter } from "next/router";
-import { useMediaQuery } from "react-responsive";
-import { Dropdown, List, Menu, message, Space } from "antd";
-import Title from "antd/lib/typography/Title";
-import {
-  ArrowUpOutlined,
-  CloseOutlined,
-  FilterFilled,
-} from "@ant-design/icons";
-import LinkButton from "components/Buttons/LinkButton";
+import { Fragment, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useMediaQuery } from 'react-responsive';
+import { Dropdown, List, Menu, message, Space } from 'antd';
+import Title from 'antd/lib/typography/Title';
+import { ArrowUpOutlined, CloseOutlined, FilterFilled } from '@ant-design/icons';
+import LinkButton from 'components/Buttons/LinkButton';
 
 const CategoryList = ({
   allCategoriesItem = true,
   category = {},
   categories = [],
   split = false,
-  itemLayout = "horizontal",
-  size = "small",
-  CategoryListTitle = "Категории книг",
+  itemLayout = 'horizontal',
+  size = 'small',
+  CategoryListTitle = 'Категории книг',
 }) => {
   const router = useRouter();
   const isTabletOrMobile = useMediaQuery({ maxWidth: 768 });
-  const [isVisibleProfileDropdown, setIsVisibleProfileDropdown] = useState(
-    false
-  );
+  const [isVisibleProfileDropdown, setIsVisibleProfileDropdown] = useState(false);
   const onClickMenuItem = async ({ key }) => {
     console.log(`key`, key);
     message.info(key);
@@ -37,19 +31,16 @@ const CategoryList = ({
   return (
     <>
       {isTabletOrMobile ? (
-        <div className="" style={{ marginTop: "20px" }}>
+        <div className="" style={{ marginTop: '20px' }}>
           <Dropdown
             placement="bottomCenter"
-            overlayStyle={{ width: "100%" }}
+            overlayStyle={{ width: '100%' }}
             overlay={
-              <Menu
-                onClick={onClickMenuItem}
-                style={{ boxShadow: "none", margin: "0 16px" }}
-              >
+              <Menu onClick={onClickMenuItem} style={{ boxShadow: 'none', margin: '0 16px' }}>
                 {allCategoriesItem && (
                   <Menu.Item
                     key={`/books`}
-                    style={{ padding: "14px", whiteSpace: "initial" }}
+                    style={{ padding: '14px', whiteSpace: 'initial' }}
                     icon={<ArrowUpOutlined />}
                   >
                     Все разделы
@@ -60,7 +51,7 @@ const CategoryList = ({
                   <Fragment key={subcategory.id}>
                     <Menu.Item
                       key={`/categories/${category.slug}/${subcategory.slug}`}
-                      style={{ padding: "14px", whiteSpace: "initial" }}
+                      style={{ padding: '14px', whiteSpace: 'initial' }}
                     >
                       {subcategory.name}
                     </Menu.Item>
@@ -70,7 +61,7 @@ const CategoryList = ({
                   <Fragment key={category.id}>
                     <Menu.Item
                       key={`/categories/${category.slug}`}
-                      style={{ padding: "14px", whiteSpace: "initial" }}
+                      style={{ padding: '14px', whiteSpace: 'initial' }}
                       icon={<ArrowUpOutlined />}
                     >
                       {category.name}
@@ -84,7 +75,7 @@ const CategoryList = ({
                   <Fragment key={category.id}>
                     <Menu.Item
                       key={`/categories/${category.slug}`}
-                      style={{ padding: "14px", whiteSpace: "initial" }}
+                      style={{ padding: '14px', whiteSpace: 'initial' }}
                     >
                       {category.name}
                     </Menu.Item>
@@ -93,20 +84,20 @@ const CategoryList = ({
                 {/* For books route */}
               </Menu>
             }
-            trigger={["click"]}
+            trigger={['click']}
             onVisibleChange={(flag) => setIsVisibleProfileDropdown(flag)}
           >
             <Space
               style={{
-                width: "100%",
-                background: isVisibleProfileDropdown ? "white" : "#01504D",
-                color: "white",
-                padding: "15px",
-                transition: "all .2s ease",
+                width: '100%',
+                background: isVisibleProfileDropdown ? 'white' : '#01504D',
+                color: 'white',
+                padding: '15px',
+                transition: 'all .2s ease',
               }}
             >
               {isVisibleProfileDropdown ? (
-                <CloseOutlined size="large" style={{ color: "black" }} />
+                <CloseOutlined size="large" style={{ color: 'black' }} />
               ) : (
                 <FilterFilled size="large" />
               )}
@@ -114,8 +105,8 @@ const CategoryList = ({
                 level={3}
                 style={{
                   margin: 0,
-                  color: isVisibleProfileDropdown ? "black" : "white",
-                  transition: "all .2s ease",
+                  color: isVisibleProfileDropdown ? 'black' : 'white',
+                  transition: 'all .2s ease',
                 }}
               >
                 Категории книг
@@ -124,16 +115,13 @@ const CategoryList = ({
           </Dropdown>
         </div>
       ) : (
-        <div
-          className=""
-          style={{ background: "white", padding: "25px 20px", height: "100%" }}
-        >
+        <div className="" style={{ background: 'white', padding: '25px 20px', height: '100%' }}>
           <Title level={2} type="secondary">
             {CategoryListTitle}
           </Title>
           <List split={split} itemLayout={itemLayout} size={size}>
             {allCategoriesItem && (
-              <List.Item style={{ padding: "4px 0" }}>
+              <List.Item style={{ padding: '4px 0' }}>
                 <LinkButton
                   btnText="Все разделы"
                   onClick={() => router.push(`/books`)}
@@ -143,19 +131,15 @@ const CategoryList = ({
             )}
             {/* For categories route */}
             {category?.subcategories?.map((subcategory) => (
-              <List.Item key={subcategory.id} style={{ padding: "4px 0" }}>
+              <List.Item key={subcategory.id} style={{ padding: '4px 0' }}>
                 <LinkButton
                   btnText={subcategory.name}
-                  onClick={() =>
-                    router.push(
-                      `/categories/${category.slug}/${subcategory.slug}`
-                    )
-                  }
+                  onClick={() => router.push(`/categories/${category.slug}/${subcategory.slug}`)}
                 />
               </List.Item>
             ))}
             {category?.categories?.map((category) => (
-              <List.Item key={category.id} style={{ padding: "4px 0" }}>
+              <List.Item key={category.id} style={{ padding: '4px 0' }}>
                 <LinkButton
                   btnText={category.name}
                   onClick={() => router.push(`/categories/${category.slug}`)}
@@ -167,7 +151,7 @@ const CategoryList = ({
 
             {/* For books route */}
             {categories?.map((category) => (
-              <List.Item key={category.id} style={{ padding: "4px 0" }}>
+              <List.Item key={category.id} style={{ padding: '4px 0' }}>
                 <LinkButton
                   btnText={category.name}
                   onClick={() => router.push(`/categories/${category.slug}`)}

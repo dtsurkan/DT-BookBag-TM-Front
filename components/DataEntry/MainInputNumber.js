@@ -1,13 +1,13 @@
-import { Col, Form, InputNumber } from "antd";
+import { Col, Form, InputNumber } from 'antd';
 
 const MainInputNumber = ({
   hasFeedback = true,
-  name = "",
+  name = '',
   rules = [],
-  size = "large",
+  size = 'large',
   min = 0,
   max = 10000,
-  placeholder = "Цена: 0.00 грн.",
+  placeholder = 'Цена: 0.00 грн.',
   step = 1,
   precision = 2,
   xs = 24,
@@ -18,7 +18,7 @@ const MainInputNumber = ({
     <Col xs={xs} lg={lg}>
       <Form.Item hasFeedback={hasFeedback} name={name} rules={rules}>
         <InputNumber
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           size={size}
           min={min}
           max={max}

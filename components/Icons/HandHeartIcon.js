@@ -1,12 +1,7 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const HandHeartSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="64"
-    height="64"
-    viewBox="0 0 64 64"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
     <g id="Group_15" data-name="Group 15" transform="translate(-189 -1324)">
       <circle
         id="Ellipse_2"
@@ -30,6 +25,4 @@ const HandHeartSvg = () => (
   </svg>
 );
 
-export const HandHeartIcon = (props) => (
-  <Icon component={HandHeartSvg} {...props} />
-);
+export const HandHeartIcon = (props) => <Icon component={HandHeartSvg} {...props} />;

@@ -1,4 +1,4 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const AddImageSvg = () => (
   <svg
@@ -8,12 +8,7 @@ const AddImageSvg = () => (
     height="18.635"
     viewBox="0 0 18.635 18.635"
   >
-    <path
-      id="Path_63"
-      data-name="Path 63"
-      d="M0,0H18.635V18.635H0Z"
-      fill="none"
-    />
+    <path id="Path_63" data-name="Path 63" d="M0,0H18.635V18.635H0Z" fill="none" />
     <path
       id="Path_64"
       data-name="Path 64"
@@ -24,6 +19,4 @@ const AddImageSvg = () => (
   </svg>
 );
 
-export const AddImageIcon = (props) => (
-  <Icon component={AddImageSvg} {...props} />
-);
+export const AddImageIcon = (props) => <Icon component={AddImageSvg} {...props} />;

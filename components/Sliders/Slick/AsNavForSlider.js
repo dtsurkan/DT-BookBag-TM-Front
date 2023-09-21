@@ -1,22 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import Slider from "react-slick";
-import { Col, Image, Row } from "antd";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
-import { ArrowDownIcon, ArrowUpIcon } from "components/Icons";
-import { getStrapiMedia } from "lib/strapi/shared/media";
+import { useEffect, useRef, useState } from 'react';
+import Slider from 'react-slick';
+import { Col, Image, Row } from 'antd';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
+import { ArrowDownIcon, ArrowUpIcon } from 'components/Icons';
+import { getStrapiMedia } from 'lib/strapi/shared/media';
 
 const CustomNextArrow = ({ style, onClick }) => (
   <div
     className="slick-arrow"
     style={{
       ...style,
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "50px",
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop: '50px',
     }}
     onClick={onClick}
+    onKeyDown={onClick}
+    role="button"
+    tabIndex="0"
   >
-    <ArrowDownIcon style={{ cursor: "pointer" }} />
+    <ArrowDownIcon style={{ cursor: 'pointer' }} />
   </div>
 );
 
@@ -25,21 +28,25 @@ const CustomPrevArrow = ({ style, onClick }) => (
     className="slick-arrow"
     style={{
       ...style,
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "50px",
-      marginTop: "25px",
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: '50px',
+      marginTop: '25px',
     }}
     onClick={onClick}
+    onKeyDown={onClick}
+    role="button"
+    tabIndex="0"
   >
-    <ArrowUpIcon style={{ cursor: "pointer" }} />
+    <ArrowUpIcon style={{ cursor: 'pointer' }} />
   </div>
 );
 
 const AsNavForSlider = ({
   book = [],
   firstSettings = {
-    infinite: book?.photos.length > 3,
+    // infinite: book?.photos.length > 3,
+    infinite: false,
     arrows: true,
     vertical: true,
     // verticalSwiping: true,
@@ -91,7 +98,7 @@ const AsNavForSlider = ({
     fade: true,
     vertical: true,
     centerMode: true,
-    centerPadding: "0px",
+    centerPadding: '0px',
     verticalSwiping: true,
     swipeToSlide: false,
     responsive: [
@@ -142,20 +149,15 @@ const AsNavForSlider = ({
     <Col xs={xs} lg={lg} xl={xl}>
       <Row gutter={[16, 16]} className="bookPhotosSliders">
         <Col xs={24} xl={4}>
-          <Slider {...firstSliderSettings} className="bookPhotos">
-            {book?.photos.map((image) => (
-              <div
-                style={{ display: "flex", justifyContent: "center" }}
-                key={image.id}
-              >
-                <Image
-                  className="img"
-                  src={getStrapiMedia(image.url)}
-                  alt={image.name}
-                />
-              </div>
-            ))}
-          </Slider>
+          <Image.PreviewGroup>
+            <Slider {...firstSliderSettings} className="bookPhotos">
+              {book?.photos.map((image) => (
+                <div style={{ display: 'flex', justifyContent: 'center' }} key={image.id}>
+                  <Image className="img" src={getStrapiMedia(image.url)} alt={image.name} />
+                </div>
+              ))}
+            </Slider>
+          </Image.PreviewGroup>
         </Col>
         <Col xs={24} xl={20}>
           <Slider {...secondSliderSettings} className="bookPhoto">

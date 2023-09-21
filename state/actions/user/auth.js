@@ -1,8 +1,5 @@
-import { message } from "antd";
-import {
-  setAuthenticationCookies,
-  clearAuthenticationCookies,
-} from "lib/cookies";
+import { message } from 'antd';
+import { setAuthenticationCookies, clearAuthenticationCookies } from 'lib/cookies';
 import {
   forgotPasswordAuthStrapi,
   getCallbackToFacebookAuthProvider,
@@ -10,14 +7,14 @@ import {
   loginUserToStrapi,
   registerUserToStrapi,
   resetPasswordAuthStrapi,
-  sendEmailConfirmation,
-} from "lib/strapi/services/auth";
-import { getExpiryDate } from "utils/functions";
+  // sendEmailConfirmation,
+} from 'lib/strapi/services/auth';
+// import { getUserByID } from 'lib/strapi/services/user';
+import { getExpiryDate } from 'utils/functions';
 
 // AUTHENTIFICATION
-export const SET_CURRENT_USER_PROFILE_SUCCESS =
-  "SET_CURRENT_USER_PROFILE_SUCCESS";
-export const SIGN_OUT_SUCCESS = "SIGN_OUT_SUCCESS";
+export const SET_CURRENT_USER_PROFILE_SUCCESS = 'SET_CURRENT_USER_PROFILE_SUCCESS';
+export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
 // ----------------------------------------------------
 // AUTHENTIFICATION
 
@@ -62,22 +59,20 @@ export const doCustomSignIn = (email, password) => async (dispatch) => {
     console.log(`expiryDays`, expiryDays);
     setAuthenticationCookies({ token: response.data.jwt, expires: expiryDays });
     dispatch(setCurrentUserProfileSuccess(response.data.user));
-    message.success(
-      `You are signed in system, dear ${response.data.user.username}`
-    );
+    message.success(`You are signed in system, dear ${response.data.user.username}`);
   }
   return response;
 };
 
 export const doCustomSignUp = (values) => async (dispatch) => {
   const registerUserResponse = await registerUserToStrapi(values);
-  if (registerUserResponse.status === 200) {
-    const emailConfirmResponse = await sendEmailConfirmation(
-      registerUserResponse.data.user.email
-    );
-    dispatch(setCurrentUserProfileSuccess(null));
-    return emailConfirmResponse;
-  }
+  // if (registerUserResponse.status === 200) {
+  //   const emailConfirmResponse = await sendEmailConfirmation(
+  //     registerUserResponse.data.user.email
+  //   );
+  //   // dispatch(setCurrentUserProfileSuccess(null));
+  //   return emailConfirmResponse;
+  // }
   return registerUserResponse;
 };
 
@@ -95,5 +90,5 @@ export const doSignOut = () => async (dispatch) => {
 
   // // Reset redux store with persist store.
   // dispatch(resetState());
-  message.success("You are signed out");
+  message.success('You are signed out');
 };

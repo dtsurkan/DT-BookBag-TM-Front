@@ -1,12 +1,7 @@
-import Icon from "@ant-design/icons";
+import Icon from '@ant-design/icons';
 
 const FacebookSvg = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
     <g id="Group_30" data-name="Group 30" transform="translate(-134 -257)">
       <path
         id="facebook-2"
@@ -26,6 +21,4 @@ const FacebookSvg = () => (
   </svg>
 );
 
-export const FacebookIcon = (props) => (
-  <Icon component={FacebookSvg} {...props} />
-);
+export const FacebookIcon = (props) => <Icon component={FacebookSvg} {...props} />;

@@ -1,7 +1,10 @@
-import { Provider } from "react-redux";
-import { persistStore } from "redux-persist";
-import { PersistGate } from "redux-persist/integration/react";
-import { useStore } from "../../state/store";
+import { useState } from 'react';
+import { Provider } from 'react-redux';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
+import { useStore } from 'state/store';
+import CenteredLottieWrapper from 'components/Lottie/CenteredLottieWrapper';
+import booksLoadingLottie from 'lotties/redux-persist-loading.json';
 
 const StoreProvider = ({ children }) => {
   //   console.log("pageProps", pageProps);
@@ -11,10 +14,17 @@ const StoreProvider = ({ children }) => {
   const persistor = persistStore(store, {}, function () {
     persistor.persist();
   });
+  const [gateLifted, setGateLifted] = useState(false);
+  const onBeforeLift = () => {
+    // Take an action before the gate lifts
+    setTimeout(() => {
+      setGateLifted(true);
+    }, 3000);
+  };
   return (
     <Provider store={store}>
-      <PersistGate loading={<div>loading</div>} persistor={persistor}>
-        {children}
+      <PersistGate onBeforeLift={onBeforeLift} persistor={persistor}>
+        {gateLifted ? children : <CenteredLottieWrapper lottieData={booksLoadingLottie} />}
       </PersistGate>
     </Provider>
   );
