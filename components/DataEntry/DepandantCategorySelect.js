@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MainSelectSearch from './MainSelectSearch';
 
+// NOTE! Fix resetiing value in future
 const DepandantCategorySelect = ({ options: categories, form }) => {
   const [isDisabled, setIsDisabled] = useState(form.getFieldValue('subcategories') ? false : true);
   const [subCategories, setSubCategories] = useState(
@@ -19,7 +20,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
     label: category.name,
   }));
   const handleChange = (value) => {
-    form.setFieldsValue({ subcategories: [] });
+    form.setFieldsValue({ subcategories: undefined });
     if (value) {
       const subCategories = categories
         .filter((item) => item.id === value)
@@ -33,7 +34,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
       setSubCategories(subCategories[0]);
       setIsDisabled(false);
     } else {
-      setSubCategories([]);
+      setSubCategories(undefined);
       setIsDisabled(true);
     }
   };

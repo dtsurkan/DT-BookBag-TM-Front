@@ -9,12 +9,14 @@ const DescriptionItem = ({
   descriptionLevel = 4,
   descriptionStyle = { maxWidth: 500 },
   isEllipsis = false,
+  wrap = false,
   rowStyle = { margin: '30px 0' },
+  copyable = false,
 }) => {
   return (
-    <Row justify="space-between" style={rowStyle}>
+    <Row justify="space-between" wrap={wrap} style={rowStyle}>
       <Col>
-        <Title type={titleType} level={titleLevel}>
+        <Title type={titleType} level={titleLevel} style={{ marginRight: '30px' }}>
           {title}
         </Title>
       </Col>
@@ -22,6 +24,7 @@ const DescriptionItem = ({
         <Title
           style={descriptionStyle}
           level={descriptionLevel}
+          copyable={copyable}
           ellipsis={
             isEllipsis && {
               rows: 1,

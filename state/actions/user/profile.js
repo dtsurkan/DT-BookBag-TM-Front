@@ -1,8 +1,14 @@
 import { message } from 'antd';
 import { clearAuthenticationCookies } from 'lib/cookies';
 import { updateBook } from 'lib/strapi/services/books';
+import { deleteTwilioClient } from 'lib/strapi/services/twilio';
 import { uploadImagesToStrapi } from 'lib/strapi/services/upload';
 import { deleteUserByID, getUserByID, updateUserByID } from 'lib/strapi/services/user';
+import {
+  fetchSubscribedConversations,
+  getUserByIdentity,
+} from 'lib/twilio-conversation/services/client';
+import { deleteConversation } from 'lib/twilio-conversation/services/conversation';
 
 export const GET_CURRENT_USER_PROFILE_PENDING = 'GET_CURRENT_USER_PROFILE_PENDING';
 export const GET_CURRENT_USER_PROFILE_SUCCESS = 'GET_CURRENT_USER_PROFILE_SUCCESS';
@@ -164,31 +170,53 @@ export const deleteBookFromLikedBooks = (profileID, book) => async (dispatch) =>
   }
 };
 
-export const updateBookStatusToSold = (profileID, book) => async (dispatch) => {
+export const updateBookStatusToSold = (profileID, book, isChecked, buyer) => async (dispatch) => {
   dispatch(getCurrentUserProfilePending());
   try {
-    const response = await updateBook(book.id, { book_status: 'sold' });
+    const response = await updateBook(book.id, {
+      book_status: isChecked ? 'sold' : 'added',
+      buyer: isChecked ? buyer : null,
+    });
     if (response.status === 200) {
       const user = await getUserByID(profileID);
       console.log(`user.data`, user.data);
       dispatch(getCurrentUserProfileSuccess(user.data));
-      message.success('Ви успішно видалили книгу із переліку вподобаних');
+      message.success(
+        isChecked ? 'Ви успішно продали книгу' : 'Ви успішно повернули книгу для продажі'
+      );
     }
   } catch (error) {
     dispatch(getCurrentUserProfileError());
   }
 };
-
-export const deleteCurrentUserProfile = (profileID) => async (dispatch) => {
+// TESTING
+// NOTE! In future wiil change
+export const deleteCurrentUserProfile = (profileID, profileEmail, client) => async (dispatch) => {
   dispatch(deleteCurrentUserProfilePending());
-  const response = await deleteUserByID(profileID);
-  console.log(`response`, response);
-  if (response.status === 200) {
-    dispatch(deleteCurrentUserProfileSuccess());
-    clearAuthenticationCookies();
-    return response;
-  } else {
+  try {
+    const conversations = await fetchSubscribedConversations(client);
+    const user = await getUserByIdentity(client, profileEmail);
+    console.log(`conversations`, conversations);
+    console.log(`user`, user);
+    const [userSid] = user.state.entityName.split('.');
+    console.log(`userSid`, userSid);
+    if (conversations.items.length) {
+      conversations.items.forEach(async (conversation) => {
+        const deletedConversation = await deleteConversation(conversation);
+        console.log(`deletedConversation`, deletedConversation);
+      });
+    }
+    const deletedTwilioClient = await deleteTwilioClient(userSid);
+    console.log(`deletedTwilioClient`, deletedTwilioClient);
+    const deletedStrapiUser = await deleteUserByID(profileID);
+    console.log(`deletedStrapiUser`, deletedStrapiUser);
+    if (deletedStrapiUser.status === 200 && deletedTwilioClient.status === 200) {
+      dispatch(deleteCurrentUserProfileSuccess());
+      clearAuthenticationCookies();
+      return deletedStrapiUser;
+    }
+  } catch (error) {
     dispatch(deleteCurrentUserProfileError());
-    return response;
+    return error;
   }
 };

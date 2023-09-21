@@ -15,11 +15,11 @@ import classes from 'styles/scss/layout/containers.module.scss';
 
 const MobileHeader = () => {
   const router = useRouter();
-  const [
+  const {
     isConfigBookModal,
     showConfigBookModal,
     handleCancelConfigBookModal,
-  ] = useShowConfigModal();
+  } = useShowConfigModal();
   const [isVisibleMenuDrawer, setIsVisibleMenuDrawer] = useState(false);
   const handleTriggerMenuDrawer = () => setIsVisibleMenuDrawer(!isVisibleMenuDrawer);
   const handleCloseMenuDrawer = () => setIsVisibleMenuDrawer(false);
@@ -64,6 +64,8 @@ const MobileHeader = () => {
           fetchOptions={onSearchBooks}
           onSelect={onSelectBook}
           dataEntryComponent={MainAutoComplete}
+          bordered={false}
+          style={{ background: '#EDF8F6' }}
         />
       </Header>
       <MobileDrawer

@@ -29,7 +29,12 @@ const BoughtBooks = () => {
   //   }
   return (
     <ProfileLayout>
-      <ProfileList listTitle="Куплені книги" renderKey="sold" books={[]} hasAddingBook={false} />
+      <ProfileList
+        listTitle="Куплені книги"
+        renderKey="bought"
+        books={!_isEmpty(profile) ? profile?.bought_books : []}
+        hasAddingBook={false}
+      />
     </ProfileLayout>
   );
 };

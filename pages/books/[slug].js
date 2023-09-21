@@ -1,10 +1,14 @@
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { Col, PageHeader, Row, Space } from 'antd';
-import ContentComponent from 'components/AppLayout/ContentComponent';
+import { isEmpty as _isEmpty } from 'lodash';
+import { Col, message, PageHeader, Row, Space } from 'antd';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import confirm from 'antd/lib/modal/confirm';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
 import Paragraph from 'antd/lib/typography/Paragraph';
+import ContentComponent from 'components/AppLayout/ContentComponent';
 import AppLayout from 'components/AppLayout/AppLayout';
 import AsNavForSlider from 'components/Sliders/Slick/AsNavForSlider';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
@@ -16,6 +20,8 @@ import { getBookBySlug, getBooks, getBookBySellerID } from 'lib/strapi/services/
 
 const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
   const { profile } = useSelector((state) => state.user);
+  const screens = useBreakpoint();
+  const MAX_COUNT_BOOKS = !screens.md ? 6 : 9;
   // console.log("booksWithTheSameSeller", booksWithTheSameSeller);
   const router = useRouter();
   if (router.isFallback) {
@@ -34,8 +40,12 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
         <Row justify="space-between">
           <AsNavForSlider xl={12} book={book} />
           <Col xs={24} xl={11}>
-            <Title>{book.book_name}</Title>
-            <DescriptionItem descriptionStyle={{ color: '#01504D' }} description={book.author} />
+            <Title style={{ textTransform: 'uppercase', fontWeight: 500 }}>{book.book_name}</Title>
+            <DescriptionItem
+              descriptionStyle={{ color: '#01504D', textTransform: 'capitalize' }}
+              description={book.author}
+              isEllipsis={true}
+            />
             <DescriptionItem
               isEllipsis={true}
               title="Категория"
@@ -46,6 +56,12 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
             <DescriptionItem title="Языки" description={book.language} />
             <DescriptionItem title="Состояние" description={book.condition} />
             <DescriptionItem title="Город" description={book.seller_city.label} />
+            <DescriptionItem
+              title="Продавец"
+              descriptionStyle={{ color: '#01504D' }}
+              description={book.seller.email}
+              copyable={true}
+            />
             <Row
               style={{
                 justifyContent: 'space-between',
@@ -54,7 +70,14 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
               }}
             >
               <Col>
-                {book.book_status === 'sold' ? (
+                {book.book_status === 'sold' && book.seller.id !== profile.id ? (
+                  <Space>
+                    <DoubleCheckIcon style={{ fontSize: '32px' }} />
+                    <Title level={2} style={{ color: '#6bbe9f', margin: 0 }}>
+                      {`Успішно куплено ${book.buyer.email}`}
+                    </Title>
+                  </Space>
+                ) : book.book_status === 'sold' ? (
                   <Space>
                     <DoubleCheckIcon style={{ fontSize: '32px' }} />
                     <Title level={2} style={{ color: '#6bbe9f', margin: 0 }}>
@@ -67,12 +90,31 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
                   </Title>
                 ) : (
                   <PrimaryButton
-                    onClick={() =>
-                      router.push({
-                        pathname: `${router.asPath}/chat`,
-                      })
-                    }
-                    btnText="Написать автору"
+                    onClick={() => {
+                      if (!_isEmpty(profile)) {
+                        confirm({
+                          centered: true,
+                          title: 'Ви хочете написати цьому продавцеві?',
+                          icon: <ExclamationCircleOutlined />,
+                          okText: 'Да',
+                          okType: 'primary',
+                          //   because dropdown z-index === 1050
+                          zIndex: 1100,
+                          cancelText: 'Ні',
+                          async onOk() {
+                            router.push({
+                              pathname: `${router.asPath}/chat`,
+                            });
+                          },
+                          onCancel() {
+                            message.info('Cancel');
+                          },
+                        });
+                      } else {
+                        message.info('You need to auth!');
+                      }
+                    }}
+                    btnText="Написати продавцю"
                     style={{ marginRight: '10px' }}
                   />
                 )}
@@ -94,23 +136,25 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
         {/* <Row> */}
         {/* Books */}
         {/* <Row> */}
-        <div style={{ margin: '100px 0' }}>
-          <Space direction="vertical">
-            <Title>Другие книги продавца</Title>
-            <Text style={{ color: '#01504D' }}>
-              Если вам понравилось творчество данного автора, не забывайте, что вы можете следить за
-              выходом его новых книг нажав подписаться на автора.
-            </Text>
-          </Space>
-          <BooksSlider>
-            {booksWithTheSameSeller.map((book) => (
-              <div key={book.id}>
-                <BookCard book={book} />
-              </div>
-            ))}
-          </BooksSlider>
-          {/* </Row> */}
-        </div>
+        {booksWithTheSameSeller.length ? (
+          <div style={{ margin: '100px 0' }}>
+            <Space direction="vertical">
+              <Title>Другие книги продавца</Title>
+              <Text style={{ color: '#01504D' }}>
+                Если вам понравилось творчество данного автора, не забывайте, что вы можете следить
+                за выходом его новых книг нажав подписаться на автора.
+              </Text>
+            </Space>
+            <BooksSlider>
+              {booksWithTheSameSeller.slice(0, MAX_COUNT_BOOKS).map((book) => (
+                <div key={book.id}>
+                  <BookCard book={book} />
+                </div>
+              ))}
+            </BooksSlider>
+            {/* </Row> */}
+          </div>
+        ) : null}
         {/* </Row> */}
       </ContentComponent>
     </AppLayout>

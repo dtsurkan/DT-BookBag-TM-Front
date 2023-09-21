@@ -8,7 +8,12 @@ import { updateUserByID } from 'lib/strapi/services/user';
 export const uploadBookLogic = (profile, values) => async (dispatch) => {
   console.log(`values`, values);
   console.log(`profile`, profile);
-  const { upload, ...otherValues } = values;
+  const { upload, book_name, ...otherValues } = values;
+  console.log(`book_name`, book_name);
+  // NOTE! This implementing needed for unique value of select option.
+  // For example, when title the same, it's necessary to stringify all volumeInfo with all data,
+  // then before sending to backend, parse and put title to book_name.
+  const { title: parsedBookName } = JSON.parse(book_name);
   const newImageIDs = await uploadImagesToStrapi(upload).then(({ data }) =>
     data.map((image) => image.id)
   );
@@ -20,6 +25,7 @@ export const uploadBookLogic = (profile, values) => async (dispatch) => {
 
   const updateFinishValues = {
     ...otherValues,
+    book_name: parsedBookName,
     seller: profile.id,
     book_status: 'added',
     photos: newImageIDs,

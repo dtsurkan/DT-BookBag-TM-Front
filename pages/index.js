@@ -10,11 +10,11 @@ import Subscribe from 'components/Sections/Subscribe';
 import { getBooks } from 'lib/strapi/services/books';
 
 const Home = ({ books = [] }) => {
-  const [
+  const {
     isConfigBookModal,
     showConfigBookModal,
     handleCancelConfigBookModal,
-  ] = useShowConfigModal();
+  } = useShowConfigModal();
 
   return (
     <>

@@ -21,5 +21,5 @@ export const useShowConfigModal = () => {
   };
   const handleCancelConfigBookModal = () => setIsConfigBookModal(false);
 
-  return [isConfigBookModal, showConfigBookModal, handleCancelConfigBookModal];
+  return { isConfigBookModal, showConfigBookModal, handleCancelConfigBookModal };
 };

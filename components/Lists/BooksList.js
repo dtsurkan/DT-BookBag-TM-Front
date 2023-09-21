@@ -1,11 +1,12 @@
 import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { useShowConfigModal } from 'hooks';
+import { useShowConfigModal, useTwilioClient } from 'hooks';
 import { Button, Card, List, Space } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { PlusOutlined } from '@ant-design/icons';
 import HorizontalBookCard from 'components/Cards/HorizontalBookCard';
 import ConfigBookModal from 'components/Modals/ConfigBookModal';
+import CustomEmptyComponent from 'components/Empty/CustomEmptyComponent';
 
 const BooksList = ({
   hasAddingBook = false,
@@ -23,16 +24,14 @@ const BooksList = ({
   },
   itemLayout = 'horizontal',
   dataSource = [],
-  pagination = {
-    pageSize: 10,
-    hideOnSinglePage: true,
-  },
+  pagination = {},
 }) => {
-  const [
+  const {
     isConfigBookModal,
     showConfigBookModal,
     handleCancelConfigBookModal,
-  ] = useShowConfigModal();
+  } = useShowConfigModal();
+  const { client } = useTwilioClient();
   const { isLoadingUserProfile } = useSelector((state) => state.user);
   const customizedDataSource = hasAddingBook ? [addingBookItemSettings, ...dataSource] : dataSource;
 
@@ -45,6 +44,7 @@ const BooksList = ({
           flexDirection: 'column',
           justifyContent: 'space-between',
         }}
+        locale={{ emptyText: <CustomEmptyComponent description="Немає книг" /> }}
         loading={hasLoading ? { size: 'large', spinning: isLoadingUserProfile } : false}
         grid={grid}
         itemLayout={itemLayout}
@@ -54,7 +54,7 @@ const BooksList = ({
           <Fragment key={book.slug}>
             {book.slug !== 'not-a-book' ? (
               <List.Item>
-                <HorizontalBookCard renderKey={renderKey} book={book} />
+                <HorizontalBookCard renderKey={renderKey} book={book} client={client} />
               </List.Item>
             ) : (
               <List.Item>

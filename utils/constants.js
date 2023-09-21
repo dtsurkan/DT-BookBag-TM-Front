@@ -12,6 +12,10 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
+// For book pagination
+export const PAGE_SIZE = 20;
+export const PAGE_BOOK_LIMIT = 20;
+
 export const DEFAULT_ALLOWED_IMAGE_TYPES = [
   'image/jpeg',
   'image/x-citrix-jpeg',

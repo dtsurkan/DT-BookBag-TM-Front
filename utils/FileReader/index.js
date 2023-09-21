@@ -1,3 +1,5 @@
+import { getImageExtensionByType } from 'utils/functions';
+
 export const getBase64 = (file) => {
   // console.log("file", file);
   return new Promise((resolve, reject) => {
@@ -14,7 +16,8 @@ export const convertToFormData = (files) => {
   const formData = new FormData();
   Array.from(files).forEach((file) => {
     // Be attentive hera! It's so-so solution, because File Object doesn't have setter, only getter
-    const newFile = new File([file.originFileObj], file.originFileObj.uid, {
+    const ext = getImageExtensionByType(file.originFileObj.type);
+    const newFile = new File([file.originFileObj], `${file.originFileObj.uid}${ext}`, {
       type: file.originFileObj.type,
     });
     formData.append('files', newFile);

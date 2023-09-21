@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTwilioClient } from 'hooks';
 import { getAuthenticationCookies } from 'lib/cookies';
 import { doSignOut } from 'state/actions/user';
 
@@ -25,6 +26,8 @@ const Auth = ({ children }) => {
     //   router.push("/login");
     // }
   }, [dispatch, router, token, isAuthenticated]);
+  // NOTE! Initialize twilio because of getting notifications through app
+  useTwilioClient(true);
 
   return children;
 };

@@ -11,8 +11,9 @@ const SoldBooks = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const sold_books =
-    !_isEmpty(profile) && profile.added_books.filter((book) => book.book_status === 'sold');
+  const sold_books = !_isEmpty(profile)
+    ? profile.added_books.filter((book) => book.book_status === 'sold')
+    : [];
 
   useEffect(() => {
     if (profile?.id) {

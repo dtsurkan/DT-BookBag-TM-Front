@@ -1,4 +1,5 @@
-import { Col, Empty, Form, Select, Spin } from 'antd';
+import { Col, Form, Select, Spin } from 'antd';
+import CustomEmptyComponent from 'components/Empty/CustomEmptyComponent';
 
 const MainSelectSearch = ({
   isChildrenOptions = false,
@@ -42,7 +43,11 @@ const MainSelectSearch = ({
     // if options are childen you need config isChildrenOptions and optionFilterProp to"children"
     optionFilterProp,
     labelInValue,
-    notFoundContent: isFetching ? <Spin size="large" /> : <Empty />,
+    notFoundContent: isFetching ? (
+      <Spin size="large" />
+    ) : (
+      <CustomEmptyComponent description="Немає результатів по даному запиту" />
+    ),
     disabled,
     getPopupContainer,
     filterOption,
@@ -62,8 +67,8 @@ const MainSelectSearch = ({
       >
         {isChildrenOptions ? (
           <Select {...сommonSelectProps}>
-            {options?.map(({ value, label, ...optionProps }) => (
-              <Select.Option key={label} value={value} {...optionProps}>
+            {options?.map(({ value, label, key, ...optionProps }) => (
+              <Select.Option key={key} value={value} {...optionProps}>
                 {label}
               </Select.Option>
             ))}

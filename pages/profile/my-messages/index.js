@@ -3,56 +3,82 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTwilioClient } from 'hooks';
 import format from 'date-fns/format';
-import { Empty, message, Spin, Table } from 'antd';
+import { Badge, message, Spin, Table } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import ProfileLayout from 'components/AppLayout/ProfileLayout';
-import { getSubscribedChannels } from 'lib/twilio-chat/services/client';
+import CustomEmptyComponent from 'components/Empty/CustomEmptyComponent';
+import { fetchSubscribedConversations } from 'lib/twilio-conversation/services/client';
 
 const MyMessages = () => {
   const router = useRouter();
   // Connect with Twilio
-  const [isLoadingTwilio, client] = useTwilioClient();
-  const [channels, setChannels] = useState([]);
-  const [isLoadingChannels, setIsLoadingChannels] = useState(false);
+  const { client, isLoadingTwilio } = useTwilioClient();
+  const [conversations, setConversations] = useState([]);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(false);
+  const [conversationOptions, setConversationOptions] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pager, setPager] = useState(1);
   // -------
 
   useEffect(() => {
-    const getChannels = async () => {
-      setIsLoadingChannels(true);
-      const channels = await getSubscribedChannels(client);
-
-      console.log(`channels`, channels);
-      setChannels(channels?.items);
-      setIsLoadingChannels(false);
+    const getConversations = async () => {
+      setIsLoadingConversations(true);
+      const conversations = await fetchSubscribedConversations(client);
+      const { items, ...conversationOptions } = conversations;
+      console.log(`conversations`, conversations);
+      setConversations(items);
+      setConversationOptions(conversationOptions);
+      setIsLoadingConversations(false);
     };
     if (client) {
-      getChannels();
+      getConversations();
     }
   }, [client]);
 
+  useEffect(() => {
+    if (pager === 1 && conversations.length) {
+      setPager(2);
+    }
+  }, [pager, conversations]);
+
   const columns = [
+    {
+      title: 'Відправник',
+      dataIndex: ['channelState', 'attributes', 'seller', 'userName'],
+    },
     {
       title: 'Назва',
       dataIndex: ['channelState', 'friendlyName'],
+      render: (text) => text.toUpperCase(),
     },
     {
       title: 'Сообщений',
       align: 'center',
       dataIndex: ['channelState'],
-      render: (record) => (
-        <div
-          style={{
-            background: 'azure',
-            display: 'inline-flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 15,
-            minWidth: '60px',
-          }}
-        >
-          {record.lastMessage ? record.lastMessage.index + 1 : 0}
-        </div>
-      ),
+      render: (record) => {
+        // NOTE! Message index begins at position 0
+        const lastMessageIndex = record.lastMessage ? record.lastMessage.index + 1 : 0;
+        const lastReadMessageIndex = record.lastReadMessageIndex
+          ? record.lastReadMessageIndex + 1
+          : 0;
+        const count = lastMessageIndex - lastReadMessageIndex;
+        return (
+          <Badge count={count}>
+            <div
+              style={{
+                background: 'azure',
+                display: 'inline-flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 15,
+                minWidth: '60px',
+              }}
+            >
+              {lastMessageIndex}
+            </div>
+          </Badge>
+        );
+      },
     },
     {
       title: 'Дата/время',
@@ -76,27 +102,64 @@ const MyMessages = () => {
     },
   ];
 
-  const dataSource = channels?.map((channel) => ({
-    channelState: channel.channelState,
-    sid: channel.sid,
+  const dataSource = conversations?.map((conversation) => ({
+    channelState: conversation.channelState,
+    sid: conversation.sid,
   }));
+
   return (
     <ProfileLayout>
-      <Spin spinning={isLoadingTwilio || isLoadingChannels}>
+      <Spin spinning={isLoadingTwilio || isLoadingConversations}>
         <Table
+          loading={isLoadingConversations}
           title={() => <Title>Мої повідомлення</Title>}
           style={{ height: '100%' }}
           locale={{
-            emptyText: (
-              <Empty
-                image="/assets/no-data-cuate.png"
-                description={<span>Немає повідомлень</span>}
-              ></Empty>
-            ),
+            emptyText: <CustomEmptyComponent />,
+          }}
+          pagination={{
+            hideOnSinglePage: dataSource.length ? false : true,
+            pageSize: 10,
+            total: pager,
           }}
           dataSource={dataSource}
           columns={columns}
           rowKey={(record) => record.channelState.uniqueName}
+          onChange={async (pagination, filters, sorter, extra) => {
+            switch (extra.action) {
+              case 'paginate':
+                setIsLoadingConversations(true);
+                if (conversationOptions.hasNextPage && pagination.current > currentPage) {
+                  const nextConversations = await conversationOptions.nextPage();
+                  const { items, ...nextConversationsOptions } = nextConversations;
+                  console.log(`nextConversations`, nextConversations);
+                  setConversations(items);
+                  setConversationOptions({ ...nextConversationsOptions });
+                  if (nextConversationsOptions.hasNextPage) {
+                    setPager((pager) => pager + 1);
+                  }
+                  setIsLoadingConversations(false);
+                } else {
+                  message.info('All messages have been retrieved');
+                }
+                if (conversationOptions.hasPrevPage && pagination.current <= currentPage) {
+                  const prevConversations = await conversationOptions.prevPage();
+                  const { items, ...prevConversationsOptions } = prevConversations;
+                  console.log(`prevConversations`, prevConversations);
+                  setConversations(items);
+                  setConversationOptions({ ...prevConversationsOptions });
+                  setPager((pager) => pager - 1);
+                  setIsLoadingConversations(false);
+                } else {
+                  message.info('All messages have been retrievedretrieved');
+                }
+                setCurrentPage(pagination.current);
+                break;
+
+              default:
+                break;
+            }
+          }}
           onRow={(data) => ({
             style: {
               cursor: 'pointer',

@@ -13,7 +13,7 @@ const ProfileLayout = ({ children }) => {
         <ProfileAsideMenu />
         <Col
           xs={24}
-          md={18}
+          lg={18}
           style={{
             minHeight: '100vh',
             background: '#F9FEFD',

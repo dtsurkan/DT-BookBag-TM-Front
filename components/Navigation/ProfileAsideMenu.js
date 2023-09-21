@@ -15,11 +15,11 @@ import {
 } from 'utils/constants';
 
 const ProfileAsideMenu = () => {
-  const [
+  const {
     isConfigBookModal,
     showConfigBookModal,
     handleCancelConfigBookModal,
-  ] = useShowConfigModal();
+  } = useShowConfigModal();
 
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1200 });
   return (

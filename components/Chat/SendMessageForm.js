@@ -9,9 +9,9 @@ import MainSpinner from 'components/Loading/Spinners/MainSpinner';
 const SendMessageForm = ({
   form,
   onFinish = () => {},
-  channel,
+  conversation,
   isTyping,
-  member,
+  participant,
   isLoadingMessage,
 }) => {
   const { profile } = useSelector((state) => state.user);
@@ -20,7 +20,13 @@ const SendMessageForm = ({
       <Row align="center">
         <Col xs={24} lg={18}>
           <TextAreaInput
-            onKeyDown={() => channel.typing()}
+            onPressEnter={(event) => {
+              //  NOTE! shift + enter checking
+              if (event.keyCode === 13 && !event.shiftKey) {
+                onFinish({ message: event.target.value });
+              }
+            }}
+            onKeyDown={() => conversation.typing()}
             name="message"
             bordered={false}
             allowClear={true}
@@ -29,9 +35,9 @@ const SendMessageForm = ({
             showCount={false}
             lg={24}
           />
-          {isTyping && member !== profile.email ? (
+          {isTyping && participant !== profile.username ? (
             <Space>
-              <Text>{member} is typing ...</Text>
+              <Text>{participant} is typing ...</Text>
             </Space>
           ) : (
             <Space>

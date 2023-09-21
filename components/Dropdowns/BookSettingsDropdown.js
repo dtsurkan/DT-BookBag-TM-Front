@@ -6,15 +6,19 @@ import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import confirm from 'antd/lib/modal/confirm';
 import MenuItems from 'components/Navigation/components/MenuItems';
 import { BOOK_SETTINGS_LIST } from 'utils/constants';
-import { addBookToLikedBooks, updateBookStatusToSold } from 'state/actions/user/profile';
+import { addBookToLikedBooks } from 'state/actions/user/profile';
 import { deleteBook } from 'lib/strapi/services/books';
 import classes from 'styles/scss/components/buttons.module.scss';
+import { fetchSubscribedConversations } from 'lib/twilio-conversation/services/client';
+import { deleteConversation } from 'lib/twilio-conversation/services/conversation';
 
 const BookSettingsDropdown = ({
   book = {},
   menuList = BOOK_SETTINGS_LIST,
   showConfigBookModal = () => {},
   showInformModal = () => {},
+  showCheckingUserModal = () => {},
+  client,
 }) => {
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -32,7 +36,7 @@ const BookSettingsDropdown = ({
         break;
       case 'sold':
         setIsVisibleDropdown(false);
-        await dispatch(updateBookStatusToSold(profile.id, book));
+        showCheckingUserModal();
         break;
       case 'delete':
         confirm({
@@ -45,6 +49,18 @@ const BookSettingsDropdown = ({
           zIndex: 1100,
           cancelText: 'Нет',
           async onOk() {
+            // NOTE! In future wiil change
+            const conversations = await fetchSubscribedConversations(client);
+            console.log(`conversations`, conversations);
+            if (conversations.items.length) {
+              conversations.items.forEach(async (conversation) => {
+                if (conversation.channelState.attributes.bookSlug === book.slug) {
+                  console.log(`conversation`, conversation);
+                  const deletedConversation = await deleteConversation(conversation);
+                  console.log(`deletedConversation`, deletedConversation);
+                }
+              });
+            }
             await deleteBook(book.id);
             showInformModal();
           },
@@ -84,7 +100,7 @@ const BookSettingsDropdown = ({
         icon={
           <EllipsisOutlined
             style={{
-              color: 'white',
+              color: 'green',
               fontSize: '32px',
               fontWeight: '700',
             }}

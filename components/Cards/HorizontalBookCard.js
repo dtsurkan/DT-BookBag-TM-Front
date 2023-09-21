@@ -10,21 +10,29 @@ import BookSettingsDropdown from 'components/Dropdowns/BookSettingsDropdown';
 import InformModal from 'components/Modals/InformModal';
 import ConfigBookModal from 'components/Modals/ConfigBookModal';
 import { DoubleCheckIcon } from 'components/Icons';
+import CheckUserModal from 'components/Modals/CheckUserModal';
 import {
   deleteBookFromLikedBooks,
   getCurrentUserProfile,
   toggleBookToLikedBooks,
+  updateBookStatusToSold,
 } from 'state/actions/user/profile';
 import { getStrapiMedia } from 'lib/strapi/shared/media';
+import { getCapitalizedString } from 'utils/lodash/string';
 import classes from 'styles/scss/components/buttons.module.scss';
 
-const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
+const HorizontalBookCard = ({ book = {}, renderKey = '', client }) => {
   const router = useRouter();
-  const [
+  const {
     isConfigBookModal,
     showConfigBookModal,
     handleCancelConfigBookModal,
-  ] = useShowConfigModal();
+  } = useShowConfigModal();
+  const {
+    isConfigBookModal: isCheckingUserModal,
+    showConfigBookModal: showCheckingUserModal,
+    handleCancelConfigBookModal: handleCancelCheckingUserModal,
+  } = useShowConfigModal();
   const [isSuccessfulConfigBook, setIsSuccessfulConfigBook] = useState(false);
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -37,13 +45,36 @@ const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
       case 'additional-settings':
         return (
           <BookSettingsDropdown
+            client={client}
             showConfigBookModal={showConfigBookModal}
             showInformModal={() => setIsSuccessfulConfigBook(true)}
             book={book}
+            showCheckingUserModal={showCheckingUserModal}
           />
         );
+      case 'bought':
+        break;
       case 'sold':
-        return null;
+        return (
+          <div
+            className={classes.likedBooksCardHover}
+            onClick={async (event) => {
+              event.stopPropagation();
+              await dispatch(updateBookStatusToSold(profile.id, book, false));
+            }}
+            onKeyDown={async (event) => {
+              event.stopPropagation();
+              await dispatch(updateBookStatusToSold(profile.id, book, false));
+            }}
+            role="button"
+            tabIndex="0"
+          >
+            <Space direction="vertical" align="center" style={{ color: 'white' }}>
+              <CloseOutlined />
+              <Text style={{ color: 'white', fontWeight: 700 }}>Повернути до продажу</Text>
+            </Space>
+          </div>
+        );
       case 'liked':
         return (
           <div
@@ -78,9 +109,9 @@ const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
               type={isChecked ? 'primary' : 'default'}
               shape="circle"
               icon={<LikeOutlined />}
-              onClick={async (e) => {
+              onClick={async () => {
                 setIsChecked(!isChecked);
-                await dispatch(toggleBookToLikedBooks(e.target.checked, profile.id, book));
+                await dispatch(toggleBookToLikedBooks(!isChecked, profile.id, book));
               }}
             />
           </div>
@@ -98,7 +129,7 @@ const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
             {getProperlyBookRender(renderKey)}
             <img
               style={{ width: '100%', height: '200px' }}
-              src={getStrapiMedia(book?.photos[0].url)}
+              src={getStrapiMedia(book?.photos[0]?.url)}
               alt={book.photos[0]?.name}
             />
           </div>
@@ -110,17 +141,23 @@ const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
             <Space direction="vertical" style={{ width: '100%' }}>
               <Title
                 ellipsis={{
-                  rows: 2,
-                  tooltip: <Tooltip>{book?.book_name}</Tooltip>,
+                  rows: 1,
+                  tooltip: <Tooltip>{book?.book_name.toUpperCase()}</Tooltip>,
                 }}
-                level={4}
+                style={{ textTransform: 'uppercase', fontWeight: 700 }}
+                level={5}
               >
                 {book?.book_name}
               </Title>
-              {renderKey === 'sold' ? (
+              {renderKey === 'bought' ? (
                 <Space>
                   <DoubleCheckIcon />
-                  <Text style={{ color: '#6bbe9f' }}>Успешно продано</Text>
+                  <Text style={{ color: '#6bbe9f' }}>Успішно куплено</Text>
+                </Space>
+              ) : renderKey === 'sold' ? (
+                <Space>
+                  <DoubleCheckIcon />
+                  <Text style={{ color: '#6bbe9f' }}>Успішно продано</Text>
                 </Space>
               ) : (
                 <>
@@ -130,7 +167,14 @@ const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Text>Автор: </Text>
-                    <Text>{book?.author}</Text>
+                    <Text
+                      ellipsis={{
+                        tooltip: <Tooltip>{getCapitalizedString(book?.author)}</Tooltip>,
+                      }}
+                      style={{ textTransform: 'capitalize', textAlign: 'end', marginLeft: '5px' }}
+                    >
+                      {book?.author}
+                    </Text>
                   </div>
                 </>
               )}
@@ -143,8 +187,8 @@ const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
         <ConfigBookModal
           formName={book.slug}
           initialValues={{
-            book_name: book.book_name,
-            author: book.author,
+            book_name: book.book_name.toUpperCase(),
+            author: getCapitalizedString(book.author),
             language: book.language,
             condition: book.condition,
             price: book.price,
@@ -171,6 +215,16 @@ const HorizontalBookCard = ({ book = {}, renderKey = '' }) => {
           }}
           visible={isSuccessfulConfigBook}
           title="Ваша книга успешно удалена"
+        />
+      )}
+      {isCheckingUserModal && (
+        <CheckUserModal
+          visible={isCheckingUserModal}
+          onCancel={handleCancelCheckingUserModal}
+          title="Продати книгу"
+          width={500}
+          btnText="Продати"
+          book={book}
         />
       )}
     </>

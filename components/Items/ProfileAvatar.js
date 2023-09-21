@@ -12,6 +12,8 @@ const ProfileAvatar = ({
   isHasArrow = true,
   isHasCity = false,
   isRotatingIcon = false,
+  hasOnlineStatus = false,
+  onlineStatus = false,
   rowProps = {
     flexDirection: 'row',
   },
@@ -29,9 +31,21 @@ const ProfileAvatar = ({
       <Row style={{ display: 'inline-flex', alignItems: 'center', ...rowProps }} gutter={[8, 0]}>
         <Col>
           <Space direction="vertical">
-            <Title style={{ margin: 0 }} {...titleProps}>
-              {!_isEmpty(userProfile) && getCustomizedDisplayName(userProfile.username)}
-            </Title>
+            <Space>
+              <Title style={{ margin: 0 }} {...titleProps}>
+                {!_isEmpty(userProfile) && getCustomizedDisplayName(userProfile.username)}
+              </Title>
+              {hasOnlineStatus && (
+                <div
+                  style={{
+                    background: onlineStatus ? 'green' : 'red',
+                    borderRadius: '50%',
+                    width: '8px',
+                    height: '8px',
+                  }}
+                ></div>
+              )}
+            </Space>
             {isHasCity && (
               <Space align="start">
                 <Title type="secondary" style={{ margin: 0 }} level={5}>
@@ -48,7 +62,7 @@ const ProfileAvatar = ({
           {!_isEmpty(userProfile?.avatar) ? (
             <Avatar
               style={{ background: '#EDF8F6', color: '#8D9DA4' }}
-              src={getStrapiMedia(userProfile?.avatar[0].url)}
+              src={getStrapiMedia(userProfile?.avatar[0]?.url)}
               {...avatarProps}
             />
           ) : (

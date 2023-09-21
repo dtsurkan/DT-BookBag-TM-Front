@@ -74,7 +74,7 @@ const MobileDrawer = ({
         )}
         <MenuItems />
       </div>
-      <MenuItems menuList={PROFILE_ASIDE_BOTTOM_LIST} />
+      {!_isEmpty(profile) && <MenuItems menuList={PROFILE_ASIDE_BOTTOM_LIST} />}
     </Drawer>
   );
 };

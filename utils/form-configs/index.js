@@ -4,34 +4,15 @@ import MainSelectSearch from 'components/DataEntry/MainSelectSearch';
 import MainInputNumber from 'components/DataEntry/MainInputNumber';
 import MainTextAreaInput from 'components/DataEntry/MainTextAreaInput';
 import DepandantCategorySelect from 'components/DataEntry/DepandantCategorySelect';
-import { BOOK_CONDITION_LIST, LANGUAGE_LIST } from 'utils/constants';
+import DepandantBookNameAuthorSelect from 'components/DataEntry/DepandantBookNameAuthorSelect';
 import DebounceSelectSearch from 'components/DataEntry/DebounceSelectSearch';
 import { getCities } from 'lib/nova-poshta/services/cities';
+import { BOOK_CONDITION_LIST, LANGUAGE_LIST } from 'utils/constants';
 
 export const getBookInputsList = (profile, categories) => [
   {
     id: uuidv4(),
-    name: 'book_name',
-    rules: [
-      {
-        required: true,
-        message: 'Введите название книги!',
-      },
-    ],
-    placeholder: 'Название книги',
-    component: MainInput,
-  },
-  {
-    id: uuidv4(),
-    name: 'author',
-    rules: [
-      {
-        required: true,
-        message: 'Введите автора!',
-      },
-    ],
-    placeholder: 'Автор',
-    component: MainInput,
+    component: DepandantBookNameAuthorSelect,
   },
   {
     id: uuidv4(),
@@ -95,10 +76,7 @@ export const getBookInputsList = (profile, categories) => [
     fetchOptions: async (city) => {
       const response = await getCities(city);
       return response?.data?.data[0]?.Addresses.map((city) => {
-        return {
-          value: city.Present,
-          label: city.Present,
-        };
+        return { key: city.DeliveryCity, value: city.Present, label: city.Present };
       });
     },
     labelInValue: true,
@@ -165,6 +143,8 @@ export const getSettingsInputList = () => [
     ],
     placeholder: 'Ваш емейл',
     component: MainInput,
+    disabled: true,
+    extra: 'Ви не можете змінити свою пошту',
     lg: 24,
   },
   {
@@ -183,6 +163,7 @@ export const getSettingsInputList = () => [
       const response = await getCities(city);
       return response?.data?.data[0]?.Addresses.map((city) => {
         return {
+          key: city.DeliveryCity,
           value: city.Present,
           label: city.Present,
         };

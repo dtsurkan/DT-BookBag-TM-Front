@@ -3,13 +3,23 @@ import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import { useTwilioClient } from 'hooks';
-import { Alert, Col, Form, PageHeader, Row, Spin } from 'antd';
+import { Alert, Col, Form, message, PageHeader, Row, Spin } from 'antd';
 import AppLayout from 'components/AppLayout/AppLayout';
 import DesktopHeader from 'components/Navigation/components/DesktopHeader';
 import AsideDescription from 'components/Chat/AsideDescription';
 import SendMessageForm from 'components/Chat/SendMessageForm';
 import MessagesList from 'components/Chat/MessagesList';
 import { getBookBySlug } from 'lib/strapi/services/books';
+import {
+  addUserToConversation,
+  getMessagesFromConversation,
+  joinToConversation,
+} from 'lib/twilio-conversation/services/conversation';
+import {
+  createTwilioConversation,
+  fetchConversationByUniqueName,
+  getUserByIdentity,
+} from 'lib/twilio-conversation/services/client';
 import { getLastElementInArray, scrollToBottom } from 'utils/functions';
 
 const ChatComponent = ({ book = {} }) => {
@@ -21,20 +31,25 @@ const ChatComponent = ({ book = {} }) => {
   const router = useRouter();
   // Connect with Twilio
   const [form] = Form.useForm();
-  const [isLoadingTwilio, client] = useTwilioClient();
+  const { client, isLoadingTwilio } = useTwilioClient();
   const [isLoadingMessage, setIsLoadingMessage] = useState(false);
-  const [channel, setChannel] = useState(null);
+  const [isLoadingInitialMesssages, setIsLoadingInitialMesssages] = useState(false);
+  const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [messagesOptions, setMessagesOptions] = useState({});
   const [isTyping, setIsTyping] = useState(false);
-  const [member, setMember] = useState(null);
+  const [participant, setParticipant] = useState(null);
+  // NOTE! This property for special situation, when at first render scroll to top and then after setTimeout unlock threshold property
+  const [threshold, setThreshold] = useState(0);
+  const [onlineStatus, setOnlineStatus] = useState(false);
   // -------
   const onSendMessage = ({ message = '' }) => {
     setIsLoadingMessage(true);
     const trimMessage = String(message).trim();
     console.log(`trimMessage`, trimMessage);
-    console.log(`channel`, channel);
+    console.log(`conversation`, conversation);
     if (message && trimMessage) {
-      channel.sendMessage(trimMessage);
+      conversation.sendMessage(trimMessage);
       console.log(`test`);
       form.resetFields();
       setIsLoadingMessage(false);
@@ -47,25 +62,48 @@ const ChatComponent = ({ book = {} }) => {
 
   useEffect(() => {
     // Helper functions inside useEffect
-    const joinChannel = async (channel) => {
-      if (channel.channelState.status !== 'joined') {
-        await channel.join();
+    const joinConversation = async (conversation) => {
+      console.log(`conversation`, conversation);
+      if (conversation.channelState.status !== 'joined') {
+        await joinToConversation(conversation);
+        await addUserToConversation(conversation, book.seller.email);
       }
-      const messages = await channel.getMessages();
+      const messages = await getMessagesFromConversation(conversation);
+      const { items, ...messagesOptions } = messages;
+      console.log(`items`, items);
+      console.log(`messagesOptions`, messagesOptions);
       console.log(`messagesqqqqq`, messages);
-      setMessages(messages.items || []);
-      channel.on('messageAdded', async (message) => {
+      setMessages(items || []);
+      setMessagesOptions(messagesOptions);
+      scrollToBottom(scrollToBottomRef, true);
+      setIsLoadingInitialMesssages(false);
+      // NOTE! This property for special situation, when at first render scroll to top and then after setTimeout unlock threshold property
+      setTimeout(() => {
+        setThreshold(200);
+      }, 2000);
+
+      conversation.on('messageAdded', async (message) => {
         console.log(`messageAddedmessageAddedmessage`, message);
         setMessages((messages) => [...messages, message]);
+        scrollToBottom(scrollToBottomRef, true);
       });
+      // Only typing in separate chat item
+      conversation.on('typingStarted', (participant) =>
+        updateTypingIndicator(participant.state.identity, true)
+      );
+      conversation.on('typingEnded', (participant) =>
+        updateTypingIndicator(participant.state.identity, false)
+      );
     };
-    const updateTypingIndicator = (member, isTyping) => {
+    const updateTypingIndicator = async (participant, isTyping) => {
+      const user = await getUserByIdentity(client, participant);
       setIsTyping(isTyping);
-      setMember(member);
+      setParticipant(user.state.friendlyName);
     };
     //--------------------------
 
     const initTwilioClient = async () => {
+      setIsLoadingInitialMesssages(true);
       const slug = getLastElementInArray(router.query.slug);
       console.log(`router.query.slug`, parseInt(slug));
       console.log(`id`, id);
@@ -75,36 +113,48 @@ const ChatComponent = ({ book = {} }) => {
       const stringifyRoomId = roomId.toString();
       console.log(`stringifyRoomId`, stringifyRoomId);
       try {
-        const channel = await client.getChannelByUniqueName(stringifyRoomId);
-        console.log(`channel existF`, channel);
-        await joinChannel(channel);
-        setChannel(channel);
+        const conversation = await fetchConversationByUniqueName(client, stringifyRoomId);
+        console.log(`conversation existF`, conversation);
+        try {
+          await joinConversation(conversation);
+        } catch (error) {
+          console.log(`error`, error);
+        }
+        setConversation(conversation);
       } catch (error) {
         console.log(`error`, error);
         try {
-          const channel = await client.createChannel({
+          const conversation = await createTwilioConversation(client, {
             uniqueName: stringifyRoomId,
             friendlyName: book.book_name,
             attributes: {
-              seller: { email: book.seller.email, userName: book.seller.username },
-              buyer: { email: email, userName: username },
+              seller: {
+                email: book.seller.email,
+                userName: book.seller.username,
+                id: book.seller.id,
+              },
+              buyer: { email, userName: username, id },
               bookSlug: router.query.slug,
+              book: { book_name: book.book_name, author: book.author },
             },
           });
-          await joinChannel(channel);
-          setChannel(channel);
+          await joinConversation(conversation);
+          setConversation(conversation);
         } catch (error) {
           console.log(`error 1`, error);
-          throw new Error('unable to create channel, please reload this page');
+          throw new Error('unable to create conversation, please reload this page');
         }
       }
-      client.on('channelJoined', async (channel) => {
-        const messages = await channel.getMessages();
+      client.on('conversationJoined', async (conversation) => {
+        setIsLoadingInitialMesssages(true);
+        const messages = await getMessagesFromConversation(conversation);
+        const { items, ...messagesOptions } = messages;
         console.log(`messagestttttttt`, messages);
-        setMessages(messages.items || []);
+        setMessages(items || []);
+        setMessagesOptions(messagesOptions);
+        scrollToBottom(scrollToBottomRef, true);
+        setIsLoadingInitialMesssages(false);
       });
-      client.on('typingStarted', (member) => updateTypingIndicator(member.state.identity, true));
-      client.on('typingEnded', (member) => updateTypingIndicator(member.state.identity, false));
     };
     if (client) {
       initTwilioClient();
@@ -112,17 +162,54 @@ const ChatComponent = ({ book = {} }) => {
   }, [client, email, id, username, router.query.slug, book]);
 
   useEffect(() => {
+    const getUserOnlineStatus = async () => {
+      const user = await getUserByIdentity(client, book.seller.email);
+      console.log(`user`, user);
+      const {
+        state: { online },
+      } = user;
+      setOnlineStatus(online);
+
+      user.on('updated', ({ user }) => {
+        const {
+          state: { online },
+        } = user;
+        setOnlineStatus(online);
+      });
+    };
+    if (client) {
+      getUserOnlineStatus();
+    }
+  }, [client, book.seller.email]);
+
+  useEffect(() => {
     scrollToBottom(scrollToBottomRef, true);
-  }, [messages]);
+  }, []);
+
+  const getMoreMessages = async () => {
+    if (messagesOptions.hasPrevPage) {
+      const prevMessages = await messagesOptions.prevPage();
+      const { items, ...prevMessagesOptions } = prevMessages;
+      console.log(`prevMessages`, prevMessages);
+      setMessages((messages) => [...items, ...messages]);
+      setMessagesOptions(prevMessagesOptions);
+    } else {
+      message.info('All messages have been retrieved');
+    }
+  };
 
   return (
-    <Spin spinning={isLoadingTwilio}>
+    <Spin spinning={isLoadingTwilio || isLoadingInitialMesssages}>
       <AppLayout isHasNavigation={false} isHasFooter={false}>
         <Row justify="center">
-          <AsideDescription book={book} />
+          <AsideDescription
+            onlineStatus={onlineStatus}
+            book={book}
+            buyer={{ email, userName: username, id }}
+          />
           <Col
             xs={24}
-            md={18}
+            md={19}
             style={{
               minHeight: '100vh',
               background: '#F9FEFD',
@@ -134,7 +221,7 @@ const ChatComponent = ({ book = {} }) => {
             {isTabletOrMobile ? null : (
               <DesktopHeader
                 hasLogo={false}
-                hasProfile={false}
+                // hasProfile={false}
                 headerStyles={{
                   padding: '0px 0px',
                   background: 'none',
@@ -165,16 +252,29 @@ const ChatComponent = ({ book = {} }) => {
                   closeText="Скрыть"
                 />
               </Col>
-              <Col flex={5}>
-                <MessagesList scrollToBottomRef={scrollToBottomRef} messages={messages} />
+              <Col
+                flex={5}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: messages.length ? 'space-between' : 'center',
+                }}
+              >
+                <MessagesList
+                  hasMore={messagesOptions.hasPrevPage}
+                  loadMore={getMoreMessages}
+                  scrollToBottomRef={scrollToBottomRef}
+                  messages={messages}
+                  threshold={threshold}
+                />
               </Col>
               <Col>
                 <SendMessageForm
                   form={form}
                   onFinish={onSendMessage}
                   isTyping={isTyping}
-                  channel={channel}
-                  member={member}
+                  conversation={conversation}
+                  participant={participant}
                   isLoadingMessage={isLoadingMessage}
                 />
               </Col>

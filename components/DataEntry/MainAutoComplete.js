@@ -1,7 +1,8 @@
 import classNames from 'classnames';
-import { AutoComplete, Avatar, Empty, Input, Spin } from 'antd';
+import { AutoComplete, Avatar, Input, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
+import CustomEmptyComponent from 'components/Empty/CustomEmptyComponent';
 import { getStrapiMedia } from 'lib/strapi/shared/media';
 import classes from 'styles/scss/components/dataEntries.module.scss';
 
@@ -11,7 +12,6 @@ const MainAutoComplete = ({
   size = 'large',
   placeholder = 'Введите автора или названия книги...',
   options = [],
-  labelInValue = false,
   isFetching = false,
   disabled = false,
   bordered = true,
@@ -28,10 +28,12 @@ const MainAutoComplete = ({
       <div key={option.slug}>
         <Avatar
           style={{ marginRight: '5px' }}
-          src={getStrapiMedia(option.photos[0].url)}
+          src={getStrapiMedia(option?.photos[0]?.url)}
           alt={option.photos[0].name}
         />
-        <Text>{option.book_name}</Text>
+        <Text
+          style={{ textTransform: 'uppercase', fontWeight: 500 }}
+        >{`${option.book_name} - ${option.author}`}</Text>
       </div>
     ),
     ...option,
@@ -40,12 +42,18 @@ const MainAutoComplete = ({
     <AutoComplete
       className={classNames(classes.autoComplete)}
       disabled={disabled}
-      labelInValue={labelInValue}
-      notFoundContent={isFetching ? <Spin size="large" /> : <Empty />}
+      notFoundContent={
+        isFetching ? (
+          <Spin size="large" />
+        ) : (
+          <CustomEmptyComponent description="Немає результатів по даному запиту" />
+        )
+      }
       options={isCustomizedOptions ? customizedOptions : options}
       onSelect={onSelect}
       onSearch={onSearch}
       filterOption={filterOption}
+      bordered={bordered}
       {...props}
     >
       <Input

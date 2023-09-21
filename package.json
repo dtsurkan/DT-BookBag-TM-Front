@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "NODE_OPTIONS=--max_old_space_size=4096 next",
     "build": "next build",
     "export": "next build && next export",
     "start": "next start -H 0.0.0.0 -p ${PORT:-8080}",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
     "@next/bundle-analyzer": "^10.0.7",
+    "@twilio/conversations": "^1.1.0",
     "antd": "^4.11.2",
     "antd-img-crop": "^3.14.1",
     "aos": "^2.3.4",
@@ -34,6 +35,7 @@
     "react": "17.0.1",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "17.0.1",
+    "react-infinite-scroller": "^1.2.4",
     "react-redux": "^7.2.2",
     "react-responsive": "^8.2.0",
     "react-slick": "^0.28.0",
@@ -46,7 +48,6 @@
     "slick-carousel": "^1.8.1",
     "slug": "^4.0.3",
     "swr": "^0.5.3",
-    "twilio-chat": "^4.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

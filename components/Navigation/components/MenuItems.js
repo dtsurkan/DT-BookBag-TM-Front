@@ -43,7 +43,7 @@ const MenuItems = ({
       {isTabs ? (
         <Tabs
           {...tabsOptions}
-          defaultActiveKey={[router.pathname]}
+          activeKey={router.pathname}
           // because onTabClick doesn't get object, only string
           onTabClick={(key) => generalOnClick({ key })}
           style={{ maxWidth: '100vw' }}

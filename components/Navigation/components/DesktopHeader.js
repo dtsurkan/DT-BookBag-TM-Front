@@ -39,6 +39,8 @@ const DesktopHeader = ({ hasLogo = true, hasProfile = true, headerStyles }) => {
         fetchOptions={onSearchBooks}
         onSelect={onSelectBook}
         dataEntryComponent={MainAutoComplete}
+        bordered={false}
+        style={{ background: '#EDF8F6' }}
       />
       <MenuItems mode="horizontal" />
       <Select bordered={false} defaultValue="ukr">

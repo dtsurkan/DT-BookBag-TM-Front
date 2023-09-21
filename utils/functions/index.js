@@ -7,9 +7,9 @@ export const getCustomizedDisplayName = (sentence) => {
   return firstName + ' ' + otherFirstLetters;
 };
 
-export const getFirstLetter = (sentence) => {
+export const getFirstLetter = (sentence, splitCondition = ' ') => {
   if (!sentence) return null;
-  const [firstName] = sentence.split(' ');
+  const [firstName] = sentence.split(splitCondition);
   return firstName.charAt(0).toUpperCase();
 };
 
@@ -33,4 +33,17 @@ export const scrollToBottom = (ref, isSmoothly = true) => {
 export const getLastElementInArray = (value) => {
   const array = value.split('-');
   return array[array.length - 1];
+};
+
+export const getImageExtensionByType = (type) => {
+  switch (type) {
+    case 'image/jpeg':
+      return '.jpg';
+    case 'image/png':
+      return '.png';
+    case 'image/webp':
+      return '.webp';
+    default:
+      break;
+  }
 };

@@ -67,8 +67,13 @@ const ConfigBookModal = ({
   }, [form, initialValues]);
 
   const onFinish = async (values) => {
-    const { upload, ...otherValues } = values;
+    const { upload, book_name, ...otherValues } = values;
     // console.log(`values`, values);
+    // console.log(`book_name`, book_name);
+    // NOTE! This implementing needed for unique value of select option.
+    // For example, when title the same, it's necessary to stringify all volumeInfo with all data,
+    // then before sending to backend, parse and put title to book_name.
+    const { title: parsedBookName } = JSON.parse(book_name);
     console.log(`upload`, upload);
     console.log(`initialValues.upload`, initialValues.upload);
     console.log(`_isEqual(upload, initialValues)`, _isEqual(values, initialValues));
@@ -94,13 +99,18 @@ const ConfigBookModal = ({
           console.log(`newImagesFromStrapi`, newImagesFromStrapi);
           const replacedImagesAccordingDraggable = upload.map(
             (uploadItem) =>
-              newImagesFromStrapi.find((item) => item.name === uploadItem.uid) || uploadItem
+              newImagesFromStrapi.find((item) => {
+                // NOTE! checking without extension
+                const [name] = item.name.split('.');
+                return name === uploadItem.uid;
+              }) || uploadItem
           );
           console.log(`replacedImagesAccordingDraggable`, replacedImagesAccordingDraggable);
           const updateFinishValues = {
             ...otherValues,
+            book_name: parsedBookName,
             seller: profile?.id,
-            photos: replacedImagesAccordingDraggable,
+            photos: replacedImagesAccordingDraggable.map((item) => item.id),
             slug: getSlugifyValue(values.book_name),
           };
           const updatedBook = await updateBook(bookId, updateFinishValues);
@@ -111,6 +121,7 @@ const ConfigBookModal = ({
           console.log('22222222');
           const updateFinishValues = {
             ...otherValues,
+            book_name: parsedBookName,
             seller: profile?.id,
             photos: existedUploadFiles,
             slug: getSlugifyValue(values.book_name),
@@ -170,6 +181,9 @@ const ConfigBookModal = ({
             name={formName}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
+            // onValuesChange={(changedValues, values) => {
+            //   console.log(`changedValues, values`, changedValues, values);
+            // }}
           >
             <Row>
               <Col xs={24}>

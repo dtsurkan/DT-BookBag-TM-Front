@@ -1,4 +1,4 @@
-import { useShowConfigModal } from 'hooks';
+import { useShowConfigModal, useTwilioClient } from 'hooks';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,15 +15,16 @@ import { getCurrentUserProfile, updateCurrentUserProfile } from 'state/actions/u
 import { getSettingsInputList } from 'utils/form-configs';
 
 const Settings = () => {
-  const [
+  const {
     isConfigBookModal,
     showConfigBookModal,
     handleCancelConfigBookModal,
-  ] = useShowConfigModal();
+  } = useShowConfigModal();
   const { profile, isLoadingUserProfile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
   const [form] = Form.useForm();
+  const { client } = useTwilioClient();
 
   // if (!profile) {
   //   router.push("/login");
@@ -166,6 +167,7 @@ const Settings = () => {
         </Row>
       </ProfileLayout>
       <DeleteProfileModal
+        client={client}
         visible={isConfigBookModal}
         onCancel={handleCancelConfigBookModal}
         title="Видалити свій профіль"
