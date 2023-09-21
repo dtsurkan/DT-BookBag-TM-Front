@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { notification } from 'antd';
-import { postTokenFromStrapi } from 'lib/strapi/services/twilio';
+import { postTokenFromStrapi, sendEmailWithTwilioData } from 'lib/strapi/services/twilio';
 import { doShutDown, getUserByIdentity } from 'lib/twilio-conversation/services/client';
 import { updateUserFriendlyName } from 'lib/twilio-conversation/services/user';
 const Conversations = require('@twilio/conversations');
@@ -65,7 +65,7 @@ export const useTwilioClient = (hasNotifications = false) => {
         }
       });
       if (hasNotifications) {
-        client.on('messageAdded', (message) => {
+        client.on('messageAdded', async (message) => {
           console.log(`message`, message);
           const key = `open${Date.now()}`;
           const theSameAuthor = email === message.state.author;
@@ -91,7 +91,7 @@ export const useTwilioClient = (hasNotifications = false) => {
                   } створив чат для обговорення деталей по книзі ${message.conversation.friendlyName.toUpperCase()}, автора(ів) ${message.conversation.channelState.attributes.book.author.toUpperCase()} та відправив декілька повідомлень. Перейдіть будь ласка в мої повідомлення в своєму профілі або натисніть на це повідомлення.`}
                 </div>
               ),
-              duration: messageIndex ? 3.5 : 0,
+              duration: messageIndex ? 3.5 : 7,
               style: {
                 cursor: 'pointer',
               },
@@ -100,6 +100,15 @@ export const useTwilioClient = (hasNotifications = false) => {
                 notification.close(key);
               },
             });
+          } else {
+            console.log('_-----w-rgwr-gwrg-wrg-wr-gw-gwr-grw-');
+            // Send email to another user exactly when created chat and send first message
+            // if (!messageIndex) {
+            await sendEmailWithTwilioData({
+              conversation: message.conversation.channelState,
+              email: message.conversation.channelState.attributes.seller.email,
+            });
+            // }
           }
         });
       }

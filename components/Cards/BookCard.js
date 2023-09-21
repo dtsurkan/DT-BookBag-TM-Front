@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import useTranslation from 'next-translate/useTranslation';
 import { useSelector } from 'react-redux';
 import { Card, Col, Row, Space, Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
@@ -11,7 +12,7 @@ import classes from 'styles/scss/components/cards.module.scss';
 const BookCard = ({ book = {}, gutter = [8, 0] }) => {
   const router = useRouter();
   const { profile } = useSelector((state) => state.user);
-
+  const { t } = useTranslation();
   return (
     <Card hoverable className={classes.bookCard} onClick={() => router.push(`/books/${book.slug}`)}>
       <Row gutter={gutter} className={classes.row}>
@@ -26,24 +27,31 @@ const BookCard = ({ book = {}, gutter = [8, 0] }) => {
             {book.book_status === 'sold' && book.seller.id !== profile.id ? (
               <Space>
                 <DoubleCheckIcon />
-                <Text style={{ color: '#6bbe9f' }}>Успішно куплено</Text>
+                <Text style={{ color: '#6bbe9f' }}>{t('components:book.success-bought')}</Text>
               </Space>
             ) : book.book_status === 'sold' ? (
               <Space>
                 <DoubleCheckIcon />
-                <Text style={{ color: '#6bbe9f' }}>Успішно продано</Text>
+                <Text style={{ color: '#6bbe9f' }}>{t('components:book.success-sold')}</Text>
               </Space>
             ) : (
               <>
-                <Text type="secondary">{`Языки: ${book?.language}`}</Text>
+                <Text type="secondary">
+                  {t('components:cards.description.language')}{' '}
+                  {t(`components:lists.language.${book.language}`)}
+                </Text>
                 <Text
                   type="secondary"
                   ellipsis={{ tooltip: <Tooltip>{getCapitalizedString(book?.author)}</Tooltip> }}
                   style={{ textTransform: 'capitalize' }}
-                >{`Автор: ${book?.author}`}</Text>
+                >
+                  {t('components:cards.description.author-with-name', { author: book.author })}
+                </Text>
               </>
             )}
-            <Title level={3}>{`${book?.price} грн`}</Title>
+            <Title level={3}>
+              {t('components:cards.description.price', { price: book.price })}
+            </Title>
           </Space>
         </Col>
       </Row>

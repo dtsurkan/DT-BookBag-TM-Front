@@ -12,7 +12,7 @@ const SoldBooks = () => {
   const router = useRouter();
 
   const sold_books = !_isEmpty(profile)
-    ? profile.added_books.filter((book) => book.book_status === 'sold')
+    ? profile.added_books.filter((book) => book.book_status !== 'added')
     : [];
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const SoldBooks = () => {
   return (
     <ProfileLayout>
       <ProfileList
-        listTitle="Продані книги"
+        listTitle="components:lists.profile.sold-books-title"
         renderKey="sold"
         books={sold_books}
         hasAddingBook={false}

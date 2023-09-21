@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Col, Form, Select, Spin } from 'antd';
 import CustomEmptyComponent from 'components/Empty/CustomEmptyComponent';
 
@@ -14,14 +15,14 @@ const MainSelectSearch = ({
   showSearch = true,
   maxTagCount = 'responsive',
   size = 'large',
-  placeholder = 'Категория',
+  placeholder = 'components:data-entries.category-placeholder',
   optionFilterProp = 'label',
   options = [],
   labelInValue = false,
   isFetching = false,
   disabled = false,
   bordered = true,
-  extra = false,
+  extra = 'components:empty.empty-string',
   getPopupContainer = (trigger) => trigger.parentNode,
   filterOption = (inputValue, option) =>
     option?.label.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1,
@@ -31,6 +32,8 @@ const MainSelectSearch = ({
   lg = 12,
   ...props
 }) => {
+  const { t } = useTranslation();
+  const translateRules = rules.map((rule) => ({ ...rule, message: t(rule.message) }));
   const сommonSelectProps = {
     mode,
     bordered,
@@ -39,14 +42,14 @@ const MainSelectSearch = ({
     showSearch,
     maxTagCount: mode === 'multiple' && maxTagCount,
     size,
-    placeholder,
+    placeholder: t(placeholder),
     // if options are childen you need config isChildrenOptions and optionFilterProp to"children"
     optionFilterProp,
     labelInValue,
     notFoundContent: isFetching ? (
       <Spin size="large" />
     ) : (
-      <CustomEmptyComponent description="Немає результатів по даному запиту" />
+      <CustomEmptyComponent description="components:empty.no-results" />
     ),
     disabled,
     getPopupContainer,
@@ -59,10 +62,10 @@ const MainSelectSearch = ({
     <Col xs={xs} lg={lg}>
       <Form.Item
         name={name}
-        rules={rules}
+        rules={translateRules}
         style={formStyles}
         hasFeedback={hasFeedback}
-        extra={extra}
+        extra={t(extra)}
         initialValue={initialValue}
       >
         {isChildrenOptions ? (

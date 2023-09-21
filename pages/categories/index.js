@@ -1,19 +1,22 @@
 import { useRouter } from 'next/router';
+import useTranslation from 'next-translate/useTranslation';
 import { Button, Card, Col, List, Row } from 'antd';
 import ContentComponent from 'components/AppLayout/ContentComponent';
 import Title from 'antd/lib/typography/Title';
 import AppLayout from 'components/AppLayout/AppLayout';
 import { getCategories } from 'lib/strapi/services/categories';
 import classes from 'styles/scss/pages/categories.module.scss';
+
 const Categories = ({ categories = [] }) => {
   console.log('categories', categories);
   const router = useRouter();
+  const { t } = useTranslation();
   return (
     <AppLayout globalDivStyles={{ background: '#F9FEFD' }}>
       <ContentComponent>
         <Row gutter={[16, 16]}>
           <Col xs={24}>
-            <Title level={1}>Категории книг</Title>
+            <Title level={1}>{t('components:others.categories-title')}</Title>
           </Col>
           {categories.map((category) => (
             <Col key={category.id} xs={24}>
@@ -23,7 +26,7 @@ const Categories = ({ categories = [] }) => {
                   type="text"
                   style={{ fontSize: '25px', height: '60px' }}
                 >
-                  {category.name}
+                  {t(`components:categories.${category.slug}`)}
                 </Button>
                 <ul className={classes.categoryList}>
                   {category.subcategories.map((subcategory) => (
@@ -50,7 +53,7 @@ const Categories = ({ categories = [] }) => {
                           router.push(`categories/${category.slug}/${subcategory.slug}`)
                         }
                       >
-                        {subcategory.name}
+                        {t(`components:categories.${subcategory.slug}`)}
                       </Button>
                       {/* </Text> */}
                     </List.Item>

@@ -1,49 +1,47 @@
-import { Form, Input } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Form } from 'antd';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
 import MainSpinner from 'components/Loading/Spinners/MainSpinner';
+import MainInputPassword from 'components/DataEntry/MainInputPassword';
+import MainInput from 'components/DataEntry/MainInput';
 
 const RegisterForm = ({ onFinish = () => {}, isLoadingAuth }) => {
   return (
     <>
       <Form onFinish={onFinish} size="large">
-        <Form.Item
-          hasFeedback
+        <MainInput
+          lg={24}
           name="username"
-          rules={[{ required: true, message: 'Please input your Username!' }]}
-        >
-          <Input placeholder="Введите логин" />
-        </Form.Item>
-        <Form.Item
-          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: 'components:data-entries.username-error-required',
+            },
+          ]}
+          placeholder="components:data-entries.username-placeholder"
+        />
+        <MainInput
+          lg={24}
           name="email"
           rules={[
             {
               type: 'email',
-              message: 'The input is not valid E-mail!',
+              message: 'components:data-entries.email-error-valid',
             },
             {
               required: true,
-              message: 'Please input your E-mail!',
+              message: 'components:data-entries.email-error-required',
             },
           ]}
-        >
-          <Input placeholder="Введите ваш емейл" />
-        </Form.Item>
-        <Form.Item
-          hasFeedback
+          placeholder="components:data-entries.email-placeholder"
+        />
+        <MainInputPassword
+          lg={24}
           name="password"
-          rules={[{ required: true, message: 'Please input your Password!' }]}
-        >
-          <Input.Password
-            placeholder="Пароль"
-            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-          />
-        </Form.Item>
-
+          rules={[{ required: true, message: 'components:data-entries.password-error-required' }]}
+        />
         <Form.Item>
           <MainSpinner spinning={isLoadingAuth}>
-            <PrimaryButton btnText="Зарегистрироваться" />
+            <PrimaryButton btnText="components:buttons.register" />
           </MainSpinner>
         </Form.Item>
       </Form>

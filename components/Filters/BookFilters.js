@@ -1,21 +1,23 @@
 import { useEffect } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { Col, Row, Form } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import FilterComponent from 'components/DataEntry/FilterComponent';
 import {
-  BOOK_CONDITION_LIST,
-  LANGUAGE_LIST,
-  PRICE_FILTER_LIST,
-  CREATED_AT_FILTER_LIST,
+  getCreateAtFilterList,
+  getPriceFilterList,
+  getBookConditionList,
+  getLanguageList,
 } from 'utils/constants';
 import { stringifyQueryParams } from 'lib/qs';
 
-const BookFilters = ({ booksCount = 0, title = 'Каталог книг' }) => {
+const BookFilters = ({ booksCount = 0, title = 'components:others.catalog-title' }) => {
   const [form] = Form.useForm();
+  const { t } = useTranslation();
   const router = useRouter();
   const onValuesChange = (changedFields, allQueryParams) =>
-    router.push(`${window.location.pathname}${stringifyQueryParams(allQueryParams)}`);
+    router.push(`${router.pathname}${stringifyQueryParams(allQueryParams)}`);
 
   useEffect(() => {
     form.setFieldsValue({ ...router.query });
@@ -25,27 +27,27 @@ const BookFilters = ({ booksCount = 0, title = 'Каталог книг' }) => {
     <Form form={form} size="large" name="filters" onValuesChange={onValuesChange}>
       <Row justify="space-between">
         <Col xs={24}>
-          <Title level={1}>{`${title} (найдено: ${booksCount})`}</Title>
+          <Title level={1}>{t(title, { booksCount })}</Title>
         </Col>
         <Col xs={24}>
           <Row>
-            <FilterComponent name="condition" options={BOOK_CONDITION_LIST} />
+            <FilterComponent name="condition" options={getBookConditionList(t)} />
             <FilterComponent
-              filterText="По дате"
-              placeholder="По дате"
+              filterText="components:data-entries.date-filter-label"
+              placeholder="components:data-entries.date-placeholder"
               name="created_at"
-              options={CREATED_AT_FILTER_LIST}
+              options={getCreateAtFilterList(t)}
             />
             <FilterComponent
-              options={LANGUAGE_LIST}
-              filterText="Язык"
-              placeholder="Язык"
+              options={getLanguageList(t)}
+              filterText="components:data-entries.language-filter-label"
+              placeholder="components:data-entries.language-placeholder"
               name="language"
             />
             <FilterComponent
-              options={PRICE_FILTER_LIST}
-              filterText="Цена"
-              placeholder="Цена"
+              options={getPriceFilterList(t)}
+              filterText="components:data-entries.price-filter-label"
+              placeholder="components:data-entries.price-placeholder"
               name="price"
               xs={12}
               lg={16}

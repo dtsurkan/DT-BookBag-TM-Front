@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
@@ -23,6 +24,7 @@ import {
 import { getLastElementInArray, scrollToBottom } from 'utils/functions';
 
 const ChatComponent = ({ book = {} }) => {
+  const { t } = useTranslation();
   const {
     profile: { email, id, username },
   } = useSelector((state) => state.user);
@@ -86,6 +88,8 @@ const ChatComponent = ({ book = {} }) => {
         console.log(`messageAddedmessageAddedmessage`, message);
         setMessages((messages) => [...messages, message]);
         scrollToBottom(scrollToBottomRef, true);
+        const getAllMessagesRead = await conversation.setAllMessagesRead();
+        console.log(`getAllMessagesReadqqqqqqqqqqqqq`, getAllMessagesRead);
       });
       // Only typing in separate chat item
       conversation.on('typingStarted', (participant) =>
@@ -239,17 +243,16 @@ const ChatComponent = ({ book = {} }) => {
               <Col>
                 <PageHeader
                   onBack={() => router.push(`/books/${router.query.slug}`)}
-                  title="Вернуться"
+                  title={t('components:buttons.return')}
                   style={{ padding: '0' }}
                 />
               </Col>
               <Col>
                 <Alert
-                  message="Ваш чат с автором"
-                  description="Здесь вы можете договорится с автором о вашей сделке, например
-                об условиях доставки и оплаты."
+                  message={t('components:alerts.chat.message')}
+                  description={t('components:alerts.chat.description')}
                   type="warning"
-                  closeText="Скрыть"
+                  closeText={t('components:alerts.chat.close-text')}
                 />
               </Col>
               <Col
@@ -285,11 +288,11 @@ const ChatComponent = ({ book = {} }) => {
     </Spin>
   );
 };
-
+// Think about removing server-side in this position in order to avoid indexing with chat
 export async function getServerSideProps({ params }) {
   console.log(`params`, params);
   const book = await getBookBySlug(params.slug);
-  if (!book.data.length) {
+  if (!book?.data?.length) {
     return {
       notFound: true,
     };

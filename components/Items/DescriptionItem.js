@@ -1,8 +1,9 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Col, Row } from 'antd';
 import Title from 'antd/lib/typography/Title';
 
 const DescriptionItem = ({
-  title = 'Автор',
+  title = 'components:cards.description.author',
   titleLevel = 4,
   titleType = 'secondary',
   description = '',
@@ -13,11 +14,12 @@ const DescriptionItem = ({
   rowStyle = { margin: '30px 0' },
   copyable = false,
 }) => {
+  const { t } = useTranslation();
   return (
     <Row justify="space-between" wrap={wrap} style={rowStyle}>
       <Col>
         <Title type={titleType} level={titleLevel} style={{ marginRight: '30px' }}>
-          {title}
+          {t(title)}
         </Title>
       </Col>
       <Col>

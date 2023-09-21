@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Col, Form, Input } from 'antd';
 
 const MainInput = ({
@@ -5,17 +6,33 @@ const MainInput = ({
   name = '',
   rules = [],
   allowClear = true,
-  placeholder = '',
+  placeholder = 'components:empty.empty-string',
   xs = 24,
   lg = 12,
   disabled = false,
-  extra = '',
+  prefix,
+  extra = 'components:empty.empty-string',
+  isTranslateRules = true,
   ...props
 }) => {
+  const { t } = useTranslation();
+  const translateRules = rules.map((rule) => ({ ...rule, message: t(rule.message) }));
+
   return (
     <Col xs={xs} lg={lg}>
-      <Form.Item hasFeedback={hasFeedback} name={name} rules={rules} extra={extra} {...props}>
-        <Input allowClear={allowClear} placeholder={placeholder} disabled={disabled} />
+      <Form.Item
+        hasFeedback={hasFeedback}
+        name={name}
+        rules={isTranslateRules ? translateRules : rules}
+        extra={t(extra)}
+        {...props}
+      >
+        <Input
+          prefix={prefix}
+          allowClear={allowClear}
+          placeholder={t(placeholder)}
+          disabled={disabled}
+        />
       </Form.Item>
     </Col>
   );

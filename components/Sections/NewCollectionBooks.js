@@ -1,47 +1,55 @@
 import { Space } from 'antd';
+import useTranslation from 'next-translate/useTranslation';
+import Trans from 'next-translate/Trans';
 import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
-import BookCard from 'components/Cards/BookCard';
-import BooksSlider from 'components/Sliders/Slick/BooksSlider';
 import Link from 'antd/lib/typography/Link';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
+import CustomEmptyComponent from 'components/Empty/CustomEmptyComponent';
+import BookCard from 'components/Cards/BookCard';
+import BooksSlider from 'components/Sliders/Slick/BooksSlider';
 import classes from 'styles/scss/pages/home.module.scss';
 
 const NewCollectionBooks = ({
   books = [],
   isAdditionalParagraph = true,
-  title = 'Новые пополнения книг',
-  suptitle = 'Новинки',
+  title = 'index:newCollectionBooks.title',
+  suptitle = 'index:newCollectionBooks.suptitle',
+  emptyText = 'components:empty.no-books',
   showModal = () => {},
 }) => {
   const screens = useBreakpoint();
   const MAX_COUNT_BOOKS = !screens.md ? 6 : 9;
+  const { t } = useTranslation();
 
   return (
     <section className={classes.newCollectionBooks}>
       <Space direction="vertical" className={classes.newCollectionBooks__heading}>
-        <Text style={{ color: '#01504D' }}>{suptitle}</Text>
-
-        <Title>{title}</Title>
+        <Text style={{ color: '#01504D' }}>{t(suptitle)}</Text>
+        <Title>{t(title)}</Title>
       </Space>
 
-      <BooksSlider>
-        {books.length &&
-          books.slice(0, MAX_COUNT_BOOKS).map((book) => (
+      {books.length ? (
+        <BooksSlider>
+          {books.slice(0, MAX_COUNT_BOOKS).map((book) => (
             <div key={book.id}>
               <BookCard book={book} />
             </div>
           ))}
-      </BooksSlider>
+        </BooksSlider>
+      ) : (
+        <CustomEmptyComponent description={emptyText} />
+      )}
 
       {isAdditionalParagraph && (
-        <div className="" style={{ textAlign: 'center', margin: ' 60px 0' }}>
-          <Text type="secondary" style={{ fontSize: '16px' }}>
-            Хотите чтобы ваша книга тоже была здесь? Тогда нажмите{' '}
-            <Link style={{ color: '#01504D' }} onClick={showModal}>
-              добавить свою книгу
-            </Link>
-          </Text>
+        <div style={{ textAlign: 'center', margin: ' 60px 0' }}>
+          <Trans
+            i18nKey="index:newCollectionBooks.text"
+            components={[
+              <Text key="0" type="secondary" style={{ fontSize: '16px' }} />,
+              <Link key="1" style={{ color: '#01504D' }} onClick={showModal} />,
+            ]}
+          />
         </div>
       )}
     </section>

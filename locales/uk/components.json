@@ -1,0 +1,263 @@
+{
+  "categories": {
+    "dramaturgiya": "Драматургія",
+    "antichnaya-drama": "Антична драма",
+    "drama-pesa": "Драма, пьеса",
+    "komediya": "Комедія",
+    "pesy-i-dramaturgiya": "П'єси і драматургія",
+    "sczenarij": "Сценарій"
+  },
+  "buttons": {
+    "add-book": "Додати книгу",
+    "publish-book": "Опублікувати книгу",
+    "subscribe": "Підписатися",
+    "login": "Увійти в аккаунт",
+    "register": "Зареєструватися",
+    "forgot-password": "Відновити пароль",
+    "reset-password": "Скинути пароль",
+    "forgot-password-link": "Відновити пароль?",
+    "see-all-books": "Див. всі",
+    "all-categories": "Всі розділи",
+    "books": "Книги",
+    "write-to-seller": "Написати продавцю",
+    "return": "Повернутися",
+    "confirm": "Підтвердити",
+    "reject": "Відхилити",
+    "send": "Відправити",
+    "return-to-selling": "Повернути до продажу",
+    "delete": "Видалити",
+    "add-another-bookname": "Додати іншу назву",
+    "reset": "Скинути",
+    "remove-profile": "Видалити свій профіль",
+    "sell": "Продати",
+    "save-changes": "Зберегти всі зміни",
+    "join": "Приєднатися"
+  },
+  "data-entries": {
+    "fullname-placeholder": "Повне ім'я",
+    "fullname-error-required": "Введіть повне ім'я!",
+    "username-placeholder": "Введіть логін...",
+    "username-error-required": "Введіть своє ім'я користувача!",
+    "email-placeholder": "Введіть свій емейл...",
+    "email-custom-placeholder": "Введіть {{profileEmail}}",
+    "email-error-required": "Будь ласка, введіть свою адресу електронної пошти!",
+    "email-buyer-placeholder": "Введіть свій емейл...",
+    "email-buyer-error-required": "Будь ласка, Введіть емейл юзера, якому продаєте книгу!",
+    "email-error-not-sell-yourself": "Ви не можете продати книгу сам собі!",
+    "email-error-valid": "Введено неправильну адресу електронної пошти!",
+    "email-error-incorrect": "Введено невірний емейл!",
+    "email-extra-text": "Ви не можете змінити свою пошту",
+    "password-placeholder": "Введіть пароль...",
+    "password-error-required": "Будь ласка, введіть свій пароль!",
+    "confirm-password-placeholder": "Повторіть свій пароль...",
+    "confirm-password-error-required": "Будь ласка, підтвердьте свій пароль!",
+    "confirm-password-error-dismatch": "Два введені паролі не збігаються!",
+    "condition-placeholder": "Стан",
+    "condition-error-required": "Виберіть стан!",
+    "condition-filter-label": "Стан:",
+    "date-placeholder": "По даті",
+    "date-filter-label": "По даті:",
+    "language-placeholder": "Мова",
+    "language-error-required": "Виберіть мову!",
+    "language-filter-label": "Мова",
+    "price-placeholder": "Ціна",
+    "price-error-required": "Введіть ціну!",
+    "price-error-min-value": "Мінімальна ціна: 10 грн!",
+    "price-filter-label": "Ціна:",
+    "message-placeholder": "Ваше повідомлення...",
+    "seller-comment-placeholder": "Коментар до товару ...",
+    "upload-first-paragraph": "Клацніть або перетягніть файл у цю область, щоб завантажити",
+    "upload-second-paragraph": "Підтримка одноразового або масового завантаження. Суворо забороняйте завантажувати дані компанії або інші файли групи.",
+    "upload-error-required": "Завантажте хоча б одну фото книги!",
+    "upload-file-size-rule": "Файл {{fileName}} повинен бути меншим ніж {{maxFileSize}}MB",
+    "upload-file-type-rule": "Тип файлу {{fileName}} не підтримується",
+    "bookname-placeholder": "Назва книги",
+    "bookname-error-required": "Введіть назву книги!",
+    "custom-bookname-placeholder": "Введіть свою назву",
+    "author-placeholder": "Автор",
+    "author-error-required": "Введіть автора!",
+    "category-placeholder": "Категорія",
+    "category-error-required": "Оберіть категорію!",
+    "subcategory-placeholder": "Підкатегорія",
+    "subcategory-error-required": "Виберіть підкатегорію!",
+    "city-placeholder": "Місто",
+    "city-error-required": "Вкажіть своє місто!",
+    "city-extra-text": "Ваше місто автоматично підтягується із профілю. Якщо хочете змінити, перейдіть в профіль.",
+    "author-bookname-search-placeholder": "Введіть автора або назву книги..."
+  },
+  "empty": {
+    "empty-string": "",
+    "no-books": "Немає книг",
+    "no-messages": "Немає повідомлень",
+    "no-results": "Немає результатів по даному запиту"
+  },
+  "loading": {
+    "tip": "Зачекайте..."
+  },
+  "alerts": {
+    "chat": {
+      "message": "Ваш чат с автором",
+      "description": "Тут ви можете домовиться з автором про вашій угоді, наприклад про умови доставки та оплати.",
+      "close-text": "Приховати"
+    },
+    "check-user": {
+      "message": "Якщо ви підтвердите цю дію, то ви успішно продасте свою книгу іншому користувачу"
+    },
+    "delete-profile": {
+      "message": "Якщо ви підтвердите цю дію, то всі дані, які звя'язані з цим аккаунтом будуть повністю видалені. Будьте обережні!"
+    }
+  },
+  "auth": {
+    "login-title": "Вхід до акаунту",
+    "register-title": "Реєстрація аккаунта",
+    "forgot-password-title": "Відновити пароль",
+    "reset-password-title": "Відновити пароль",
+    "success-register-title": "Ви успішно зареєструвалися. Для верифікації перейдіть на пошту і натисніть на посилання і зайдіть в систему.",
+    "success-register-text": "Дякую що залишаєтеся з нами!",
+    "success-forgot-password-title": "Вам відправлено на пошту посилання для відновлення пароля. Будь ласка, перевірте емейл.",
+    "success-reset-password-title": "Ви успішно скинули пароль. Будь ласка, перейдіть на сторінку авторизації і зайдіть в систему!",
+    "success-editing-profile-title": "Ви успішно змінили свій профіль",
+    "success-add-to-liked-books-title": "Ви успішно додали книгу до переліку вподобаних",
+    "success-remove-from-liked-books-title": "Ви успішно видалили книгу із переліку вподобаних",
+    "exist-book-in-liked-title": "Ви вже вподобали та додали цю книгу до переліку вподобаних!",
+    "required-auth-title": "Вам потрібно авторизуватися!",
+    "signout-title": "Ви вийшли з системи"
+  },
+  "auth-providers": {
+    "divider-text": "Або продовжити",
+    "additional-login-text": "У вас ще немає аккаунта? Натисніть ",
+    "additional-register-text": "Вже є аккаунт? Натисніть "
+  },
+  "lists": {
+    "menu": {
+      "books": "Книги",
+      "categories": "Категорії",
+      "about-bookbag": "Про BookBag"
+    },
+    "profile": {
+      "my-books": "Мої книги",
+      "my-books-title": "Мої книги ({{count}})",
+      "sold-books": "Продано",
+      "sold-books-title": "Продані книги ({{count}})",
+      "bought-books": "Куплено",
+      "bought-books-title": "Куплені книги ({{count}})",
+      "liked-books": "Вподобані",
+      "liked-books-title": "Вподобані книги ({{count}})",
+      "my-messages": "Мої повідомлення",
+      "my-messages-title": "Мої повідомлення",
+      "settings": "Налаштування",
+      "logout": "Вийти"
+    },
+    "book-settings": {
+      "edit": "Змінити",
+      "liked": "Подобається",
+      "sold": "Продано",
+      "delete": "Видалити"
+    },
+    "price": {
+      "from-big-to-small": "Від високой до низької",
+      "from-small-to-big": "Від низької до високої"
+    },
+    "date": {
+      "default": "Дефолтне",
+      "new": "Найновіші"
+    },
+    "condition": {
+      "new": "Нове",
+      "perfect": "Ідеальне",
+      "good": "Хороше",
+      "medium": "Середнє",
+      "bad": "Погане",
+      "terrible": "Жахливе"
+    },
+    "language": {
+      "ukrainian": "Українська",
+      "russian": "Російська",
+      "english": "Англійська",
+      "polish": "Польска",
+      "italian": "Італійська",
+      "german": "Німецька"
+    }
+  },
+  "cards": {
+    "description": {
+      "name": "Назва",
+      "author": "Автор",
+      "author-with-name": "Автор {{author}}",
+      "categories": "Категорії",
+      "subcategories": "Підкатегорії",
+      "language": "Мова",
+      "language-with-name": "Мова {{language}}",
+      "condition": "Стан",
+      "city": "Місто",
+      "comments": "Коментар продавця:",
+      "price": "{{price}} грн"
+    }
+  },
+  "confirm": {
+    "confirm-write-to-seller-title": "Ви хочете написати цьому продавцеві?",
+    "confirm-sold-book": "Ви дійсно хочете продати цю книгу?",
+    "confirm-restore-solding-book": "Ви дійсно хочете відновити продаж на цю книгу?",
+    "confirm-buying-book": "Ви точно відхиляєте купівлю цієї книги?",
+    "confirm-reject-buying-book": "Ви точно підтверджуєте купівлю цієї книги?",
+    "confirm-saving-profile-settings": "Ви дійсно хочете зберегти всі зміни?",
+    "confirm-delete-book": "Ви дійсно хочете видалити цю книгу?"
+  },
+  "messages": {
+    "non-exist-email": "Такого емейлу не існує. Введіть дійсний емейл користувача, який використовується на сайті"
+  },
+  "table": {
+    "sender": "Відправник",
+    "name": "Назва",
+    "messages": "Повідомлення",
+    "date": "Дата/час"
+  },
+  "general": {
+    "yes": "Так",
+    "no": "Ні"
+  },
+  "book": {
+    "sold": "Продано",
+    "in-progress": "В обробці",
+    "selling": "Продається",
+    "owner-book": "Ви є власником цієї книги. Тут ви можете змінити статус книги на продано.",
+    "buyer-book": "Ви є потенційним покупцем цієї книги. Тут ви можете переглянути статус книги, а також підтвердити або відхилити покупку.",
+    "success-bought": "Успішно куплено",
+    "success-sold": "Успішно продано",
+    "reject-purchase": "Відхилити покупку",
+    "confirm-purchase": "Підтвердити покупку",
+    "waiting-for-buy-sell": "Очікуйте на підтвердження або відхилення від покупця",
+    "accept-reject-purchase": "Підтвердіть або відхиліть свою покупку",
+    "update-book-status-to-processing": "Ви перекинули свою книгу в режим очікування. Тепер покупець повинен підтвердити.",
+    "update-book-status-to-added": "Ви успішно повернули книгу для продажі",
+    "update-book-status-to-sold": "Ви успішно купили книгу!"
+  },
+  "others": {
+    "settings-title": "Налаштування профілю",
+    "confirm-deletion-title": "Введіть {{profileEmail}} для підтвердження.",
+    "check-user-modal-title": "Введіть емейл юзера, якому продаєте книгу",
+    "remove-profile-title": "Видалити свій профіль",
+    "success-remove-profile-title": "Ви успішно видалили свій аккаунт!",
+    "add-book-title": "Додати нову книгу",
+    "edit-book-title": "Змінити книгу",
+    "sell-book-title": "Продати книгу",
+    "success-publish-book-title": "Ваша книга успішно опублікована",
+    "success-edit-book-title": "Ваша книга успішно змінена",
+    "success-delete-book-title": "Ваша книга успішно видалена",
+    "seller": "Продавець:",
+    "good-item": "Ваш товар:",
+    "categories-title": "Категорії книг",
+    "catalog-title": "Каталог книг ({{booksCount}})",
+    "success-sold-book-title": "Успішно продано",
+    "success-bought-book-title": "Успішно куплено ({{buyer}}",
+    "your-book-title": "Це ваша книга!",
+    "others-seller-books-title": "Інші книги продавця",
+    "others-seller-books-text": "Якщо вам сподобалося творчість даного автора, не забувайте, що ви можете стежити за виходом його нових книг натиснувши підписатися на автора.",
+    "seller-all-books-title": "Тут ви можете знайти всі книги продавця.",
+    "is-typing": "{{participant}} набирає повідомлення...",
+    "upload-title": "Завантажте фотографії книги",
+    "upload-description": "До 10 фотографій не більше 200Мб. PNG, JPEG, WEBP",
+    "required-fields-text": "Загальна інформація про книгу",
+    "general-information": "Всі поля обов'язкові для заповнення"
+  }
+}

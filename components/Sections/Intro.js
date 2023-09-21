@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Col, Row, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -9,25 +10,23 @@ import LottieComponent from 'components/Lottie/LottieComponent';
 import booksLottie from 'lotties/books.json';
 
 const Intro = ({ showModal = () => {} }) => {
+  const { t } = useTranslation();
   return (
     <Row align="middle" style={{ minHeight: '90vh' }}>
       <Col xs={24} md={10} style={{ zIndex: 1, marginTop: '16px' }}>
         <Space size="middle" direction="vertical">
           <Title style={{ color: '#01504D' }} level={3}>
-            Добро пожаловать!
+            {t('index:intro.suptitle')}
           </Title>
           <Title style={{ fontSize: '48px' }} level={1}>
-            BookBag - платформа которая экономит ваши деньги и природные ресурсы
+            {t('index:intro.title')}
           </Title>
-          <div className="" style={{ maxWidth: '550px' }}>
-            <Paragraph type="secondary">
-              Регистрируйся и переходы к покупке своих любимых книг по вигодной цене, а если ты
-              писатель, то спеши поделиться своим творчеством с людьми.
-            </Paragraph>
+          <div style={{ maxWidth: '550px' }}>
+            <Paragraph type="secondary">{t('index:intro.subtitle')}</Paragraph>
           </div>
           <PrimaryButton
             onClick={showModal}
-            btnText="Добавить книгу"
+            btnText="components:buttons.add-book"
             isBlock={false}
             style={{ marginTop: '30px' }}
           />
@@ -47,7 +46,7 @@ const Intro = ({ showModal = () => {} }) => {
           <Col xs={{ span: 24 }} lg={{ span: 12 }}>
             <Space>
               <BotIcon />
-              <Text style={{ maxWidth: '150px' }}>Facebook бот - ваш надежний помощник</Text>
+              <Text style={{ maxWidth: '150px' }}>{t('index:intro.facebook')}</Text>
             </Space>
           </Col>
           <Col
@@ -56,7 +55,7 @@ const Intro = ({ showModal = () => {} }) => {
             style={{ display: 'flex', justifyContent: 'center' }}
           >
             <Space direction="vertical" align="center">
-              <Text>Вниз</Text>
+              <Text>{t('index:intro.arrow-text')}</Text>
               <DownOutlined />
             </Space>
           </Col>

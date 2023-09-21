@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import useTranslation from 'next-translate/useTranslation';
 import { AutoComplete, Avatar, Input, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
@@ -10,7 +11,7 @@ const MainAutoComplete = ({
   isCustomizedOptions = true,
   allowClear = true,
   size = 'large',
-  placeholder = 'Введите автора или названия книги...',
+  placeholder = 'components:data-entries.author-bookname-search-placeholder',
   options = [],
   isFetching = false,
   disabled = false,
@@ -21,6 +22,7 @@ const MainAutoComplete = ({
   onSelect = () => {},
   ...props
 }) => {
+  const { t } = useTranslation();
   const customizedOptions = options.map((option) => ({
     key: option.slug,
     value: option.slug,
@@ -46,7 +48,7 @@ const MainAutoComplete = ({
         isFetching ? (
           <Spin size="large" />
         ) : (
-          <CustomEmptyComponent description="Немає результатів по даному запиту" />
+          <CustomEmptyComponent description="components:empty.no-results" />
         )
       }
       options={isCustomizedOptions ? customizedOptions : options}
@@ -60,7 +62,7 @@ const MainAutoComplete = ({
         allowClear={allowClear}
         size={size}
         prefix={<SearchOutlined />}
-        placeholder={placeholder}
+        placeholder={t(placeholder)}
         bordered={bordered}
       />
     </AutoComplete>

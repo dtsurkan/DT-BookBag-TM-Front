@@ -30,7 +30,7 @@ const BoughtBooks = () => {
   return (
     <ProfileLayout>
       <ProfileList
-        listTitle="Куплені книги"
+        listTitle="components:lists.profile.bought-books-title"
         renderKey="bought"
         books={!_isEmpty(profile) ? profile?.bought_books : []}
         hasAddingBook={false}

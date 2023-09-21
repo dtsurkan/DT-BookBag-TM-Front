@@ -11,11 +11,13 @@ import MainAutoComplete from 'components/DataEntry/MainAutoComplete';
 import PageHeaderLogo from 'components/Logo/PageHeaderLogo';
 import ProfileDropdown from './ProfileDropdown';
 import MenuItems from './MenuItems';
-import classes from 'styles/scss/layout/containers.module.scss';
 import { getBooksByAuthorOrBookName } from 'lib/strapi/services/books';
+import { LOCALES_LIST } from 'utils/constants';
+import classes from 'styles/scss/layout/containers.module.scss';
 
 const DesktopHeader = ({ hasLogo = true, hasProfile = true, headerStyles }) => {
   const router = useRouter();
+  const { locale } = router;
   const { profile } = useSelector((state) => state.user);
   const onSearchBooks = async (value) => {
     console.log('value', value);
@@ -43,9 +45,19 @@ const DesktopHeader = ({ hasLogo = true, hasProfile = true, headerStyles }) => {
         style={{ background: '#EDF8F6' }}
       />
       <MenuItems mode="horizontal" />
-      <Select bordered={false} defaultValue="ukr">
-        <Select.Option value="ukr">Ukr</Select.Option>
-        <Select.Option value="rus">Rus</Select.Option>
+      <Select
+        onSelect={(locale) => {
+          console.log(`locale`, locale);
+          router.push(router.asPath, router.asPath, { locale });
+        }}
+        bordered={false}
+        defaultValue={locale}
+      >
+        {LOCALES_LIST.map((locale) => (
+          <Select.Option key={locale.value} value={locale.value}>
+            {locale.label}
+          </Select.Option>
+        ))}
       </Select>
       {hasProfile && (
         <Fragment>

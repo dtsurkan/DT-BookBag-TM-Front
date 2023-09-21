@@ -1,4 +1,6 @@
 import { Row, Col, Space } from 'antd';
+import Trans from 'next-translate/Trans';
+import useTranslation from 'next-translate/useTranslation';
 import classNames from 'classnames';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Title from 'antd/lib/typography/Title';
@@ -9,6 +11,7 @@ import rotateBook from 'lotties/rotate-book.json';
 import classes from 'styles/scss/pages/home.module.scss';
 
 const Opportunities = () => {
+  const { t } = useTranslation();
   return (
     <Row className={classNames(classes.opportunities)}>
       <Col xs={24} lg={12} data-aos="fade-right">
@@ -17,23 +20,23 @@ const Opportunities = () => {
       <Col xs={24} lg={12} data-aos="fade-left">
         <Space>
           <LightBulbIcon />
-          <Text>Узнай что ты можешь</Text>
+          <Text>{t('index:opportunities.suptitle')}</Text>
         </Space>
-        <Title>Ваши возможности на платформе</Title>
-        <Paragraph type="secondary">
-          Став участником платформы, вы можете{' '}
-          <Text style={{ color: '#05161D' }}>публиковать свои книги</Text> для их дальнейшей продажи
-          на данной платформе, возможно вы писатель и хотите поделиться своими произведениями, тогда
-          вы в нужном месте.
-        </Paragraph>
-        <Paragraph type="secondary">
-          Так же эта платформа дает вам возможность покупать книги
-          <Text style={{ color: '#05161D' }}>дешевле чем в каком-либо интернет-магазине</Text> , а
-          покупая их здесь, вы так же{' '}
-          <Text style={{ color: '#05161D' }}>участвуете в сбережении природных ресурсов</Text>, ведь
-          все мы знаем что на печать новых изданий требуются природные ресурсы и все что вам
-          необходимо, это просто присоединиться к нам.
-        </Paragraph>
+        <Title>{t('index:opportunities.title')}</Title>
+        <Trans
+          i18nKey="index:opportunities.first-paragraph"
+          components={[
+            <Paragraph key="0" type="secondary" />,
+            <Text key="0" style={{ color: '#05161D' }} />,
+          ]}
+        />
+        <Trans
+          i18nKey="index:opportunities.second-paragraph"
+          components={[
+            <Paragraph key="0" type="secondary" />,
+            <Text key="1" style={{ color: '#05161D' }} />,
+          ]}
+        />
       </Col>
     </Row>
   );

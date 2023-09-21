@@ -30,14 +30,14 @@ const SendMessageForm = ({
             name="message"
             bordered={false}
             allowClear={true}
-            placeholder="Ваше сообщение..."
+            placeholder="components:data-entries.message-placeholder"
             autoSize={{ minRows: 1, maxRows: 2 }}
             showCount={false}
             lg={24}
           />
           {isTyping && participant !== profile.username ? (
             <Space>
-              <Text>{participant} is typing ...</Text>
+              <Text>{t('components:others.is-typing', { participant })}</Text>
             </Space>
           ) : (
             <Space>
@@ -48,7 +48,7 @@ const SendMessageForm = ({
         <Col xs={24} lg={6}>
           <Form.Item style={{ margin: 0 }}>
             <MainSpinner spinning={isLoadingMessage}>
-              <PrimaryButton btnText="ОТПРАВИТЬ" icon={<SendOutlined />} />
+              <PrimaryButton btnText="components:buttons.send" icon={<SendOutlined />} />
             </MainSpinner>
           </Form.Item>
         </Col>

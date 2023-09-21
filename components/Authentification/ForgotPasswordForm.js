@@ -1,27 +1,27 @@
-import { Form, Input } from 'antd';
+import { Form } from 'antd';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
+import MainInput from 'components/DataEntry/MainInput';
 import MainSpinner from 'components/Loading/Spinners/MainSpinner';
 
 const ForgotPasswordForm = ({ btnText = '', isLoadingAuth, onFinish = () => {} }) => {
   return (
     <>
       <Form onFinish={onFinish} size="large">
-        <Form.Item
-          hasFeedback
+        <MainInput
+          lg={24}
           name="email"
           rules={[
             {
               type: 'email',
-              message: 'The input is not valid E-mail!',
+              message: 'components:data-entries.email-error-valid',
             },
             {
               required: true,
-              message: 'Please input your E-mail!',
+              message: 'components:data-entries.email-error-required',
             },
           ]}
-        >
-          <Input allowClear placeholder="Введите ваш емейл" />
-        </Form.Item>
+          placeholder="components:data-entries.email-placeholder"
+        />
         <Form.Item>
           <MainSpinner spinning={isLoadingAuth}>
             <PrimaryButton btnText={btnText} />

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { Dropdown, message } from 'antd';
@@ -20,6 +21,7 @@ const BookSettingsDropdown = ({
   showCheckingUserModal = () => {},
   client,
 }) => {
+  const { t } = useTranslation();
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
@@ -32,7 +34,7 @@ const BookSettingsDropdown = ({
         break;
       case 'liked':
         setIsVisibleDropdown(false);
-        await dispatch(addBookToLikedBooks(profile.id, book));
+        await dispatch(addBookToLikedBooks(profile.id, book, t));
         break;
       case 'sold':
         setIsVisibleDropdown(false);
@@ -41,13 +43,13 @@ const BookSettingsDropdown = ({
       case 'delete':
         confirm({
           centered: true,
-          title: 'Вы действительно хотите удалить эту книгу?',
+          title: t('components:confirm.confirm-delete-book'),
           icon: <ExclamationCircleOutlined />,
-          okText: 'Да',
+          okText: t('components:general.yes'),
           okType: 'danger',
           //   because dropdown z-index === 1050
           zIndex: 1100,
-          cancelText: 'Нет',
+          cancelText: t('components:general.no'),
           async onOk() {
             // NOTE! In future wiil change
             const conversations = await fetchSubscribedConversations(client);

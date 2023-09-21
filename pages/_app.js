@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Router, useRouter } from 'next/router';
-import { BackTop } from 'antd';
+// import { BackTop } from 'antd';
 import AppProviders from 'components/Providers/AppProviders';
 import Auth from 'components/Routing/Auth';
 import NProgress from 'nprogress'; //nprogress module
@@ -42,7 +42,7 @@ function MyApp({ Component, pageProps }) {
       )} */}
       <Auth>
         <Component {...pageProps} />
-        <BackTop />
+        {/* <BackTop /> */}
       </Auth>
     </AppProviders>
   );

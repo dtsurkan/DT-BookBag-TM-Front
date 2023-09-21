@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import useTranslation from 'next-translate/useTranslation';
 import { isEmpty as _isEmpty } from 'lodash';
 import { Avatar, Col, Row, Space } from 'antd';
 import Title from 'antd/lib/typography/Title';
@@ -24,6 +25,7 @@ const ProfileAvatar = ({
     level: 4,
   },
 }) => {
+  const { t } = useTranslation();
   const { profile } = useSelector((state) => state.user);
   const userProfile = isChatSellerProfile ? sellerProfile : profile;
   return (
@@ -49,7 +51,7 @@ const ProfileAvatar = ({
             {isHasCity && (
               <Space align="start">
                 <Title type="secondary" style={{ margin: 0 }} level={5}>
-                  {`Город: `}
+                  {t('components:cards.description.city')}:
                 </Title>
                 <Title style={{ margin: 0 }} level={5}>
                   {userProfile.user_city.value}

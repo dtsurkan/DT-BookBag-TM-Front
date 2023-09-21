@@ -1,16 +1,20 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty as _isEmpty } from 'lodash';
-import { Col, message, Row, Skeleton, Switch } from 'antd';
+import { Button, Col, message, Row, Skeleton, Space, Switch } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import confirm from 'antd/lib/modal/confirm';
 import Title from 'antd/lib/typography/Title';
 import DescriptionItem from 'components/Items/DescriptionItem';
 import ProfileAvatar from 'components/Items/ProfileAvatar';
 import PageHeaderLogo from 'components/Logo/PageHeaderLogo';
-import { updateBookStatusToSold } from 'state/actions/user/profile';
+import { updateBookStatus, updateBookStatusToSold } from 'state/actions/user/profile';
 
 const AsideDescription = ({ onlineStatus = false, book = {}, buyer = null }) => {
+  const router = useRouter();
+  const { t } = useTranslation();
   const { profile } = useSelector((state) => state.user);
   const [isChecked, setIsChecked] = useState(false);
   const dispatch = useDispatch();
@@ -43,7 +47,7 @@ const AsideDescription = ({ onlineStatus = false, book = {}, buyer = null }) => 
           <>
             <Col flex={2}>
               <Title level={2} type="secondary">
-                Продавец:
+                {t('components:others.seller')}
               </Title>
               <ProfileAvatar
                 rowProps={{ flexDirection: 'row-reverse', flexWrap: 'nowrap' }}
@@ -58,12 +62,12 @@ const AsideDescription = ({ onlineStatus = false, book = {}, buyer = null }) => 
             </Col>
             <Col xs={24}>
               <Title level={2} type="secondary">
-                Ваш товар:
+                {t('components:others.good-item')}
               </Title>
               <Row justify="space-between">
                 <DescriptionItem
                   isEllipsis={true}
-                  title="Название:"
+                  title="components:cards.description.name"
                   descriptionLevel={5}
                   description={book.book_name}
                   rowStyle={{ flexDirection: 'column', margin: '5px' }}
@@ -79,75 +83,141 @@ const AsideDescription = ({ onlineStatus = false, book = {}, buyer = null }) => 
               </Row>
               <DescriptionItem
                 isEllipsis={true}
-                title="Категория"
+                title="components:cards.description.categories"
                 descriptionLevel={5}
                 description={book.categories.map(
-                  (category, index) => `${(index ? ', ' : '') + category.name}`
+                  (category, index) =>
+                    `${(index ? ', ' : '') + t(`components:categories.${category.slug}`)}`
                 )}
                 rowStyle={{ flexDirection: 'column', margin: '5px' }}
               />
               <DescriptionItem
                 isEllipsis={true}
-                title="Подкатегория"
+                title="components:cards.description.subcategories"
                 descriptionLevel={5}
                 description={book.subcategories.map(
-                  (subcategory, index) => `${(index ? ', ' : '') + subcategory.name}`
+                  (subcategory, index) =>
+                    `${(index ? ', ' : '') + t(`components:categories.${subcategory.slug}`)}`
                 )}
                 rowStyle={{ flexDirection: 'column', margin: '5px' }}
               />
               <Row justify="space-between">
                 <DescriptionItem
-                  title="Языки"
+                  title="components:cards.description.language"
                   descriptionLevel={5}
-                  description={book.language}
+                  description={t(`components:lists.language.${book.language}`)}
                   rowStyle={{ flexDirection: 'column', margin: '5px' }}
                 />
                 <DescriptionItem
-                  title="Состояние"
+                  title="components:cards.description.condition"
                   descriptionLevel={5}
-                  description={book.condition}
+                  description={t(`components:lists.condition.${book.condition}`)}
                   rowStyle={{ flexDirection: 'column', margin: '5px' }}
                 />
               </Row>
             </Col>
             <Col xs={24}>
-              <Title level={2} style={{ marginBottom: 0 }}>{`Цена: ${book.price} грн`}</Title>
+              <Title level={2} style={{ marginBottom: 0 }}>
+                {t('components:cards.description.price', { price: book.price })}
+              </Title>
             </Col>
             <Col xs={24}>
-              <Title level={4}>
+              <Title level={5}>
                 {book.seller.id === profile.id
-                  ? 'Ви є власником цієї книги. Тут ви можете змінити статус книги на продано.'
-                  : 'Ви є потенційним покупцем цієї книги. Тут ви можете переглянути статус книги.'}
+                  ? t('components:book.owner-book')
+                  : t('components:book.buyer-book')}
+                <Switch
+                  checkedChildren={
+                    book.book_status === 'sold'
+                      ? t('components:book.sold')
+                      : t('components:book.in-progress')
+                  }
+                  unCheckedChildren={t('components:book.selling')}
+                  onClick={(checked) => {
+                    confirm({
+                      centered: true,
+                      title: checked
+                        ? t('components:confirm.confirm-sold-book')
+                        : t('components:confirm.confirm-restore-solding-book'),
+                      icon: <ExclamationCircleOutlined />,
+                      okText: t('components:general.yes'),
+                      okType: 'primary',
+                      //   because dropdown z-index === 1050
+                      zIndex: 1100,
+                      cancelText: t('components:general.no'),
+                      async onOk() {
+                        await dispatch(updateBookStatus(t, profile.id, book, checked, buyer.id));
+                        setIsChecked(checked);
+                      },
+                      onCancel() {
+                        message.info('Cancel');
+                      },
+                    });
+                  }}
+                  checked={isChecked}
+                  disabled={book.seller.id !== profile.id || book.book_status === 'sold'}
+                />
               </Title>
-              <Switch
-                checkedChildren="Продано"
-                unCheckedChildren="Продається"
-                onClick={(checked) => {
-                  confirm({
-                    centered: true,
-                    title: checked
-                      ? 'Ви дійсно хочете продати цю книгу?'
-                      : 'Ви дійсно хочете відновити продаж на цю книгу?',
-                    icon: <ExclamationCircleOutlined />,
-                    okText: 'Да',
-                    okType: 'primary',
-                    //   because dropdown z-index === 1050
-                    zIndex: 1100,
-                    cancelText: 'Ні',
-                    async onOk() {
-                      await dispatch(updateBookStatusToSold(profile.id, book, checked, buyer.id));
-                      setIsChecked(checked);
-                    },
-                    onCancel() {
-                      message.info('Cancel');
-                    },
-                  });
-                }}
-                checked={isChecked}
-                disabled={book.seller.id !== profile.id}
-              />
-              {/* {!_isEmpty(buyer) && <Title level={5}>{`Куплено: ${buyer.email}`}</Title>} */}
             </Col>
+            {book.seller.id !== profile.id && book.book_status === 'processing' && (
+              <Col xs={24}>
+                <Space align="center" style={{ color: 'white' }}>
+                  <Button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      confirm({
+                        centered: true,
+                        title: t('components:confirm.confirm-reject-buying-book'),
+                        icon: <ExclamationCircleOutlined />,
+                        okText: t('components:general.yes'),
+                        okType: 'primary',
+                        //   because dropdown z-index === 1050
+                        zIndex: 1100,
+                        cancelText: t('components:general.no'),
+                        async onOk() {
+                          await dispatch(updateBookStatus(t, profile.id, book, false));
+                          router.reload();
+                        },
+                        onCancel() {
+                          message.info('Cancel');
+                        },
+                      });
+                    }}
+                    type="dashed"
+                  >
+                    {t('components:buttons.reject')}
+                  </Button>
+
+                  <Button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      message.success('Yes');
+                      confirm({
+                        centered: true,
+                        title: t('components:confirm.confirm-buying-book'),
+                        icon: <ExclamationCircleOutlined />,
+                        okText: t('components:general.yes'),
+                        okType: 'primary',
+                        //   because dropdown z-index === 1050
+                        zIndex: 1100,
+                        cancelText: t('components:general.no'),
+                        async onOk() {
+                          await dispatch(updateBookStatusToSold(t, profile.id, book));
+                          message.success('Ok');
+                          router.reload();
+                        },
+                        onCancel() {
+                          message.info('Cancel');
+                        },
+                      });
+                    }}
+                    type="primary"
+                  >
+                    {t('components:buttons.confirm')}
+                  </Button>
+                </Space>
+              </Col>
+            )}
           </>
         )}
       </Row>

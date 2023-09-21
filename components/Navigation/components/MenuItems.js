@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { Menu, message, Tabs } from 'antd';
 import { MENU_LIST } from 'utils/constants';
@@ -22,7 +23,7 @@ const MenuItems = ({
 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-
+  const { t } = useTranslation();
   const selectedKeys = hasSelectedKeys ? [router.pathname] : false;
 
   const generalOnClick = async ({ key }) => {
@@ -30,6 +31,7 @@ const MenuItems = ({
     switch (key) {
       case 'logout':
         await dispatch(doSignOut());
+        message.success(t('components:auth.signout-title'));
         router.push('/');
         break;
       default:
@@ -54,7 +56,7 @@ const MenuItems = ({
                 tab={
                   <span>
                     {item.icon}
-                    {item.title}
+                    {t(item.title)}
                   </span>
                 }
                 key={item.key}
@@ -72,7 +74,7 @@ const MenuItems = ({
           {menuList.map((item) => (
             <Fragment key={item.id}>
               <Menu.Item key={item.key} icon={item.icon}>
-                {item.title}
+                {t(item.title)}
               </Menu.Item>
             </Fragment>
           ))}

@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import { useEffect, useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { useTwilioClient } from 'hooks';
 import format from 'date-fns/format';
@@ -11,6 +12,7 @@ import { fetchSubscribedConversations } from 'lib/twilio-conversation/services/c
 
 const MyMessages = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   // Connect with Twilio
   const { client, isLoadingTwilio } = useTwilioClient();
   const [conversations, setConversations] = useState([]);
@@ -43,16 +45,16 @@ const MyMessages = () => {
 
   const columns = [
     {
-      title: 'Відправник',
+      title: t('components:table.sender'),
       dataIndex: ['channelState', 'attributes', 'seller', 'userName'],
     },
     {
-      title: 'Назва',
+      title: t('components:table.name'),
       dataIndex: ['channelState', 'friendlyName'],
       render: (text) => text.toUpperCase(),
     },
     {
-      title: 'Сообщений',
+      title: t('components:table.messages'),
       align: 'center',
       dataIndex: ['channelState'],
       render: (record) => {
@@ -81,7 +83,7 @@ const MyMessages = () => {
       },
     },
     {
-      title: 'Дата/время',
+      title: t('components:table.date'),
       dataIndex: ['channelState'],
       render: (record) => (
         <div
@@ -112,7 +114,7 @@ const MyMessages = () => {
       <Spin spinning={isLoadingTwilio || isLoadingConversations}>
         <Table
           loading={isLoadingConversations}
-          title={() => <Title>Мої повідомлення</Title>}
+          title={() => <Title>{t('components:lists.profile.my-messages-title')}</Title>}
           style={{ height: '100%' }}
           locale={{
             emptyText: <CustomEmptyComponent />,

@@ -36,7 +36,7 @@ export const getServerSideProps = async ({ params }) => {
   const books = await getBooks();
   return {
     props: {
-      books: books.data,
+      books: books?.data ? books.data : [],
     },
     // revalidate: 1,
   };

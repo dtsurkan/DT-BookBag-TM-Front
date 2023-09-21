@@ -1,5 +1,6 @@
 // next.config.js
 const withAntdLess = require('next-plugin-antd-less');
+const nextTranslate = require('next-translate');
 const withPlugins = require('next-compose-plugins');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   // enabled: process.env.ANALYZE === "true",
@@ -18,6 +19,7 @@ module.exports = withPlugins([
       },
     }),
   ],
+  [nextTranslate],
 ]);
 // module.exports = {
 //   distDir: ".next",

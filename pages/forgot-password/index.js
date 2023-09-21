@@ -52,8 +52,8 @@ const ForgotPassword = () => {
       <AuthentificationContainer alt="Sign In Image" srcImage="/assets/signup.png">
         <FormWrapper
           isNeededAuthProviders={false}
-          btnText="Восстановить пароль"
-          formTitle="Восстановить пароль"
+          btnText="components:buttons.forgot-password"
+          formTitle="components:auth.forgot-password-title"
           onFinish={onFinish}
           FormComponent={ForgotPasswordForm}
           isLoadingAuth={isResettingPassword}
@@ -63,7 +63,7 @@ const ForgotPassword = () => {
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        title="Вам отправлено на почту ссылку для восстановления пароля. Пожалуйста, проверьте емейл"
+        title="components:auth.success-forgot-password-title"
       />
     </>
   );

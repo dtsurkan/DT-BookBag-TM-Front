@@ -29,45 +29,48 @@ export const MAX_FILE_SIZE = 200;
 export const SEARCH_CITY_DEBOUNCE_DELAY = 800;
 export const SEARCH_BOOK_DEBOUNCE_DELAY = 400;
 
-export const BOOK_CONDITION_LIST = [
-  { value: 'Новое', label: 'Новое' },
-  { value: 'Идеальное', label: 'Идеальное' },
-  { value: 'Xорошее', label: 'Xорошее' },
-  { value: 'Среднее', label: 'Среднее' },
-  { value: 'Плохое', label: 'Плохое' },
-  { value: 'Ужасное', label: 'Ужасное' },
+export const getBookConditionList = (t) => [
+  { value: 'new', label: t('components:lists.condition.new') },
+  { value: 'perfect', label: t('components:lists.condition.perfect') },
+  { value: 'good', label: t('components:lists.condition.good') },
+  { value: 'medium', label: t('components:lists.condition.medium') },
+  { value: 'bad', label: t('components:lists.condition.bad') },
+  { value: 'terrible', label: t('components:lists.condition.terrible') },
 ];
-
-export const LANGUAGE_LIST = [
-  { value: 'Украинский', label: 'Украинский' },
-  { value: 'Русский', label: 'Русский' },
-  { value: 'Английский', label: 'Английский' },
-  { value: 'Польский', label: 'Польский' },
-  { value: 'Итальянский', label: 'Итальянский' },
-  { value: 'Нимецкий', label: 'Нимецкий' },
+export const LOCALES_LIST = [
+  { value: 'uk', label: 'UA' },
+  { value: 'ru', label: 'RU' },
+];
+export const getLanguageList = (t) => [
+  { value: 'ukrainian', label: t('components:lists.language.ukrainian') },
+  { value: 'russian', label: t('components:lists.language.russian') },
+  { value: 'english', label: t('components:lists.language.english') },
+  { value: 'polish', label: t('components:lists.language.polish') },
+  { value: 'italian', label: t('components:lists.language.italian') },
+  { value: 'german', label: t('components:lists.language.german') },
 ];
 
 // Note: price:ASC/DESC because of _sort: field:params (in documantation strapi)
-export const PRICE_FILTER_LIST = [
-  { value: 'price:ASC', label: 'От низкой к высокой' },
-  { value: 'price:DESC', label: 'От високой к низкой' },
+export const getPriceFilterList = (t) => [
+  { value: 'price:ASC', label: t('components:lists.price.from-small-to-big') },
+  { value: 'price:DESC', label: t('components:lists.price.from-big-to-small') },
 ];
-export const CREATED_AT_FILTER_LIST = [
-  { value: 'created_at:ASC', label: 'Дефолтное' },
-  { value: 'created_at:DESC', label: 'Самие новие' },
+export const getCreateAtFilterList = (t) => [
+  { value: 'created_at:ASC', label: t('components:lists.date.default') },
+  { value: 'created_at:DESC', label: t('components:lists.date.new') },
 ];
 
 // Advantages list
 export const ADVANTAGES_LIST = [
-  { id: uuidv4(), title: 'Гараздо дешевле чем в интернет-магазинах' },
+  { id: uuidv4(), title: 'index:advantages.list.first-item' },
   {
     id: uuidv4(),
-    title: 'Економие природных ресурсов на печать нових изданий',
+    title: 'index:advantages.list.second-item',
     icon: LeavesIcon,
   },
   {
     id: uuidv4(),
-    title: 'Удобное и безопасное использование платформи',
+    title: 'index:advantages.list.third-item',
     icon: DefenceIcon,
   },
 ];
@@ -78,21 +81,21 @@ export const MENU_LIST = [
     key: '/books',
     href: '/books',
     icon: <BookOutlined style={{ fontSize: 18 }} />,
-    title: 'Книги',
+    title: 'components:lists.menu.books',
   },
   {
     id: uuidv4(),
     key: '/categories',
     href: '/categories',
     icon: <MailOutlined style={{ fontSize: 18 }} />,
-    title: 'Категории',
+    title: 'components:lists.menu.categories',
   },
   {
     id: uuidv4(),
     key: '/about',
     href: '/about',
     icon: false,
-    title: 'О BookBag',
+    title: 'components:lists.menu.about-bookbag',
   },
 ];
 
@@ -102,49 +105,49 @@ export const PROFILE_DROPDOWN_LIST = [
     key: '/profile/added-books',
     href: '/profile/added-books',
     icon: <BookOutlined style={{ fontSize: 18 }} />,
-    title: 'Мои книги',
+    title: 'components:lists.profile.my-books',
   },
   {
     id: uuidv4(),
     key: '/profile/sold-books',
     href: '/profile/sold-books',
     icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
-    title: 'Продано',
+    title: 'components:lists.profile.sold-books',
   },
   {
     id: uuidv4(),
     key: '/profile/bought-books',
     href: '/profile/bought-books',
     icon: <MoneyCollectOutlined style={{ fontSize: 18 }} />,
-    title: 'Куплено',
+    title: 'components:lists.profile.bought-books',
   },
   {
     id: uuidv4(),
     key: '/profile/liked-books',
     href: '/profile/liked-books',
     icon: <LikeOutlined style={{ fontSize: 18 }} />,
-    title: 'Понравившиеся',
+    title: 'components:lists.profile.liked-books',
   },
   {
     id: uuidv4(),
     key: '/profile/my-messages',
     href: '/profile/my-messages',
     icon: <MessageOutlined style={{ fontSize: 18 }} />,
-    title: 'Мои сообщения',
+    title: 'components:lists.profile.my-messages',
   },
   {
     id: uuidv4(),
-    key: '/profile/settings',
-    href: '/profile/settings',
+    key: '/profile/setup-profile',
+    href: '/profile/setup-profile',
     icon: <SettingOutlined style={{ fontSize: 18 }} />,
-    title: 'Настройки',
+    title: 'components:lists.profile.settings',
   },
   {
     id: uuidv4(),
     key: 'logout',
     href: 'logout',
     icon: <LogoutOutlined style={{ fontSize: 18 }} />,
-    title: 'Выйти',
+    title: 'components:lists.profile.logout',
   },
 ];
 
@@ -154,52 +157,52 @@ export const PROFILE_ASIDE_TOP_LIST = [
     key: '/profile/added-books',
     href: '/profile/added-books',
     icon: <BookOutlined style={{ fontSize: 18 }} />,
-    title: 'Мои книги',
+    title: 'components:lists.profile.my-books',
   },
   {
     id: uuidv4(),
     key: '/profile/sold-books',
     href: '/profile/sold-books',
     icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
-    title: 'Продано',
+    title: 'components:lists.profile.sold-books',
   },
   {
     id: uuidv4(),
     key: '/profile/bought-books',
     href: '/profile/bought-books',
     icon: <MoneyCollectOutlined style={{ fontSize: 18 }} />,
-    title: 'Куплено',
+    title: 'components:lists.profile.bought-books',
   },
   {
     id: uuidv4(),
     key: '/profile/liked-books',
     href: '/profile/liked-books',
     icon: <LikeOutlined style={{ fontSize: 18 }} />,
-    title: 'Понравившиеся',
+    title: 'components:lists.profile.liked-books',
   },
   {
     id: uuidv4(),
     key: '/profile/my-messages',
     href: '/profile/my-messages',
     icon: <MessageOutlined style={{ fontSize: 18 }} />,
-    title: 'Мои сообщения',
+    title: 'components:lists.profile.my-messages',
   },
 ];
 
 export const PROFILE_ASIDE_BOTTOM_LIST = [
   {
     id: uuidv4(),
-    key: '/profile/settings',
-    href: '/profile/settings',
+    key: '/profile/setup-profile',
+    href: '/profile/setup-profile',
     icon: <SettingOutlined style={{ fontSize: 18 }} />,
-    title: 'Настройки',
+    title: 'components:lists.profile.settings',
   },
   {
     id: uuidv4(),
     key: 'logout',
     href: 'logout',
     icon: <LogoutOutlined style={{ fontSize: 18 }} />,
-    title: 'Выйти',
+    title: 'components:lists.profile.logout',
   },
 ];
 
@@ -209,27 +212,27 @@ export const BOOK_SETTINGS_LIST = [
     key: 'edit',
     href: false,
     icon: <SettingOutlined style={{ fontSize: 18 }} />,
-    title: 'Изменить',
+    title: 'components:lists.book-settings.edit',
   },
   {
     id: uuidv4(),
     key: 'liked',
     href: false,
     icon: <LikeOutlined style={{ fontSize: 18 }} />,
-    title: 'Нравится',
+    title: 'components:lists.book-settings.liked',
   },
   {
     id: uuidv4(),
     key: 'sold',
     href: false,
     icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
-    title: 'Продано',
+    title: 'components:lists.book-settings.sold',
   },
   {
     id: uuidv4(),
     key: 'delete',
     href: false,
     icon: <CloseOutlined style={{ fontSize: 18 }} />,
-    title: 'Удалить',
+    title: 'components:lists.book-settings.delete',
   },
 ];

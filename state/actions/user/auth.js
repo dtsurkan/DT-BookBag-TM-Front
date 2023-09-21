@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import { setAuthenticationCookies, clearAuthenticationCookies } from 'lib/cookies';
 import {
   forgotPasswordAuthStrapi,
@@ -59,7 +58,7 @@ export const doCustomSignIn = (email, password) => async (dispatch) => {
     console.log(`expiryDays`, expiryDays);
     setAuthenticationCookies({ token: response.data.jwt, expires: expiryDays });
     dispatch(setCurrentUserProfileSuccess(response.data.user));
-    message.success(`You are signed in system, dear ${response.data.user.username}`);
+    // message.success(`You are signed in system, dear ${response.data.user.username}`);
   }
   return response;
 };
@@ -90,5 +89,5 @@ export const doSignOut = () => async (dispatch) => {
 
   // // Reset redux store with persist store.
   // dispatch(resetState());
-  message.success('You are signed out');
+  // message.success('You are signed out');
 };

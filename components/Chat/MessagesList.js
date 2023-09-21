@@ -26,7 +26,7 @@ const MessagesList = ({
           threshold={threshold}
           useWindow={false}
           loader={
-            <div key={1} className="" style={{ display: 'flex', justifyContent: 'center' }}>
+            <div key={1} style={{ display: 'flex', justifyContent: 'center' }}>
               <Spin />
             </div>
           }

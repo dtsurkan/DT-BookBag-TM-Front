@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useSelector, useDispatch } from 'react-redux';
 import { Alert, Col, Form, message, Modal, Row, Space } from 'antd';
 import Title from 'antd/lib/typography/Title';
@@ -9,8 +10,8 @@ import { deleteCurrentUserProfile } from 'state/actions/user/profile';
 import { checkErrorCode } from 'lib/strapi/shared/errors';
 
 const DeleteProfileModal = ({
-  title = 'Добавить новую книгу',
-  btnText = 'Опубликовать книгу',
+  title = 'components:others.remove-profile-title',
+  btnText = 'components:buttons.remove-profile',
   visible = true,
   size = 'large',
   onOk = () => {},
@@ -25,6 +26,7 @@ const DeleteProfileModal = ({
   maskClosable = false,
   client,
 }) => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -42,7 +44,7 @@ const DeleteProfileModal = ({
       } else {
         setIsProcessingBook(false);
         onCancel();
-        message.success('Ви успішно видалили свій аккаунт!');
+        message.success(t('components:others.success-remove-profile-title'));
       }
     }
   };
@@ -54,7 +56,7 @@ const DeleteProfileModal = ({
     <Modal
       width={width}
       zIndex={zIndex}
-      title={title}
+      title={t(title)}
       centered
       visible={visible}
       onOk={onOk}
@@ -80,29 +82,33 @@ const DeleteProfileModal = ({
         >
           <Space direction="vertical" size="large">
             <Alert
-              message="Якщо ви підтвердите цю дію, то всі дані, які звя'язані з цим аккаунтом будуть повністю видалені. Будьте обережні!"
+              message={t('components:alerts.delete-profile.message')}
               type="warning"
               showIcon={true}
             />
-            <Title
-              level={4}
-              copyable={{ text: profile.email }}
-            >{`Введіть '${profile.email}' для підтвердження.`}</Title>
+            <Title level={4} copyable={{ text: profile.email }}>
+              {t('components:others.confirm-deletion-title', {
+                profileEmail: profile.email,
+              })}
+            </Title>
           </Space>
           <Row gutter={[0, 4]}>
             <MainInput
               lg={24}
               name="deletion"
-              placeholder={profile.email}
+              placeholder="components:data-entries.email-placeholder"
               hasFeedback={true}
+              isTranslateRules={false}
               rules={[
                 {
                   required: true,
-                  message: `Введіть ${profile.email}!`,
+                  message: t('components:data-entries.email-custom-placeholder', {
+                    profileEmail: profile.email,
+                  }),
                 },
                 {
                   type: 'email',
-                  message: 'Введений емейл не є дійсним',
+                  message: t('components:data-entries.email-error-valid'),
                 },
                 // checking by correct entered email
                 {
@@ -110,7 +116,9 @@ const DeleteProfileModal = ({
                     if (!value || profile.email === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('Введено неправильне значення!'));
+                    return Promise.reject(
+                      new Error(t('components:data-entries.email-error-incorrect'))
+                    );
                   },
                 },
               ]}

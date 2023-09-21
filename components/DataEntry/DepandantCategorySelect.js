@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import MainSelectSearch from './MainSelectSearch';
 
 // NOTE! Fix resetiing value in future
 const DepandantCategorySelect = ({ options: categories, form }) => {
+  const { t } = useTranslation();
   const [isDisabled, setIsDisabled] = useState(form.getFieldValue('subcategories') ? false : true);
   const [subCategories, setSubCategories] = useState(
     categories
@@ -10,14 +12,14 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
       .map((category) =>
         category.subcategories.map((subCategory) => ({
           value: subCategory.id,
-          label: subCategory.name,
+          label: t(`components:categories.${subCategory.slug}`),
         }))
       )
       .flat()
   );
   const filterCategories = categories.map((category) => ({
     value: category.id,
-    label: category.name,
+    label: t(`components:categories.${category.slug}`),
   }));
   const handleChange = (value) => {
     form.setFieldsValue({ subcategories: undefined });
@@ -47,7 +49,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
         rules={[
           {
             required: true,
-            message: 'Выберите категорию!',
+            message: 'components:data-entries.category-error-required',
           },
         ]}
       />
@@ -56,11 +58,11 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
         disabled={isDisabled}
         mode="multiple"
         options={subCategories}
-        placeholder="Подкатегория"
+        placeholder="components:data-entries.subcategory-placeholder"
         rules={[
           {
             required: true,
-            message: 'Выберите подкатегорию!',
+            message: 'components:data-entries.subcategory-error-required',
           },
         ]}
       />

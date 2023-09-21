@@ -1,19 +1,21 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Col } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { FilterIcon } from 'components/Icons';
 import MainSelectSearch from './MainSelectSearch';
 
 const FilterComponent = ({
-  filterText = 'Состояние:',
+  filterText = 'components:data-entries.condition-filter-label',
   name = '',
   options = [],
   bordered = false,
-  placeholder = 'Состояние',
+  placeholder = 'components:data-entries.condition-placeholder',
   formStyles = { marginBottom: 0 },
   xs = 12,
   lg = 10,
   ...props
 }) => {
+  const { t } = useTranslation();
   return (
     <Col
       xs={24}
@@ -26,7 +28,7 @@ const FilterComponent = ({
     >
       <Col style={{ display: 'flex', alignItems: 'center' }}>
         <FilterIcon />
-        <Text>{filterText}</Text>
+        <Text>{t(filterText)}</Text>
       </Col>
       <MainSelectSearch
         xs={xs}

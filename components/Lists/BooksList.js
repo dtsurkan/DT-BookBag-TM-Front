@@ -1,5 +1,7 @@
 import { Fragment } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useSelector } from 'react-redux';
+import { isEmpty as _isEmpty } from 'lodash';
 import { useShowConfigModal, useTwilioClient } from 'hooks';
 import { Button, Card, List, Space } from 'antd';
 import Text from 'antd/lib/typography/Text';
@@ -25,7 +27,9 @@ const BooksList = ({
   itemLayout = 'horizontal',
   dataSource = [],
   pagination = {},
+  customLoadingParams = {},
 }) => {
+  const { t } = useTranslation();
   const {
     isConfigBookModal,
     showConfigBookModal,
@@ -34,7 +38,9 @@ const BooksList = ({
   const { client } = useTwilioClient();
   const { isLoadingUserProfile } = useSelector((state) => state.user);
   const customizedDataSource = hasAddingBook ? [addingBookItemSettings, ...dataSource] : dataSource;
-
+  const isCustomLoadingParams = !_isEmpty(customLoadingParams)
+    ? customLoadingParams
+    : { size: 'large', spinning: isLoadingUserProfile };
   return (
     <>
       <List
@@ -44,8 +50,8 @@ const BooksList = ({
           flexDirection: 'column',
           justifyContent: 'space-between',
         }}
-        locale={{ emptyText: <CustomEmptyComponent description="Немає книг" /> }}
-        loading={hasLoading ? { size: 'large', spinning: isLoadingUserProfile } : false}
+        locale={{ emptyText: <CustomEmptyComponent description="components:empty.no-books" /> }}
+        loading={hasLoading ? isCustomLoadingParams : false}
         grid={grid}
         itemLayout={itemLayout}
         dataSource={customizedDataSource}
@@ -77,7 +83,7 @@ const BooksList = ({
                       onClick={showConfigBookModal}
                     />
                     <Text style={{ fontSize: '16px' }} type="secondary">
-                      Добавить ещё книгу
+                      {t('components:buttons.add-book')}
                     </Text>
                   </Space>
                 </Card>

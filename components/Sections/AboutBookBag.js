@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import classNames from 'classnames';
+import useTranslation from 'next-translate/useTranslation';
 import { Col, Layout, Row, Space } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
 import classes from 'styles/scss/pages/about.module.scss';
 
 const AboutBookBag = () => {
+  const { t } = useTranslation();
   return (
     <Layout className={classes.about}>
       <Row>
@@ -17,10 +19,9 @@ const AboutBookBag = () => {
                 😉
               </span>
             </Title>
-            <Title level={1}>О BookBag</Title>
-
-            <Title>100 K +</Title>
-            <Text>Отзывов от наших пользователей</Text>
+            <Title level={1}>{t('about:title')}</Title>
+            <Title>{t('about:feedback-numbers')}</Title>
+            <Text>{t('about:feedback-text')}</Text>
           </Space>
         </Col>
         <Col xs={24} lg={8} style={{ margin: '30px 0' }}>
@@ -34,14 +35,8 @@ const AboutBookBag = () => {
         </Col>
         <Col xs={24} lg={8} className={classNames(classes.about__description, classes._paddings)}>
           <Space direction="vertical">
-            <Text type="secondary">
-              Платформа BookBag- создавалась нашей талантливой креативной командой для людей которые
-              ценят свои деньги и экологию.
-            </Text>
-            <Text type="secondary">
-              Основана платформа в 2021 году и за этот небольшой срок мы уже получили сотни тысяч
-              отзывов от наших пользователей, а так это лучшая и единственная платформа в Украине.
-            </Text>
+            <Text type="secondary">{t('about:first-paragraph')}</Text>
+            <Text type="secondary">{t('about:second-paragraph')}</Text>
           </Space>
         </Col>
       </Row>

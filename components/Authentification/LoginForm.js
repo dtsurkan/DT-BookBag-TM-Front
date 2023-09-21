@@ -1,47 +1,42 @@
 import { useRouter } from 'next/router';
-import { Form, Input } from 'antd';
+import useTranslation from 'next-translate/useTranslation';
+import { Form } from 'antd';
 import Link from 'antd/lib/typography/Link';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
 import MainSpinner from 'components/Loading/Spinners/MainSpinner';
+import MainInput from 'components/DataEntry/MainInput';
+import MainInputPassword from 'components/DataEntry/MainInputPassword';
 
 const LoginForm = ({ onFinish = () => {}, isLoadingAuth }) => {
   const router = useRouter();
-
+  const { t } = useTranslation();
   return (
     <>
       <Form onFinish={onFinish} size="large">
-        <Form.Item
-          hasFeedback
+        <MainInput
+          lg={24}
           name="email"
           rules={[
             {
               type: 'email',
-              message: 'The input is not valid E-mail!',
+              message: 'components:data-entries.email-error-valid',
             },
             {
               required: true,
-              message: 'Please input your E-mail!',
+              message: 'components:data-entries.email-error-required',
             },
           ]}
-        >
-          <Input allowClear placeholder="Введите ваш емейл" />
-        </Form.Item>
-        <div className="">
-          <Form.Item
-            hasFeedback
+          placeholder="components:data-entries.email-placeholder"
+        />
+        <div>
+          <MainInputPassword
+            lg={24}
             name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
-          >
-            <Input.Password
-              allowClear
-              placeholder="Пароль"
-              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-            />
-          </Form.Item>
+            rules={[{ required: true, message: 'components:data-entries.password-error-required' }]}
+          />
           <div style={{ textAlign: 'end', margin: '5px 0' }}>
             <Link onClick={() => router.push('/forgot-password')} type="secondary">
-              Восстановить пароль?
+              {t('components:buttons.forgot-password-link')}
             </Link>
           </div>
         </div>

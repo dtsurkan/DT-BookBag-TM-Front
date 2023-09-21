@@ -1,4 +1,5 @@
 import { useShowConfigModal } from 'hooks';
+import useTranslation from 'next-translate/useTranslation';
 import { useMediaQuery } from 'react-responsive';
 import { Button, Col, Row, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -20,7 +21,7 @@ const ProfileAsideMenu = () => {
     showConfigBookModal,
     handleCancelConfigBookModal,
   } = useShowConfigModal();
-
+  const { t } = useTranslation();
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1200 });
   return (
     <>
@@ -80,7 +81,7 @@ const ProfileAsideMenu = () => {
                   onClick={showConfigBookModal}
                 />
                 <Text style={{ fontSize: '16px' }} type="secondary">
-                  Добавить книгу
+                  {t('components:buttons.add-book')}
                 </Text>
               </Space>
             </Col>

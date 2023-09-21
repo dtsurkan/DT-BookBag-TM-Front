@@ -30,7 +30,7 @@ const LikedBooks = () => {
   return (
     <ProfileLayout>
       <ProfileList
-        listTitle="Вподобані книги"
+        listTitle="components:lists.profile.liked-books-title"
         renderKey="liked"
         books={!_isEmpty(profile) ? profile?.liked_books : []}
         hasAddingBook={false}

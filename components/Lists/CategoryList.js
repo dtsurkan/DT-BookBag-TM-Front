@@ -1,4 +1,5 @@
 import { Fragment, useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { useMediaQuery } from 'react-responsive';
 import { Dropdown, List, Menu, message, Space } from 'antd';
@@ -13,8 +14,9 @@ const CategoryList = ({
   split = false,
   itemLayout = 'horizontal',
   size = 'small',
-  CategoryListTitle = 'Категории книг',
+  categoryListTitle = 'components:others.categories-title',
 }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const isTabletOrMobile = useMediaQuery({ maxWidth: 768 });
   const [isVisibleProfileDropdown, setIsVisibleProfileDropdown] = useState(false);
@@ -31,7 +33,7 @@ const CategoryList = ({
   return (
     <>
       {isTabletOrMobile ? (
-        <div className="" style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: '20px' }}>
           <Dropdown
             placement="bottomCenter"
             overlayStyle={{ width: '100%' }}
@@ -43,7 +45,7 @@ const CategoryList = ({
                     style={{ padding: '14px', whiteSpace: 'initial' }}
                     icon={<ArrowUpOutlined />}
                   >
-                    Все разделы
+                    {t('components:buttons.all-categories')}
                   </Menu.Item>
                 )}
                 {/* For categories route */}
@@ -109,21 +111,21 @@ const CategoryList = ({
                   transition: 'all .2s ease',
                 }}
               >
-                Категории книг
+                {t(categoryListTitle)}
               </Title>
             </Space>
           </Dropdown>
         </div>
       ) : (
-        <div className="" style={{ background: 'white', padding: '25px 20px', height: '100%' }}>
+        <div style={{ background: 'white', padding: '25px 20px', height: '100%' }}>
           <Title level={2} type="secondary">
-            {CategoryListTitle}
+            {t(categoryListTitle)}
           </Title>
           <List split={split} itemLayout={itemLayout} size={size}>
             {allCategoriesItem && (
               <List.Item style={{ padding: '4px 0' }}>
                 <LinkButton
-                  btnText="Все разделы"
+                  btnText={t('components:buttons.all-categories')}
                   onClick={() => router.push(`/books`)}
                   icon={<ArrowUpOutlined />}
                 />

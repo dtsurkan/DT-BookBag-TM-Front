@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import useTranslation from 'next-translate/useTranslation';
 import { isEmpty as _isEmpty } from 'lodash';
 import { useSelector } from 'react-redux';
 import { Button, Collapse, Drawer, Space } from 'antd';
@@ -19,6 +20,7 @@ const MobileDrawer = ({
   onClose = () => {},
   showAddingBookModal = () => {},
 }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { profile } = useSelector((state) => state.user);
 
@@ -63,7 +65,7 @@ const MobileDrawer = ({
                   onClick={showAddingBookModal}
                 />
                 <Text style={{ fontSize: '16px' }} type="secondary">
-                  Добавить книгу
+                  {t('components:buttons.add-book')}
                 </Text>
               </Space>
               <MenuItems menuList={PROFILE_ASIDE_TOP_LIST} />

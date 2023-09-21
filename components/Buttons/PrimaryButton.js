@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Button } from 'antd';
 import classes from 'styles/scss/components/buttons.module.scss';
 
@@ -6,12 +7,13 @@ const PrimaryButton = ({
   type = 'primary',
   htmlType = 'submit',
   isBlock = true,
-  btnText = 'Войти в аккаунт',
+  btnText = 'components:buttons.login',
   disabled = false,
   icon = false,
   onClick = () => {},
   ...props
 }) => {
+  const { t } = useTranslation();
   return (
     <Button
       icon={icon}
@@ -24,7 +26,7 @@ const PrimaryButton = ({
       onClick={onClick}
       {...props}
     >
-      {btnText}
+      {t(btnText)}
     </Button>
   );
 };

@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Button } from 'antd';
 import classes from 'styles/scss/components/buttons.module.scss';
 
@@ -6,10 +7,11 @@ const PrimaryOutlinedButton = ({
   type = 'text',
   htmlType = 'submit',
   isBlock = false,
-  btnText = 'Присоедениться',
+  btnText = 'components:buttons.join',
   onClick = () => {},
   ...props
 }) => {
+  const { t } = useTranslation();
   return (
     <Button
       className={classes.primaryOutlinedBtn}
@@ -20,7 +22,7 @@ const PrimaryOutlinedButton = ({
       onClick={onClick}
       {...props}
     >
-      {btnText}
+      {t(btnText)}
     </Button>
   );
 };

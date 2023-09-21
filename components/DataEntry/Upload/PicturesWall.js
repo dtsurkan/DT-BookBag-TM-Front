@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { Form, message, Modal, Upload } from 'antd';
 import Dragger from 'antd/lib/upload/Dragger';
 import DraggableUpload from './components/DraggableUpload';
@@ -22,7 +23,7 @@ const PicturesWall = ({
   rules = [
     {
       required: true,
-      message: 'Загрузите хотя бы одну фото книги!',
+      message: 'components:data-entries.upload-error-required',
     },
   ],
   multiple = true,
@@ -31,12 +32,13 @@ const PicturesWall = ({
   draggerContent = <DraggerContent />,
   ...props
 }) => {
+  const { t } = useTranslation();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
   const handleClosePreview = () => setPreviewVisible(false);
-
+  const translateRules = rules.map((rule) => ({ ...rule, message: t(rule.message) }));
   const normFile = (e) => {
     console.log('Upload event:', e);
     if (Array.isArray(e)) {
@@ -55,12 +57,17 @@ const PicturesWall = ({
       // console.log(fileSizeInMB + "MB");
       if (!!maxFileSize && fileSizeInMB > maxFileSize) {
         message.error({
-          content: `File ${file.name} must be less than ${maxFileSize}MB`,
+          content: t('components:data-entries.upload-file-size-rule', {
+            fileName: file.name,
+            maxFileSize,
+          }),
           style: { zIndex: 1030 },
         });
       } else if (!!allowedFileTypes && !allowedFileTypes.includes(file?.type)) {
         message.error({
-          content: `File type of ${file.name} not supported`,
+          content: t('components:data-entries.upload-file-size-rule', {
+            fileName: file.name,
+          }),
           style: { zIndex: 1030 },
         });
       }
@@ -94,7 +101,7 @@ const PicturesWall = ({
         name={name}
         valuePropName={valuePropName}
         getValueFromEvent={normFile}
-        rules={rules}
+        rules={rules.length ? translateRules : rules}
         style={{ margin: 0 }}
       >
         {isDraggable ? (

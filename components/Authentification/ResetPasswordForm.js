@@ -1,31 +1,30 @@
-import { Form, Input } from 'antd';
+import useTranslation from 'next-translate/useTranslation';
+import { Form } from 'antd';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
+import MainInputPassword from 'components/DataEntry/MainInputPassword';
 import MainSpinner from 'components/Loading/Spinners/MainSpinner';
 
 const ResetPasswordForm = ({ btnText = '', isLoadingAuth, onFinish = () => {} }) => {
+  const { t } = useTranslation();
   return (
     <>
       <Form onFinish={onFinish} size="large">
-        <Form.Item
-          hasFeedback
+        <MainInputPassword
+          lg={24}
           name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your password!',
-            },
-          ]}
-        >
-          <Input.Password allowClear placeholder="Введите ваш пароль" />
-        </Form.Item>
-        <Form.Item
+          rules={[{ required: true, message: 'components:data-entries.password-error-required' }]}
+        />
+        <MainInputPassword
+          lg={24}
           name="passwordConfirmation"
+          placeholder="components:data-entries.confirm-password-placeholder"
           dependencies={['password']}
-          hasFeedback
+          // NOTE! Don't know how to merge validator and translation mixture.
+          isTranslateRules={false}
           rules={[
             {
               required: true,
-              message: 'Please confirm your password!',
+              message: t('components:data-entries.confirm-password-error-required'),
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
@@ -33,14 +32,12 @@ const ResetPasswordForm = ({ btnText = '', isLoadingAuth, onFinish = () => {} })
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error('The two passwords that you entered do not match!')
+                  new Error(t('components:data-entries.confirm-password-error-dismatch'))
                 );
               },
             }),
           ]}
-        >
-          <Input.Password allowClear placeholder="Повторите ваш пароль" />
-        </Form.Item>
+        />
         <Form.Item>
           <MainSpinner spinning={isLoadingAuth}>
             <PrimaryButton btnText={btnText} />

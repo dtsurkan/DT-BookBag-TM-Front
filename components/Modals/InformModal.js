@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Modal } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import Title from 'antd/lib/typography/Title';
@@ -10,11 +11,12 @@ const InformModal = ({
   onOk = () => {},
   onCancel = () => {},
   width = 700,
-  title = 'Вы успешно зарегистрировались. Для верификации перейдите на почту и нажмите на ссылку и зайдите в систему.',
-  text = 'Спасибо что остаетесь с нами!',
+  title = 'components:auth.success-register-title',
+  text = 'components:auth.success-register-text',
   isHasCancelBtn = { style: { display: 'none' } },
   zIndex = 1030,
 }) => {
+  const { t } = useTranslation();
   return (
     <Modal
       zIndex={zIndex}
@@ -36,8 +38,8 @@ const InformModal = ({
       }}
     >
       <Image src="/assets/orderBook.png" width="120px" height="120px" alt="orderBook" />
-      <Title>{title}</Title>
-      <Text>{text}</Text>
+      <Title>{t(title)}</Title>
+      <Text>{t(text)}</Text>
     </Modal>
   );
 };

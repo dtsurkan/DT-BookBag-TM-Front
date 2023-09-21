@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import Slider from 'react-slick';
+import useTranslation from 'next-translate/useTranslation';
 import { Button } from 'antd';
 import { useRouter } from 'next/router';
 
@@ -12,9 +13,11 @@ const BooksSlider = ({
   speed = 500,
   slidesToShow = 3,
   slidesToScroll = 1,
+  route = `/books`,
   ...other
 }) => {
   const router = useRouter();
+  const { t } = useTranslation();
   const settings = {
     dots,
     infinite,
@@ -27,8 +30,8 @@ const BooksSlider = ({
     appendDots: (dots) => (
       <span>
         <ul>{dots}</ul>
-        <Button type="link" onClick={() => router.push('/books')}>
-          См. все
+        <Button type="link" onClick={() => router.push(route)}>
+          {t('components:buttons.see-all-books')}
         </Button>
       </span>
     ),

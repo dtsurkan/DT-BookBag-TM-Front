@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useMediaQuery } from 'react-responsive';
 import { useTwilioClient } from 'hooks';
 import { Alert, Col, Form, message, PageHeader, Row, Spin } from 'antd';
@@ -17,6 +18,7 @@ import {
 import { scrollToBottom } from 'utils/functions';
 
 const Chat = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { client, isLoadingTwilio } = useTwilioClient();
   const [conversation, setConversation] = useState(null);
@@ -186,17 +188,16 @@ const Chat = () => {
                 <PageHeader
                   // onBack={() => router.push(`/books/${router.query.slug}`)}
                   onBack={() => router.push(`/profile/my-messages`)}
-                  title="Вернуться"
+                  title={t('components:buttons.return')}
                   style={{ padding: '0' }}
                 />
               </Col>
               <Col>
                 <Alert
-                  message="Ваш чат с автором"
-                  description="Здесь вы можете договорится с автором о вашей сделке, например
-            об условиях доставки и оплаты."
+                  message={t('components:alerts.chat.message')}
+                  description={t('components:alerts.chat.description')}
                   type="warning"
-                  closeText="Скрыть"
+                  closeText={t('components:alerts.chat.close-text')}
                 />
               </Col>
               <Col

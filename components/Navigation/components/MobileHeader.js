@@ -11,10 +11,12 @@ import ConfigBookModal from 'components/Modals/ConfigBookModal';
 import BurgerComponent from './BurgerComponent';
 import MobileDrawer from './MobileDrawer';
 import { getBooksByAuthorOrBookName } from 'lib/strapi/services/books';
+import { LOCALES_LIST } from 'utils/constants';
 import classes from 'styles/scss/layout/containers.module.scss';
 
 const MobileHeader = () => {
   const router = useRouter();
+  const { locale } = router;
   const {
     isConfigBookModal,
     showConfigBookModal,
@@ -54,10 +56,20 @@ const MobileHeader = () => {
           />
           <PageHeaderLogo style={{ padding: 0, cursor: 'pointer' }} isClickable={true} />
         </div>
-        <div className="">
-          <Select bordered={false} defaultValue="ukr">
-            <Select.Option value="ukr">Ukr</Select.Option>
-            <Select.Option value="rus">Rus</Select.Option>
+        <div>
+          <Select
+            onSelect={(locale) => {
+              console.log(`locale`, locale);
+              router.push(router.asPath, router.asPath, { locale });
+            }}
+            bordered={false}
+            defaultValue={locale}
+          >
+            {LOCALES_LIST.map((locale) => (
+              <Select.Option key={locale.value} value={locale.value}>
+                {locale.label}
+              </Select.Option>
+            ))}
           </Select>
         </div>
         <DebounceSelectSearch

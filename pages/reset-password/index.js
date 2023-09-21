@@ -49,8 +49,8 @@ const ResetPassword = () => {
       <AuthentificationContainer alt="Sign In Image" srcImage="/assets/signup.png">
         <FormWrapper
           isNeededAuthProviders={false}
-          btnText="Cбросить пароль"
-          formTitle="Сбросить пароль"
+          btnText="components:buttons.reset-password"
+          formTitle="components:auth.reset-password-title"
           onFinish={onFinish}
           FormComponent={ResetPasswordForm}
           isLoadingAuth={isResettingPassword}
@@ -60,7 +60,7 @@ const ResetPassword = () => {
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        title="Ви успешно сбросили пароль. Пожалуйста, перейдите на страницу авторизации и зайдите в систему!"
+        title="components:auth.success-reset-password-title"
       />
     </>
   );

@@ -83,15 +83,16 @@ export const updateCurrentUserProfile = (profileID, values) => async (dispatch) 
     console.log(`response.data`, response.data);
     if (response.status === 200) {
       dispatch(getCurrentUserProfile(profileID));
-      message.success('Ви успішно змінили свій профіль');
+      // message.success('Ви успішно змінили свій профіль');
     }
+    return response;
   } catch (error) {
     console.log(`error`, error);
   }
 };
-
+// Disable loader when liked the book
 export const toggleBookToLikedBooks = (isChecked, profileID, book) => async (dispatch) => {
-  dispatch(getCurrentUserProfilePending());
+  // dispatch(getCurrentUserProfilePending());
   try {
     if (isChecked) {
       const users = book.liked_by_users.map((user) => user.id);
@@ -103,7 +104,8 @@ export const toggleBookToLikedBooks = (isChecked, profileID, book) => async (dis
         const user = await getUserByID(profileID);
         console.log(`user.data`, user.data);
         dispatch(getCurrentUserProfileSuccess(user.data));
-        message.success('Ви успішно додали книгу до переліку вподобаних');
+        // message.success('Ви успішно додали книгу до переліку вподобаних');
+        return response;
       }
     } else {
       const filteredLikedUsers = book.liked_by_users
@@ -116,22 +118,22 @@ export const toggleBookToLikedBooks = (isChecked, profileID, book) => async (dis
         const user = await getUserByID(profileID);
         console.log(`user.data`, user.data);
         dispatch(getCurrentUserProfileSuccess(user.data));
-        message.success('Ви успішно видалили книгу із переліку вподобаних');
+        // message.success('Ви успішно видалили книгу із переліку вподобаних');
+        return response;
       }
     }
   } catch (error) {
     dispatch(getCurrentUserProfileError());
   }
 };
-
-export const addBookToLikedBooks = (profileID, book) => async (dispatch) => {
-  dispatch(getCurrentUserProfilePending());
+// Disable loader when liked the book
+export const addBookToLikedBooks = (profileID, book, t) => async (dispatch) => {
+  // dispatch(getCurrentUserProfilePending());
   try {
     const users = book.liked_by_users.map((user) => user.id);
     if (users.includes(profileID)) {
-      dispatch(getCurrentUserProfileError());
-      message.info('You have already liked and added this book to favorites');
-      // return;
+      // dispatch(getCurrentUserProfileError());
+      message.success(t('components:auth.exist-book-in-liked-title'));
     } else {
       const newLikedUsers = [...users, profileID];
       const response = await updateBook(book.id, {
@@ -141,16 +143,17 @@ export const addBookToLikedBooks = (profileID, book) => async (dispatch) => {
         const user = await getUserByID(profileID);
         console.log(`user.data`, user.data);
         dispatch(getCurrentUserProfileSuccess(user.data));
-        message.success('Ви успішно додали книгу до переліку вподобаних');
+        // message.success('Ви успішно додали книгу до переліку вподобаних');
+        message.success(t('components:auth.success-add-to-liked-books-title'));
       }
     }
   } catch (error) {
     dispatch(getCurrentUserProfileError());
   }
 };
-
-export const deleteBookFromLikedBooks = (profileID, book) => async (dispatch) => {
-  dispatch(getCurrentUserProfilePending());
+// Disable loader when liked the book
+export const deleteBookFromLikedBooks = (profileID, book, t) => async (dispatch) => {
+  // dispatch(getCurrentUserProfilePending());
   try {
     const filteredUsers = book.liked_by_users
       .map((user) => user.id)
@@ -163,18 +166,18 @@ export const deleteBookFromLikedBooks = (profileID, book) => async (dispatch) =>
       const user = await getUserByID(profileID);
       console.log(`user.data`, user.data);
       dispatch(getCurrentUserProfileSuccess(user.data));
-      message.success('Ви успішно видалили книгу із переліку вподобаних');
+      message.success(t('components:auth.success-remove-from-liked-books-title'));
     }
   } catch (error) {
     dispatch(getCurrentUserProfileError());
   }
 };
 
-export const updateBookStatusToSold = (profileID, book, isChecked, buyer) => async (dispatch) => {
+export const updateBookStatus = (t, profileID, book, isChecked, buyer) => async (dispatch) => {
   dispatch(getCurrentUserProfilePending());
   try {
     const response = await updateBook(book.id, {
-      book_status: isChecked ? 'sold' : 'added',
+      book_status: isChecked ? 'processing' : 'added',
       buyer: isChecked ? buyer : null,
     });
     if (response.status === 200) {
@@ -182,13 +185,33 @@ export const updateBookStatusToSold = (profileID, book, isChecked, buyer) => asy
       console.log(`user.data`, user.data);
       dispatch(getCurrentUserProfileSuccess(user.data));
       message.success(
-        isChecked ? 'Ви успішно продали книгу' : 'Ви успішно повернули книгу для продажі'
+        isChecked
+          ? message.success(t('components:book.update-book-status-to-processing'))
+          : message.success(t('components:book.update-book-status-to-added'))
       );
     }
   } catch (error) {
     dispatch(getCurrentUserProfileError());
   }
 };
+
+export const updateBookStatusToSold = (t, profileID, book) => async (dispatch) => {
+  dispatch(getCurrentUserProfilePending());
+  try {
+    const response = await updateBook(book.id, {
+      book_status: 'sold',
+    });
+    if (response.status === 200) {
+      const user = await getUserByID(profileID);
+      console.log(`user.data`, user.data);
+      dispatch(getCurrentUserProfileSuccess(user.data));
+      message.success(t('components:book.update-book-status-to-sold'));
+    }
+  } catch (error) {
+    dispatch(getCurrentUserProfileError());
+  }
+};
+
 // TESTING
 // NOTE! In future wiil change
 export const deleteCurrentUserProfile = (profileID, profileEmail, client) => async (dispatch) => {

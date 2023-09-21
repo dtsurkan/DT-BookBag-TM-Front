@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
+import useTranslation from 'next-translate/useTranslation';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   differenceWith as _differenceWith,
@@ -25,9 +26,9 @@ import { uploadBookLogic } from 'state/actions/books';
 import { checkErrorCode } from 'lib/strapi/shared/errors';
 
 const ConfigBookModal = ({
-  title = 'Добавить новую книгу',
-  btnText = 'Опубликовать книгу',
-  followingModalTitle = 'Ваша книга успешно опубликована',
+  title = 'components:others.add-book-title',
+  btnText = 'components:buttons.publish-book',
+  followingModalTitle = 'components:others.success-publish-book-title',
   visible = true,
   isEditingFinish = false,
   onOk = () => {},
@@ -42,6 +43,7 @@ const ConfigBookModal = ({
   maskClosable = false,
   bookId,
 }) => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -69,11 +71,15 @@ const ConfigBookModal = ({
   const onFinish = async (values) => {
     const { upload, book_name, ...otherValues } = values;
     // console.log(`values`, values);
-    // console.log(`book_name`, book_name);
     // NOTE! This implementing needed for unique value of select option.
     // For example, when title the same, it's necessary to stringify all volumeInfo with all data,
     // then before sending to backend, parse and put title to book_name.
-    const { title: parsedBookName } = JSON.parse(book_name);
+    let parsedBookName = book_name;
+    // When you update you have already parsed data, and need to parse only when book_name will be changed
+    if (book_name !== initialValues.book_name) {
+      const { title } = JSON.parse(book_name);
+      parsedBookName = title;
+    }
     console.log(`upload`, upload);
     console.log(`initialValues.upload`, initialValues.upload);
     console.log(`_isEqual(upload, initialValues)`, _isEqual(values, initialValues));
@@ -158,7 +164,7 @@ const ConfigBookModal = ({
       <Modal
         width={width}
         zIndex={zIndex}
-        title={title}
+        title={t(title)}
         centered
         visible={visible}
         onOk={onOk}
@@ -187,19 +193,19 @@ const ConfigBookModal = ({
           >
             <Row>
               <Col xs={24}>
-                <Title level={2}>Загрузите фотографии книги</Title>
-                <Paragraph type="secondary">До 10 фотографий не более 200Мб. PNG, JPEG</Paragraph>
+                <Title level={2}>{t('components:others.upload-title')}</Title>
+                <Paragraph type="secondary">{t('components:others.upload-description')}</Paragraph>
               </Col>
               <Col xs={24}>
                 <PicturesWall form={form} />
               </Col>
             </Row>
-            <div className="">
-              <Title level={2}>Общая информация о книге</Title>
-              <Paragraph type="secondary">Все поля обязательны для заполнения</Paragraph>
+            <div>
+              <Title level={2}>{t('components:others.required-fields-text')}</Title>
+              <Paragraph type="secondary">{t('components:others.general-information')}</Paragraph>
             </div>
             <Row gutter={[16, 0]}>
-              {getBookInputsList(profile, categories?.data?.length ? categories.data : []).map(
+              {getBookInputsList(profile, categories?.data?.length ? categories.data : [], t).map(
                 ({ id, component: Component, ...props }) => (
                   <Fragment key={id}>
                     <Component {...props} form={form} />
@@ -219,7 +225,7 @@ const ConfigBookModal = ({
                             <PrimaryButton
                               type="default"
                               htmlType="button"
-                              btnText="Сбросить"
+                              btnText="components:buttons.reset"
                               disabled={_isEqual(values, firstSnapshotValues)}
                               onClick={() => form.resetFields()}
                             />

@@ -7,9 +7,9 @@ import DepandantCategorySelect from 'components/DataEntry/DepandantCategorySelec
 import DepandantBookNameAuthorSelect from 'components/DataEntry/DepandantBookNameAuthorSelect';
 import DebounceSelectSearch from 'components/DataEntry/DebounceSelectSearch';
 import { getCities } from 'lib/nova-poshta/services/cities';
-import { BOOK_CONDITION_LIST, LANGUAGE_LIST } from 'utils/constants';
+import { getBookConditionList, getLanguageList } from 'utils/constants';
 
-export const getBookInputsList = (profile, categories) => [
+export const getBookInputsList = (profile, categories, t) => [
   {
     id: uuidv4(),
     component: DepandantBookNameAuthorSelect,
@@ -25,12 +25,12 @@ export const getBookInputsList = (profile, categories) => [
     rules: [
       {
         required: true,
-        message: 'Выберите язык!',
+        message: 'components:data-entries.language-error-required',
       },
     ],
-    placeholder: 'Языки',
+    placeholder: 'components:data-entries.language-placeholder',
     component: MainSelectSearch,
-    options: LANGUAGE_LIST,
+    options: getLanguageList(t),
   },
   {
     id: uuidv4(),
@@ -38,13 +38,13 @@ export const getBookInputsList = (profile, categories) => [
     rules: [
       {
         required: true,
-        message: 'Укажите состояние!',
+        message: 'components:data-entries.condition-error-required',
       },
     ],
-    placeholder: 'Состояние',
+    placeholder: 'components:data-entries.condition-placeholder',
 
     component: MainSelectSearch,
-    options: BOOK_CONDITION_LIST,
+    options: getBookConditionList(t),
   },
   {
     id: uuidv4(),
@@ -52,12 +52,12 @@ export const getBookInputsList = (profile, categories) => [
     rules: [
       {
         required: true,
-        message: 'Введите цену!',
+        message: 'components:data-entries.price-error-required',
       },
       {
         type: 'number',
         min: 10,
-        message: 'Минимальная цена: 10 грн!',
+        message: 'components:data-entries.price-error-min-value',
       },
     ],
     component: MainInputNumber,
@@ -68,10 +68,10 @@ export const getBookInputsList = (profile, categories) => [
     rules: [
       {
         required: true,
-        message: 'Укажите свой город!',
+        message: 'components:data-entries.city-error-required',
       },
     ],
-    placeholder: 'Укажите свой город',
+    placeholder: 'components:data-entries.city-placeholder',
     component: DebounceSelectSearch,
     fetchOptions: async (city) => {
       const response = await getCities(city);
@@ -86,8 +86,8 @@ export const getBookInputsList = (profile, categories) => [
     filterOption: false,
     disabled: profile.user_city ? true : false,
     extra: profile.user_city
-      ? 'Ваше місто автоматично підтягується із профілю. Якщо хочете змінити, перейдіть в профіль.'
-      : false,
+      ? 'components:data-entries.city-extra-text'
+      : 'components:empty.empty-string',
     // initialValue: profile.user_city ? profile.user_city : undefined,
   },
   {
@@ -108,10 +108,10 @@ export const getSettingsInputList = () => [
     // rules: [
     //   {
     //     required: true,
-    //     message: "Введите полное имя!",
+    //     message: 'components:data-entries.fullname-error-required',
     //   },
     // ],
-    placeholder: 'Полное имя',
+    placeholder: 'components:data-entries.fullname-placeholder',
     component: MainInput,
     lg: 24,
   },
@@ -121,10 +121,10 @@ export const getSettingsInputList = () => [
     rules: [
       {
         required: true,
-        message: 'Введите логин!',
+        message: 'components:data-entries.username-error-required',
       },
     ],
-    placeholder: 'Ваш логин',
+    placeholder: 'components:data-entries.username-placeholder',
     component: MainInput,
     lg: 24,
   },
@@ -134,17 +134,17 @@ export const getSettingsInputList = () => [
     rules: [
       {
         type: 'email',
-        message: 'The input is not valid E-mail!',
+        message: 'components:data-entries.email-error-valid',
       },
       {
         required: true,
-        message: 'Please input your E-mail!',
+        message: 'components:data-entries.email-error-required',
       },
     ],
-    placeholder: 'Ваш емейл',
+    placeholder: 'components:data-entries.email-placeholder',
     component: MainInput,
     disabled: true,
-    extra: 'Ви не можете змінити свою пошту',
+    extra: 'components:data-entries.email-extra-text',
     lg: 24,
   },
   {
@@ -153,11 +153,11 @@ export const getSettingsInputList = () => [
     // rules: [
     //   {
     //     required: true,
-    //     message: "Укажите свой город!",
+    //     message: 'components:data-entries.city-error-required',
     //   },
     // ],
     hasFeedback: false,
-    placeholder: 'Укажите свой город',
+    placeholder: 'components:data-entries.city-placeholder',
     component: DebounceSelectSearch,
     fetchOptions: async (city) => {
       const response = await getCities(city);

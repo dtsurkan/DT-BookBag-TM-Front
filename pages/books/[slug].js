@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import useTranslation from 'next-translate/useTranslation';
 import { isEmpty as _isEmpty } from 'lodash';
 import { Col, message, PageHeader, Row, Space } from 'antd';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
@@ -20,6 +21,7 @@ import { getBookBySlug, getBooks, getBookBySellerID } from 'lib/strapi/services/
 
 const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
   const { profile } = useSelector((state) => state.user);
+  const { t } = useTranslation();
   const screens = useBreakpoint();
   const MAX_COUNT_BOOKS = !screens.md ? 6 : 9;
   // console.log("booksWithTheSameSeller", booksWithTheSameSeller);
@@ -34,7 +36,7 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
         <PageHeader
           className="site-page-header"
           onBack={() => router.push('/books')}
-          title="Книги"
+          title={t('components:buttons.books')}
           style={{ padding: '16px 0' }}
         />
         <Row justify="space-between">
@@ -48,19 +50,23 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
             />
             <DescriptionItem
               isEllipsis={true}
-              title="Категория"
+              title="components:cards.description.categories"
               description={book.categories.map(
-                (category, index) => `${(index ? ', ' : '') + category.name}`
+                (category, index) =>
+                  `${(index ? ', ' : '') + t(`components:categories.${category.slug}`)}`
               )}
             />
-            <DescriptionItem title="Языки" description={book.language} />
-            <DescriptionItem title="Состояние" description={book.condition} />
-            <DescriptionItem title="Город" description={book.seller_city.label} />
             <DescriptionItem
-              title="Продавец"
-              descriptionStyle={{ color: '#01504D' }}
-              description={book.seller.email}
-              copyable={true}
+              title="components:cards.description.language"
+              description={t(`components:lists.language.${book.language}`)}
+            />
+            <DescriptionItem
+              title="components:cards.description.condition"
+              description={t(`components:lists.condition.${book.condition}`)}
+            />
+            <DescriptionItem
+              title="components:cards.description.city"
+              description={book.seller_city.label}
             />
             <Row
               style={{
@@ -74,19 +80,22 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
                   <Space>
                     <DoubleCheckIcon style={{ fontSize: '32px' }} />
                     <Title level={2} style={{ color: '#6bbe9f', margin: 0 }}>
-                      {`Успішно куплено ${book.buyer.email}`}
+                      {
+                        (t('components:others.success-sold-book-title'),
+                        { buyer: book.buyer.email })
+                      }
                     </Title>
                   </Space>
                 ) : book.book_status === 'sold' ? (
                   <Space>
                     <DoubleCheckIcon style={{ fontSize: '32px' }} />
                     <Title level={2} style={{ color: '#6bbe9f', margin: 0 }}>
-                      Успешно продано
+                      {t('components:others.success-sold-book-title')}
                     </Title>
                   </Space>
                 ) : theSameUser ? (
                   <Title level={2} style={{ color: '#6bbe9f', margin: 0 }}>
-                    Це ваша книга!
+                    {t('components:others.your-book-title')}
                   </Title>
                 ) : (
                   <PrimaryButton
@@ -94,13 +103,13 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
                       if (!_isEmpty(profile)) {
                         confirm({
                           centered: true,
-                          title: 'Ви хочете написати цьому продавцеві?',
+                          title: t('components:confirm.confirm-write-to-seller-title'),
                           icon: <ExclamationCircleOutlined />,
-                          okText: 'Да',
+                          okText: t('components:general.yes'),
                           okType: 'primary',
                           //   because dropdown z-index === 1050
                           zIndex: 1100,
-                          cancelText: 'Ні',
+                          cancelText: t('components:general.no'),
                           async onOk() {
                             router.push({
                               pathname: `${router.asPath}/chat`,
@@ -111,21 +120,23 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
                           },
                         });
                       } else {
-                        message.info('You need to auth!');
+                        message.info(t('components:auth.required-auth-title'));
                       }
                     }}
-                    btnText="Написати продавцю"
+                    btnText="components:buttons.write-to-seller"
                     style={{ marginRight: '10px' }}
                   />
                 )}
               </Col>
               <Col>
-                <Title style={{ marginBottom: 0 }}>{book.price} грн</Title>
+                <Title style={{ marginBottom: 0 }}>
+                  {t('components:cards.description.price', { price: book.price })}
+                </Title>
               </Col>
             </Row>
             <Row>
               <Col xs={24}>
-                <Title level={3}>Комментарий продавца:</Title>
+                <Title level={3}>{t('components:cards.description.comments')}</Title>
               </Col>
               <Col xs={24}>
                 <Paragraph type="secondary">{book.seller_comment}</Paragraph>
@@ -139,13 +150,12 @@ const BookItem = ({ book = {}, booksWithTheSameSeller = [] }) => {
         {booksWithTheSameSeller.length ? (
           <div style={{ margin: '100px 0' }}>
             <Space direction="vertical">
-              <Title>Другие книги продавца</Title>
+              <Title>{t('components:others.others-seller-books-title')}</Title>
               <Text style={{ color: '#01504D' }}>
-                Если вам понравилось творчество данного автора, не забывайте, что вы можете следить
-                за выходом его новых книг нажав подписаться на автора.
+                {t('components:others.others-seller-books-text')}
               </Text>
             </Space>
-            <BooksSlider>
+            <BooksSlider route={`/sellers/${book.seller.id}`}>
               {booksWithTheSameSeller.slice(0, MAX_COUNT_BOOKS).map((book) => (
                 <div key={book.id}>
                   <BookCard book={book} />
@@ -183,7 +193,7 @@ export async function getStaticProps({ params }) {
 
   const booksWithTheSameSeller = await getBookBySellerID(book?.data[0]?.seller.id);
 
-  if (!book.data.length) {
+  if (!book?.data?.length) {
     return {
       notFound: true,
     };

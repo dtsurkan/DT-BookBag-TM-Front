@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Col, Form } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import classes from 'styles/scss/components/dataEntries.module.scss';
@@ -7,7 +8,7 @@ const TextAreaInput = ({
   autoSize = { minRows: 1, maxRows: 5 },
   maxLength = 2000,
   showCount = true,
-  placeholder = 'Комментарий к товару...',
+  placeholder = 'components:data-entries.seller-comment-placeholder',
   bordered = true,
   allowClear = false,
   xs = 24,
@@ -15,6 +16,7 @@ const TextAreaInput = ({
   styles,
   ...props
 }) => {
+  const { t } = useTranslation();
   return (
     <Col xs={xs} lg={lg}>
       <Form.Item name={name} style={{ margin: 0, ...styles }}>
@@ -23,7 +25,7 @@ const TextAreaInput = ({
           autoSize={autoSize}
           showCount={showCount}
           maxLength={maxLength}
-          placeholder={placeholder}
+          placeholder={t(placeholder)}
           bordered={bordered}
           allowClear={allowClear}
           {...props}

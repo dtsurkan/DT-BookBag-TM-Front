@@ -53,10 +53,10 @@ const Register = () => {
       <AuthentificationContainer>
         <FormWrapper
           onFinish={onFinish}
-          formTitle="Регистрация аккаунта"
+          formTitle="components:auth.register-title"
           linkUrl="/login"
-          linkText="войти"
-          additionalText="Уже есть аккаунт? Нажмите "
+          linkText="components:buttons.login"
+          additionalText="components:auth-providers.additional-register-text"
           FormComponent={RegisterForm}
           isLoadingAuth={isLoadingAuth}
           // formSubtitle="Для покупки книг, вам не нужно создавать аккаунт, но если ви хотите продавать книги, тогда добро пожаловать!"

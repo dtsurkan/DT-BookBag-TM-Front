@@ -1,4 +1,5 @@
 import { useShowConfigModal, useTwilioClient } from 'hooks';
+import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +15,8 @@ import DeleteProfileModal from 'components/Modals/DeleteProfileModal';
 import { getCurrentUserProfile, updateCurrentUserProfile } from 'state/actions/user/profile';
 import { getSettingsInputList } from 'utils/form-configs';
 
-const Settings = () => {
+const SetupProfile = () => {
+  const { t } = useTranslation();
   const {
     isConfigBookModal,
     showConfigBookModal,
@@ -23,6 +25,7 @@ const Settings = () => {
   const { profile, isLoadingUserProfile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
+  console.log(`router`, router);
   const [form] = Form.useForm();
   const { client } = useTwilioClient();
 
@@ -62,15 +65,18 @@ const Settings = () => {
   const onFinishUpdateProfile = async (values) => {
     confirm({
       centered: true,
-      title: 'Вы действительно хотите cохранить все изменения?',
+      title: t('components:confirm.confirm-saving-profile-settings'),
       icon: <ExclamationCircleOutlined />,
-      okText: 'Да',
+      okText: t('components:general.yes'),
       okType: 'primary',
       //   because dropdown z-index === 1050
       zIndex: 1100,
-      cancelText: 'Нет',
+      cancelText: t('components:general.no'),
       async onOk() {
-        await dispatch(updateCurrentUserProfile(profile.id, values));
+        const response = await dispatch(updateCurrentUserProfile(profile.id, values));
+        if (response.status === 200) {
+          message.success(t('components:auth.success-editing-profile-title'));
+        }
       },
       onCancel() {
         message.info('Cancel');
@@ -86,7 +92,7 @@ const Settings = () => {
         <Row style={{ marginTop: '30px' }}>
           <Col xs={24}>
             <Title level={1} type="secondary">
-              Настройки профиля
+              {t('components:others.settings-title')}
             </Title>
           </Col>
           <Col xs={24}>
@@ -133,7 +139,7 @@ const Settings = () => {
                                   <PrimaryButton
                                     type="default"
                                     htmlType="button"
-                                    btnText="Сбросить"
+                                    btnText="components:buttons.reset"
                                     disabled={_isEqual(getFieldsValue(), initialValues)}
                                     onClick={() => form.resetFields()}
                                   />
@@ -141,7 +147,7 @@ const Settings = () => {
                                 <Col xs={24}>
                                   <PrimaryButton
                                     disabled={_isEqual(getFieldsValue(), initialValues)}
-                                    btnText="Сохранить все изменения"
+                                    btnText="components:buttons.save-changes"
                                   />
                                 </Col>
                               </Row>
@@ -156,7 +162,7 @@ const Settings = () => {
                       danger
                       type="default"
                       htmlType="button"
-                      btnText="Удалить профиль"
+                      btnText="components:buttons.remove-profile"
                       onClick={showConfigBookModal}
                     />
                   </Col>
@@ -170,12 +176,10 @@ const Settings = () => {
         client={client}
         visible={isConfigBookModal}
         onCancel={handleCancelConfigBookModal}
-        title="Видалити свій профіль"
         width={500}
-        btnText="Видалити свій профіль"
       />
     </>
   );
 };
 
-export default Settings;
+export default SetupProfile;

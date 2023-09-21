@@ -1,13 +1,20 @@
+import useTranslation from 'next-translate/useTranslation';
 import { Col, Row } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import BooksList from './BooksList';
 
-const ProfileList = ({ books = [], renderKey, hasAddingBook = true, listTitle = 'Мої книги' }) => {
+const ProfileList = ({
+  books = [],
+  renderKey,
+  hasAddingBook = true,
+  listTitle = 'components:lists.profile.my-books-title',
+}) => {
+  const { t } = useTranslation();
   return (
     <Row style={{ marginTop: '25px' }}>
       <Col xs={24}>
         <Title level={1} type="secondary">
-          {`${listTitle} (${books ? books.length : 0})`}
+          {t(listTitle, { count: books ? books.length : 0 })}
         </Title>
       </Col>
       <Col xs={24}>
