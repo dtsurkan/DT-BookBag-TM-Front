@@ -4,67 +4,25 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
-import {
-  AutoComplete,
-  Avatar,
-  Button,
-  Collapse,
-  Drawer,
-  Empty,
-  Input,
-  Menu,
-  Select,
-  List,
-} from "antd";
+import { Avatar, Button, Collapse, Drawer, Menu, Select, List } from "antd";
 const { Panel } = Collapse;
 import { Header } from "antd/lib/layout/layout";
 import Text from "antd/lib/typography/Text";
 import {
   ArrowDownOutlined,
+  BookOutlined,
   CloseOutlined,
   MailOutlined,
   MenuOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
 import PageHeaderLogo from "components/Logo/PageHeaderLogo";
 import PrimaryOutlinedButton from "components/Buttons/PrimaryOutlinedButton";
 import { doSignOut } from "state/actions/user";
 import classes from "styles/scss/layout/containers.module.scss";
-const options = [
-  {
-    value: "Burns Bay Road",
-  },
-  {
-    value: "Downing Street",
-  },
-  {
-    value: "Walerfl Street",
-  },
-  {
-    value: "Wallerfer Street",
-  },
-  {
-    value: "Wgergereall Street",
-  },
-  {
-    value: "Wergergall Street",
-  },
-  {
-    value: "Wergegrall Street",
-  },
-  {
-    value: "Wall Strergergeet",
-  },
-  {
-    value: "Wall Strergerget",
-  },
-  {
-    value: "Wall Stergregergreet",
-  },
-  {
-    value: "Wall Streregergegreet",
-  },
-];
+import { getBooksByAuthorOrBookName } from "lib/strapi/services/books";
+import DebounceSelectSearch from "components/DataEntry/DebounceSelectSearch";
+import MainAutoComplete from "components/DataEntry/MainAutocomplete";
+
 const data = [
   {
     title: "Книги",
@@ -73,13 +31,12 @@ const data = [
     title: "O BookBag",
   },
 ];
-const NavBar = ({ books = [] }) => {
+const NavBar = () => {
   const router = useRouter();
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const onSelect = (value, instance) => {
-    router.push(`/books/${instance.slug}`);
-  };
+  const isTabletOrMobile = useMediaQuery({ maxWidth: 1200 });
+  const [visible, setVisible] = useState(false);
 
   const signOut = async () => {
     try {
@@ -89,8 +46,6 @@ const NavBar = ({ books = [] }) => {
       console.log("error", error);
     }
   };
-  const isTabletOrMobile = useMediaQuery({ maxWidth: 1200 });
-  const [visible, setVisible] = useState(false);
 
   const isShowDrawer = () => {
     setVisible(!visible);
@@ -100,12 +55,21 @@ const NavBar = ({ books = [] }) => {
     setVisible(false);
   };
 
-  const filterBooks = books.map((book) => {
-    const { name, ...other } = book;
-    return { value: name, ...other };
-  });
-  // console.log("filterBooks", filterBooks);
-  
+  const onSearchBooks = async (value) => {
+    console.log("value", value);
+    if (!value) {
+      return [];
+    }
+    const response = await getBooksByAuthorOrBookName(value);
+    return response.data.map((book) => {
+      const { book_name, ...other } = book;
+      return { value: book_name, ...other };
+    });
+  };
+  const onSelectBook = (value, instance) => {
+    router.push(`/books/${instance.slug}`);
+  };
+
   return (
     <>
       {isTabletOrMobile ? (
@@ -170,27 +134,11 @@ const NavBar = ({ books = [] }) => {
               <Select.Option value="rus">Rus</Select.Option>
             </Select>
           </div>
-          <AutoComplete
-            // notFoundContent="Not Found"
-            notFoundContent={<Empty description="No options" />}
-            style={{
-              width: "100%",
-            }}
-            options={options}
-            onSelect={onSelect}
-            //   placeholder="Введите автора или названия книги..."
-            filterOption={(inputValue, option) =>
-              option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-              -1
-            }
-          >
-            <Input
-              size="large"
-              allowClear
-              placeholder="Введите автора или названия книги..."
-              bordered={false}
-            />
-          </AutoComplete>
+          <DebounceSelectSearch
+            fetchOptions={onSearchBooks}
+            onSelect={onSelectBook}
+            dataEntryComponent={MainAutoComplete}
+          />
         </Header>
       ) : (
         <Header
@@ -215,29 +163,16 @@ const NavBar = ({ books = [] }) => {
             style={{ padding: 0, cursor: "pointer" }}
             isClickable={true}
           />
-          <AutoComplete
-            // notFoundContent="Not Found"
-            notFoundContent={<Empty description="No options" />}
-            style={{
-              minWidth: 500,
-            }}
-            options={filterBooks}
-            onSelect={onSelect}
-            //   placeholder="Введите автора или названия книги..."
-            filterOption={(inputValue, option) =>
-              option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-              -1
-            }
-          >
-            <Input
-              size="large"
-              prefix={<SearchOutlined />}
-              allowClear
-              placeholder="Введите автора или названия книги..."
-            />
-          </AutoComplete>
+          <DebounceSelectSearch
+            fetchOptions={onSearchBooks}
+            onSelect={onSelectBook}
+            dataEntryComponent={MainAutoComplete}
+          />
           <Menu mode="horizontal">
-            <Menu.Item key="mail" icon={<MailOutlined />}>
+            <Menu.Item key="category" icon={<MailOutlined />}>
+              <Link href="/categories">Категории</Link>
+            </Menu.Item>
+            <Menu.Item key="mail" icon={<BookOutlined />}>
               <Link href="/books">Книги</Link>
             </Menu.Item>
             <Menu.Item key="app">О BookBag</Menu.Item>

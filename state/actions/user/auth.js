@@ -4,7 +4,7 @@ import {
   getAuthLocalPersistence,
   getFacebookAuthProvider,
 } from "firebaseConfig/auth";
-
+import { YOUR_ORIGIN_URL } from "utils/constants";
 // AUTHENTIFICATION
 export const SET_CURRENT_USER_PROFILE_PENDING =
   "SET_CURRENT_USER_PROFILE_PENDING";
@@ -197,7 +197,8 @@ export const doCustomSignUp = (displayName, email, password) => async (
       displayName,
     });
     const actionCodeSettings = {
-      url: "http://localhost:3000/login",
+      // url: "http://localhost:3000/login",
+      url: `${YOUR_ORIGIN_URL}/login`,
       iOS: {
         bundleId: "com.example.ios",
       },
@@ -238,7 +239,8 @@ export const doResetPassword = (email) => async (dispatch) => {
   dispatch(setResetPasswordPending());
   try {
     const actionCodeSettings = {
-      url: "http://localhost:3000/login",
+      // url: "http://localhost:3000/login",
+      url: `${YOUR_ORIGIN_URL}/login`,
       iOS: {
         bundleId: "com.example.ios",
       },

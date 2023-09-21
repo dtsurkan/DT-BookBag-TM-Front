@@ -1,29 +1,31 @@
 import { Col } from "antd";
 import Title from "antd/lib/typography/Title";
 import { HandHeartIcon } from "components/Icons/HandHeartIcon";
+import classes from "styles/scss/pages/home.module.scss";
 
 const AdventageCard = ({
   title = "Hello",
   titleLevel = 4,
   IconComponent = HandHeartIcon,
-  xs = 22,
-  lg = 8,
+  xs = 24,
+  sm = 24,
+  md,
+  lg = 12,
+  xxl = 8,
 }) => {
   return (
     <Col
       xs={xs}
+      sm={sm}
+      md={md}
       lg={lg}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "0 120px",
-        textAlign: "center",
-      }}
+      xxl={xxl}
+      className={classes.advantages__card}
     >
       <IconComponent style={{ fontSize: "50px" }} />
-      <Title level={titleLevel}>{title}</Title>
+      <Title level={titleLevel} style={{ marginBottom: 0 }}>
+        {title}
+      </Title>
     </Col>
   );
 };

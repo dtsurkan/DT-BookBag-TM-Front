@@ -1,0 +1,11 @@
+.newCollectionBooks {
+  margin: 100px 0;
+}
+
+@include media-breakpoint-down($screen-sm-max) {
+  .newCollectionBooks {
+    &__heading {
+      margin-bottom: 50px;
+    }
+  }
+}

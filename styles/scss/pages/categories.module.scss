@@ -1,0 +1,19 @@
+@import "../utilities/index";
+.categoryList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 6;
+  overflow: hidden;
+}
+
+@include media-breakpoint-down($screen-xl-max) {
+  .categoryList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include media-breakpoint-down($screen-md-max) {
+  .categoryList {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

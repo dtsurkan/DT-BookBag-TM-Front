@@ -1,39 +1,24 @@
-import { MailOutlined } from "@ant-design/icons";
 import { Col, Form, Input, Row } from "antd";
+import { MailOutlined } from "@ant-design/icons";
 import Title from "antd/lib/typography/Title";
 import PrimaryButton from "components/Buttons/PrimaryButton";
 import MainSpinner from "components/Loading/Spinners/MainSpinner";
-import classes from "styles/scss/components/sections.module.scss";
+import classes from "styles/scss/pages/home.module.scss";
 
-const SubscribeCard = () => {
+const Subscribe = () => {
   return (
-    <Row
-      justify="center"
-      align="middle"
-      style={{ minHeight: "600px", background: "#F9FEFD" }}
-    >
-      <Col
-        xs={24}
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <div className={classes.subscribeSectionWrapper}>
+    <Row className={classes.subscribe}>
+      <Col xs={24} sm={20} lg={24} className={classes.subscribe__col}>
+        <div className={classes.subscribe__wrapper}>
           <Title level={4} style={{ color: "#01504D" }}>
             Подписка на уведомления
           </Title>
-          <Title className={classes.subscribeSectionTitle}>
+          <Title className={classes.subscribe__wrapper__title}>
             Подписывайся и получай первым уведомления о публикации новых книг
           </Title>
-          {/* <Space> */}
-          <Form size="large" className={classes.subscribeSectionForm}>
-            {/* <Space> */}
+          <Form size="large" className={classes.subscribe__form}>
             <Form.Item
-              className={classes.subscribeSectionFormInput}
+              className={classes.subscribe__form__input}
               hasFeedback
               name="email"
               rules={[
@@ -58,7 +43,7 @@ const SubscribeCard = () => {
                 placeholder="Адрес электронной почты..."
               />
             </Form.Item>
-            <Form.Item className={classes.subscribeSectionFormBtn}>
+            <Form.Item className={classes.subscribe__form__btn}>
               <MainSpinner>
                 <PrimaryButton btnText="Подписаться" />
               </MainSpinner>
@@ -70,4 +55,4 @@ const SubscribeCard = () => {
   );
 };
 
-export default SubscribeCard;
+export default Subscribe;

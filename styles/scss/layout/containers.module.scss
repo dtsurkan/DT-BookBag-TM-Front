@@ -14,7 +14,12 @@
   /* padding: 0 80px; */
 }
 
-@include media-breakpoint-down($screen-lg-max) {
+.mainContent {
+  // padding-top: 130px;
+  padding-top: 10vh;
+}
+
+@include media-breakpoint-down($screen-md-max) {
   .appLayout {
     padding: 0 16px;
   }

@@ -1,6 +1,8 @@
 import Head from "next/head";
 import classNames from "classnames";
 import Layout from "antd/lib/layout/layout";
+import NavBar from "components/Navigation/NavBar";
+import FooterComponent from "./Footer";
 import classes from "styles/scss/layout/containers.module.scss";
 
 const AppLayout = ({
@@ -26,7 +28,9 @@ const AppLayout = ({
           className={classNames(classes.container, classes.appLayout)}
           style={style}
         >
+          <NavBar />
           {children}
+          <FooterComponent />
         </Layout>
       </div>
     </div>

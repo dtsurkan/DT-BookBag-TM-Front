@@ -13,9 +13,11 @@ const InformModal = ({
   title = "Вы успешно зарегистрировались. Для верификации перейдите на почту и нажмите на ссылку и зайдите в систему.",
   text = "Спасибо что остаетесь с нами!",
   isHasCancelBtn = { style: { display: "none" } },
+  zIndex = 1001,
 }) => {
   return (
     <Modal
+      zIndex={zIndex}
       closable={closable}
       centered={centered}
       visible={visible}

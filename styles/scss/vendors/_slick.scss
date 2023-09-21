@@ -1,5 +1,5 @@
 .slick-list {
-  padding: 25px 0;
+  padding: 0;
 }
 .slick-dots.booksSliderCustomDots {
   top: -50px;
@@ -33,9 +33,6 @@ li.slick-active {
 }
 
 @include media-breakpoint-down($screen-sm-max) {
-  .slick-slider {
-    margin-top: 50px;
-  }
 
   .slick-dots.booksSliderCustomDots {
     left: 0;

@@ -1,27 +1,28 @@
 // next.config.js
 const withAntdLess = require("next-plugin-antd-less");
+const withPlugins = require("next-compose-plugins");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  // enabled: process.env.ANALYZE === "true",
+  enabled: true,
+});
 
-module.exports = withAntdLess(
+module.exports = withPlugins(
+  [
+    [withBundleAnalyzer],
+    [
+      withAntdLess({
+        lessVarsFilePath: "styles/less/variables.less",
+        cssLoaderOptions: {},
+
+        webpack(config) {
+          return config;
+        },
+      }),
+    ],
+  ],
   {
-    lessVarsFilePath: "styles/less/variables.less",
-    cssLoaderOptions: {
-      //   https://github.com/webpack-contrib/css-loader#object
-      //
-      //   sourceMap: true, // default false
-      //   esModule: false, // default false
-      //   modules: {
-      //     exportLocalsConvention: 'asIs',
-      //     exportOnlyLocals: true,
-      //     mode: 'pure',
-      //     getLocalIdent: [Function: getCssModuleLocalIdent]
-      //   }
-    },
-    // Other Config Here...
-    webpack(config) {
-      return config;
-    },
-  },
-  { distDir: ".next" }
+    distDir: ".next",
+  }
 );
 // module.exports = {
 //   distDir: ".next",

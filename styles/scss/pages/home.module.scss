@@ -1,20 +1,5 @@
-.advantages {
-  min-height: 60vh;
-  flex-direction: column;
-  padding: 50px 0;
-  justify-content: center;
-  align-items: center;
-  margin: 75px 0;
-}
-.background {
-    position: relative;
-  &::after {
-    content: "";
-    position: absolute;
-    background: #f9fefd;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    z-index: -1;
-  }
-}
+@import "../utilities/index";
+@import "./sections/advantages";
+@import "./sections/opportunities";
+@import "./sections/newCollectionBooks";
+@import "./sections/subscribe";

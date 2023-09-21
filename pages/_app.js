@@ -24,13 +24,21 @@ function MyApp({ Component, pageProps }) {
       offset: 50,
     });
   }, []);
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [router.pathname]);
+  }, [router.asPath]);
 
   return (
     <AppProviders>
+      {/* {pageProps.error ? (
+        <Error
+          statusCode={pageProps.error.statusCode}
+          title={pageProps.error.message}
+        />
+      ) : (
+        <Component {...pageProps} />
+      )} */}
       <Component {...pageProps} />
     </AppProviders>
   );

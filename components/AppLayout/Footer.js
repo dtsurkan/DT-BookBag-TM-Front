@@ -1,16 +1,19 @@
 import { Button, Col, List, Row } from "antd";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { Footer } from "antd/lib/layout/layout";
 import Text from "antd/lib/typography/Text";
 import PageHeaderLogo from "components/Logo/PageHeaderLogo";
 
 const FooterComponent = () => {
   const getYear = () => new Date().getFullYear();
+  const screens = useBreakpoint();
+
   return (
     <Footer style={{ background: "transparent", padding: "100px 0" }}>
       <Row align="middle">
         <Col xs={24} lg={16}>
           <PageHeaderLogo style={{ padding: "16px 0" }} />
-          <Text>BookBag &copy; {getYear()}</Text>
+          {screens.lg && <Text>BookBag &copy; {getYear()}</Text>}
         </Col>
         <Col
           xs={24}
@@ -32,7 +35,9 @@ const FooterComponent = () => {
             ]}
             renderItem={({ title }) => (
               <List.Item style={{ padding: "8px 0" }}>
-                <Button type="link">{title}</Button>
+                <Button type="link" style={{ padding: 0 }}>
+                  {title}
+                </Button>
               </List.Item>
             )}
           />
@@ -46,10 +51,17 @@ const FooterComponent = () => {
             ]}
             renderItem={({ title }) => (
               <List.Item style={{ padding: "8px 0" }}>
-                <Button type="link">{title}</Button>
+                <Button type="link" style={{ padding: 0 }}>
+                  {title}
+                </Button>
               </List.Item>
             )}
           />
+          {!screens.lg && (
+            <Text style={{ width: "100%", marginTop: "16px" }}>
+              BookBag &copy; {getYear()}
+            </Text>
+          )}
         </Col>
       </Row>
     </Footer>

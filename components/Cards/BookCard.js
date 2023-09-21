@@ -17,12 +17,12 @@ const BookCard = ({ book = {}, gutter = [8, 0] }) => {
         <Col>
           <img
             src={getStrapiMedia(book?.photos[0])}
-            alt={book.photos[0].name}
+            alt={book.photos[0]?.name}
           />
         </Col>
         <Col>
           <Space direction="vertical">
-            <Title level={4}>{book?.name}</Title>
+            <Title level={4}>{book?.book_name}</Title>
             <Text type="secondary">{`Языки: ${book?.language}`}</Text>
             <Text type="secondary">{`Автор: ${book?.author}`}</Text>
             <Title level={3}>{`${book?.price} грн`}</Title>
