@@ -13,9 +13,13 @@ const useStyles = createUseStyles((theme) => ({
   },
 }));
 
-const MainContent = ({ children }) => {
+const MainContent = ({ children, extraStyles = {} }) => {
   const classes = useStyles();
-  return <Content className={classNames(classes.mainContent)}>{children}</Content>;
+  return (
+    <Content className={classNames(classes.mainContent)} style={extraStyles}>
+      {children}
+    </Content>
+  );
 };
 
 export default MainContent;

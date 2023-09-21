@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import useTwilioClient from 'hooks/useTwilioClient';
-import useCustomSwr from 'hooks/useCustomSwr';
-import { useSession } from 'next-auth/client';
+import { getSession } from 'next-auth/client';
 import useTranslation from 'next-translate/useTranslation';
 import { Button, Col, message, PageHeader, Row, Space } from 'antd';
 import { ExclamationCircleOutlined, LikeOutlined } from '@ant-design/icons';
@@ -17,26 +16,23 @@ import BookDescriptionItem from 'components/Book/BookDescriptionItem';
 import DoubleCheckIcon from 'components/Icons/DoubleCheckIcon';
 import NewCollectionBooks from 'components/Sections/NewCollectionBooks';
 import { getBookBySlug, getBookBySellerID } from 'lib/strapi/services/books';
-import { toggleBookToLikedBooks } from 'logics/books/liked-books';
+import { getBookFromLikedBooks } from 'lib/strapi/services/liked-books';
+import {
+  handleAddBookToLikedBooks,
+  handleDeleteBookFromLikedBooks,
+} from 'logics/books/liked-books';
 
-const BookItem = ({ initialBook = {}, booksWithTheSameSeller = [], params }) => {
-  const [session] = useSession();
+const BookItem = ({ book = {}, booksWithTheSameSeller = [], session, isLiked }) => {
   const { client } = useTwilioClient();
   const { t } = useTranslation();
-  const { response: book } = useCustomSwr({
-    url: `/books?slug=${params.slug}`,
-    extraSwrOpts: { initialData: initialBook },
-  });
   console.log(`bookefewfwfewfwefewfwffewfwefwefwefewfewfweff`, book);
   // console.log("booksWithTheSameSeller", booksWithTheSameSeller);
   const router = useRouter();
-  const [isChecked, setIsChecked] = useState(
-    book?.liked_by_users?.some((user) => user.id === session?.profile?.id)
-  );
+  const [isChecked, setIsChecked] = useState(isLiked);
   if (router.isFallback) {
     return <div>Loading22222222...</div>;
   }
-  const theSameUser = session?.profile.email === book.seller.email;
+  const theSameUser = session?.profile.id === book.buyingID.sellerID;
   return (
     <AppLayout>
       <MainContent>
@@ -58,7 +54,7 @@ const BookItem = ({ initialBook = {}, booksWithTheSameSeller = [], params }) => 
             <BookDescriptionItem
               isEllipsis={true}
               title="components:cards.description.categories"
-              description={book.categories.map(
+              description={book?.categories?.map(
                 (category, index) =>
                   `${(index ? ', ' : '') + t(`components:categories.${category.slug}`)}`
               )}
@@ -93,16 +89,15 @@ const BookItem = ({ initialBook = {}, booksWithTheSameSeller = [], params }) => 
               }}
             >
               <Col style={{ display: 'flex', alignItems: 'center' }}>
-                {book.book_status === 'sold' && book.seller.id !== session?.profile.id ? (
+                {book.buyingID.buying_status === 'sold' &&
+                book.buyingID.sellerID !== session?.profile.id ? (
                   <Space>
                     <DoubleCheckIcon style={{ fontSize: '32px' }} />
                     <Title level={2} style={{ color: '#6bbe9f', margin: 0, marginRight: '16px' }}>
-                      {t('components:others.success-bought-book-title', {
-                        buyer: book.buyer.email,
-                      })}
+                      {t('components:others.success-bought-book-title')}
                     </Title>
                   </Space>
-                ) : book.book_status === 'sold' ? (
+                ) : book.buyingID.buying_status === 'sold' ? (
                   <Space>
                     <DoubleCheckIcon style={{ fontSize: '32px' }} />
                     <Title level={2} style={{ color: '#6bbe9f', margin: 0, marginRight: '16px' }}>
@@ -151,7 +146,11 @@ const BookItem = ({ initialBook = {}, booksWithTheSameSeller = [], params }) => 
                     onClick={async () => {
                       console.log(`book`, book);
                       setIsChecked(!isChecked);
-                      await toggleBookToLikedBooks(!isChecked, session, book, t);
+                      if (!isChecked) {
+                        await handleAddBookToLikedBooks(session, book, t);
+                      } else {
+                        await handleDeleteBookFromLikedBooks(session, book, t);
+                      }
                     }}
                   />
                 )}
@@ -178,7 +177,7 @@ const BookItem = ({ initialBook = {}, booksWithTheSameSeller = [], params }) => 
           client={client}
           title="components:others.others-seller-books-title"
           subtitle="components:others.others-seller-books-text"
-          route={`/sellers/${book.seller.id}`}
+          route={`/sellers/${book.buyingID.sellerID}`}
           hasSubtitle={true}
           hasSuptitle={false}
           isAdditionalParagraph={false}
@@ -188,11 +187,17 @@ const BookItem = ({ initialBook = {}, booksWithTheSameSeller = [], params }) => 
   );
 };
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, req }) {
   console.log('params', params);
   const book = await getBookBySlug(params.slug);
-
-  const booksWithTheSameSeller = await getBookBySellerID(book?.data[0]?.seller.id);
+  const session = await getSession({ req });
+  const booksWithTheSameSeller = await getBookBySellerID(book?.data[0]?.buyingID.sellerID);
+  const likedBook = await getBookFromLikedBooks(
+    book?.data[0]?.id,
+    session?.profile.id,
+    session?.jwt
+  );
+  const isLiked = likedBook?.data[0]?.userID === session?.profile?.id;
 
   if (!book?.data?.length) {
     return {
@@ -201,9 +206,10 @@ export async function getServerSideProps({ params }) {
   }
   return {
     props: {
-      params,
-      initialBook: book.data[0],
+      isLiked,
+      book: book.data[0],
       booksWithTheSameSeller: booksWithTheSameSeller.data,
+      session,
     },
   };
 }

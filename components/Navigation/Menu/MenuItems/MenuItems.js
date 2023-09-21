@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
-import { Menu, message, Tabs } from 'antd';
+import { Badge, Menu, Tabs } from 'antd';
 import { MENU_LIST } from 'utils/constants';
 import { signOut } from 'next-auth/client';
 const { TabPane } = Tabs;
@@ -18,6 +18,7 @@ const MenuItems = ({
   hasSelectedKeys = true,
   hasCustomOnClick = false,
   customOnClick = () => {},
+  menuStyles = {},
 }) => {
   const router = useRouter();
   const { t } = useTranslation();
@@ -60,6 +61,7 @@ const MenuItems = ({
                   <span>
                     {item.icon}
                     {t(item.title)}
+                    {item.hasBadge && <Badge count={item.count} offset={[10, 0]}></Badge>}
                   </span>
                 }
                 key={item.key}
@@ -72,12 +74,13 @@ const MenuItems = ({
           mode={mode}
           selectedKeys={selectedKeys}
           onClick={onMenuClick}
-          style={{ border: 'none' }}
+          style={{ border: 'none', ...menuStyles }}
         >
           {menuList.map((item) => (
             <Fragment key={item.id}>
               <Menu.Item key={item.key} icon={item.icon}>
                 {t(item.title)}
+                {item.hasBadge && <Badge count={item.count} offset={[10, 0]}></Badge>}
               </Menu.Item>
             </Fragment>
           ))}

@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import useTranslation from 'next-translate/useTranslation';
 import { useSession } from 'next-auth/client';
+import { useSWRConfig } from 'swr';
 import { Alert, Col, Form, message, Modal, Row, Space } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import MainInput from 'components/DataEntries/Main/MainInput';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
 import MainSpinner from 'components/Loading/Spinners/MainSpinner';
-import { updateBookStatus } from 'logics/books/book-status';
+import { updateBookStatusToProcessing } from 'logics/books/book-status';
 import { checkErrorCode } from 'lib/strapi/shared/errors';
 import { getUserByEmail } from 'lib/strapi/services/user';
+import { getUserAddedBooksSWR, getUserProcessingBooksSWR } from 'lib/swr/mutate/books';
 
 const CheckUserModal = ({
   book = {},
@@ -28,6 +30,7 @@ const CheckUserModal = ({
   maskClosable = false,
 }) => {
   const [session] = useSession();
+  const { mutate } = useSWRConfig();
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [isProcessingBook, setIsProcessingBook] = useState(false);
@@ -45,7 +48,9 @@ const CheckUserModal = ({
         if (!response.data.length) {
           message.info(t('components:messages.non-exist-email'));
         } else {
-          await updateBookStatus(t, session, book, true, response.data[0].id);
+          await updateBookStatusToProcessing(t, session, book, response.data[0].id);
+          mutate([getUserAddedBooksSWR(session?.profile?.id), false]);
+          mutate([getUserProcessingBooksSWR(session?.profile?.id), false]);
           onCancel();
         }
         setIsProcessingBook(false);

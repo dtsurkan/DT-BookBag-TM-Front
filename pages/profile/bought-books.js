@@ -1,7 +1,8 @@
-import { getSession, useSession } from 'next-auth/client';
+import { getSession } from 'next-auth/client';
 import useCustomSwr from 'hooks/useCustomSwr';
 import ProfileLayout from 'components/Layout/ProfileLayout';
 import ProfileList from 'components/Lists/ProfileBooksList';
+import { getUserBoughtBooksSWR } from 'lib/swr/mutate/books';
 
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
@@ -15,15 +16,13 @@ export async function getServerSideProps({ req }) {
     };
   }
   return {
-    props: {},
+    props: { session },
   };
 }
 
-const BoughtBooks = () => {
-  const [session] = useSession();
-  console.log(`session`, session);
+const BoughtBooks = ({ session }) => {
   const { response: bought_books, isLoading } = useCustomSwr({
-    url: `/books?buyer.id=${session?.profile?.id}&book_status_ne=added`,
+    url: getUserBoughtBooksSWR(session?.profile?.id, ''),
   });
 
   return (

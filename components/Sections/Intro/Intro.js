@@ -53,10 +53,7 @@ const Intro = ({ showModal = () => {} }) => {
       </Col>
       <Col xs={0} md={24} lg={14} data-aos="fade-left">
         <div>
-          <LottieComponent
-            animationData={booksLottie}
-            loop={5}
-          />
+          <LottieComponent animationData={booksLottie} />
         </div>
       </Col>
       <Col xs={24} style={{ alignSelf: 'flex-end' }} data-aos="fade-up">

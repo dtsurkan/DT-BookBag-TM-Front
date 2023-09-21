@@ -16,6 +16,7 @@ import MessagesList from 'components/Chat/Lists/MessagesList';
 import MobileHeader from 'components/Navigation/Mobile/MobileHeader';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
 import { getBookBySlug } from 'lib/strapi/services/books';
+import { getUserByID } from 'lib/strapi/services/user';
 import { fetchConversationBySid, getUserByIdentity } from 'lib/twilio-conversation/services/client';
 import {
   getMessagesFromConversation,
@@ -59,11 +60,11 @@ export async function getServerSideProps({ req }) {
     };
   }
   return {
-    props: {},
+    props: { session },
   };
 }
 
-const Chat = () => {
+const Chat = ({ session }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const router = useRouter();
@@ -84,6 +85,7 @@ const Chat = () => {
   const [threshold, setThreshold] = useState(0);
   const [onlineStatus, setOnlineStatus] = useState(false);
   const [buyer, setBuyer] = useState(null);
+  const [seller, setSeller] = useState(null);
 
   useEffect(() => {
     // Helper functions inside useEffect
@@ -126,7 +128,9 @@ const Chat = () => {
 
       console.log(`conversation`, conversation);
       const book = await getBookBySlug(conversation.channelState.attributes.bookSlug);
+      const { data: seller } = await getUserByID(book.data[0].buyingID.sellerID, session.jwt);
       setBook(book.data[0]);
+      setSeller(seller);
       setBuyer(conversation.channelState.attributes.buyer);
       console.log(`book`, book);
       await joinConversation(conversation);
@@ -137,7 +141,7 @@ const Chat = () => {
         setThreshold(200);
       }, 2000);
 
-      const user = await getUserByIdentity(client, book.data[0].seller.email);
+      const user = await getUserByIdentity(client, seller.email);
       console.log(`user`, user);
       const {
         state: { online },
@@ -162,7 +166,7 @@ const Chat = () => {
     if (client) {
       getConversation();
     }
-  }, [client, router.query.sid]);
+  }, [client, router.query.sid, session]);
 
   useEffect(() => {
     scrollToBottom(scrollToBottomRef, true);
@@ -203,7 +207,12 @@ const Chat = () => {
       <AppLayout isHasNavigation={false} isHasFooter={false}>
         <Row justify="center">
           {isTabletOrMobile ? null : (
-            <AsideBookDescription onlineStatus={onlineStatus} book={book} buyer={buyer} />
+            <AsideBookDescription
+              onlineStatus={onlineStatus}
+              book={book}
+              seller={seller}
+              buyer={buyer}
+            />
           )}
           <Col xs={24} xl={19} className={classes.chat}>
             {isTabletOrMobile ? (
@@ -291,6 +300,7 @@ const Chat = () => {
           hasHeaderLogo={false}
           onlineStatus={onlineStatus}
           book={book}
+          seller={seller}
           buyer={buyer}
         />
       </Modal>

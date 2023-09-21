@@ -15,9 +15,12 @@ const Subscribe = () => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const [IsLoadingSubscribing, setIsLoadingSubscribing] = useState(false);
-  const onFinish = async (values) => {
+  const onFinish = async ({ email }) => {
     setIsLoadingSubscribing(true);
-    const response = await createSubscriptionOnNewBooks(values);
+    const response = await createSubscriptionOnNewBooks({
+      email,
+      hasNewBooks: true,
+    });
     // console.log(`response`, response);
     if (checkErrorCode(response.status)) {
       message.error(t('components:subscribe.error-subscribing'));

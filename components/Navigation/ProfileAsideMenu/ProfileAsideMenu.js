@@ -1,5 +1,8 @@
 import useShowConfigModal from 'hooks/useShowConfigModal';
 import useTranslation from 'next-translate/useTranslation';
+import { useSession } from 'next-auth/client';
+import useCustomSwr from 'hooks/useCustomSwr';
+import useBadgeProfileCount from 'hooks/useBadgeProfileCount';
 import { useTheme, createUseStyles } from 'react-jss';
 import { useMediaQuery } from 'react-responsive';
 import { Col, Row, Space } from 'antd';
@@ -12,10 +15,11 @@ import MobileHeader from 'components/Navigation/Mobile/MobileHeader';
 import MenuItems from 'components/Navigation/Menu/MenuItems';
 import ProfileAvatar from 'components/Profile/ProfileAvatar';
 import {
+  getProfileAsideTopList,
+  getProfileDropdownList,
   PROFILE_ASIDE_BOTTOM_LIST,
-  PROFILE_ASIDE_TOP_LIST,
-  PROFILE_DROPDOWN_LIST,
 } from 'utils/constants';
+import { getUserProcessingBooksSWR } from 'lib/swr/mutate/books';
 
 const useStyles = createUseStyles(() => ({
   mobileProfileAsideWrapper: {
@@ -47,9 +51,14 @@ const ProfileAsideMenu = () => {
     handleCancelConfigBookModal,
   } = useShowConfigModal();
   const { t } = useTranslation();
+  const [session] = useSession();
   const theme = useTheme();
   const classes = useStyles();
   const isTabletOrMobile = useMediaQuery({ maxWidth: theme.breakpoints.xl });
+  const { response: processing_books } = useCustomSwr({
+    url: getUserProcessingBooksSWR(session?.profile?.id, ''),
+  });
+  const { messagesCount } = useBadgeProfileCount();
   return (
     <>
       {isTabletOrMobile ? (
@@ -65,12 +74,18 @@ const ProfileAsideMenu = () => {
             </Col>
 
             <Col xs={24}>
-              <MenuItems menuList={PROFILE_DROPDOWN_LIST} isTabs={true} />
+              <MenuItems
+                menuList={getProfileDropdownList({
+                  processingBooksCount: processing_books.length,
+                  messagesCount,
+                })}
+                isTabs={true}
+              />
             </Col>
           </Row>
         </div>
       ) : (
-        <Col xs={24} md={6} className={classes.desktopProfileAsideWrapper}>
+        <Col xs={24} md={6} className={classes.desktopProfileAsideWrapper} data-aos="fade-right">
           <Row gutter={[0, 8]} className={classes.desktopProfileAsideWrapperRow}>
             <Col flex={0.5}>
               <PageHeaderLogo isBackIcon={true} style={{ padding: 0 }} />
@@ -96,7 +111,12 @@ const ProfileAsideMenu = () => {
               </Space>
             </Col>
             <Col flex={4} className={classes.desktopProfileMenusBox}>
-              <MenuItems menuList={PROFILE_ASIDE_TOP_LIST} />
+              <MenuItems
+                menuList={getProfileAsideTopList({
+                  processingBooksCount: processing_books.length,
+                  messagesCount,
+                })}
+              />
               <MenuItems menuList={PROFILE_ASIDE_BOTTOM_LIST} />
             </Col>
           </Row>

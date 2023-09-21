@@ -4,7 +4,7 @@ import { Dropdown, message } from 'antd';
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import confirm from 'antd/lib/modal/confirm';
 import MenuItems from 'components/Navigation/Menu/MenuItems';
-import { addBookToLikedBooks } from 'logics/books/liked-books';
+import { handleAddBookToLikedBooks } from 'logics/books/liked-books';
 import { deleteBook } from 'lib/strapi/services/books';
 import { fetchSubscribedConversations } from 'lib/twilio-conversation/services/client';
 import { deleteConversation } from 'lib/twilio-conversation/services/conversation';
@@ -31,7 +31,7 @@ const BookSettingsDropdown = ({
         break;
       case 'liked':
         setIsVisibleDropdown(false);
-        await addBookToLikedBooks(session, book, t);
+        await handleAddBookToLikedBooks(session, book, t);
         break;
       case 'sold':
         setIsVisibleDropdown(false);

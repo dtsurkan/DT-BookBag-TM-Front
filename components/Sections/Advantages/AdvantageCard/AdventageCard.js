@@ -13,7 +13,7 @@ const AdventageCard = ({
   lg = 12,
   xl = 6,
   xxl = 8,
-  props,
+  ...props
 }) => {
   const classes = useStyles();
   return (

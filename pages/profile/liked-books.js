@@ -1,7 +1,8 @@
 import useCustomSwr from 'hooks/useCustomSwr';
-import { getSession, useSession } from 'next-auth/client';
+import { getSession } from 'next-auth/client';
 import ProfileLayout from 'components/Layout/ProfileLayout';
 import ProfileList from 'components/Lists/ProfileBooksList';
+import { getUserLikedBooksSWR } from 'lib/swr/mutate/books';
 
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
@@ -15,17 +16,16 @@ export async function getServerSideProps({ req }) {
     };
   }
   return {
-    props: {},
+    props: { session },
   };
 }
 
-const LikedBooks = () => {
-  const [session] = useSession();
-  console.log(`session`, session);
-  const { response: liked_books, isLoading } = useCustomSwr({
-    url: `/users/${session?.profile.id}/liked-books`,
-    token: session.jwt,
+const LikedBooks = ({ session }) => {
+  const { response, isLoading } = useCustomSwr({
+    url: getUserLikedBooksSWR(session?.profile.id, ''),
+    token: session?.jwt,
   });
+  const liked_books = response.map((item) => item.bookID);
   return (
     <ProfileLayout>
       <ProfileList

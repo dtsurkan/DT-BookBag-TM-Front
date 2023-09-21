@@ -23,9 +23,9 @@ const BookFilters = ({ booksCount = 0, title = 'components:others.catalog-title'
     form.setFieldsValue({ ...router.query });
   }, [form, router.query]);
 
-  useEffect(() => {
-    form.resetFields();
-  }, [form, window.location.pathname]);
+  // useEffect(() => {
+  //   form.resetFields();
+  // }, [form, window.location.pathname]);
   return (
     <Form
       style={{ margin: '24px 0' }}

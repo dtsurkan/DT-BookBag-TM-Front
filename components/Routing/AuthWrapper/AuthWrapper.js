@@ -31,7 +31,7 @@ const AuthWrapper = ({ children }) => {
           justifyContent: 'center',
         }}
       >
-        <Spin size="large" tip="Loading" />;
+        <Spin size="large" tip="Loading" />
       </div>
     );
 

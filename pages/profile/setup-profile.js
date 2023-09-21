@@ -2,7 +2,7 @@ import useTwilioClient from 'hooks/useTwilioClient';
 import useShowConfigModal from 'hooks/useShowConfigModal';
 import useCustomSwr from 'hooks/useCustomSwr';
 import { createUseStyles } from 'react-jss';
-import { getSession, useSession } from 'next-auth/client';
+import { getSession } from 'next-auth/client';
 import useTranslation from 'next-translate/useTranslation';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import _isEqual from 'lodash/isEqual';
@@ -47,12 +47,11 @@ export async function getServerSideProps({ req }) {
     };
   }
   return {
-    props: {},
+    props: { session },
   };
 }
 
-const SetupProfile = () => {
-  const [session, loading] = useSession();
+const SetupProfile = ({ session }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const {
@@ -121,7 +120,7 @@ const SetupProfile = () => {
             </Title>
           </Col>
           <Col xs={24}>
-            <Spin spinning={loading || isLoadingUserProfile}>
+            <Spin spinning={isLoadingUserProfile}>
               <Form
                 layout="vertical"
                 initialValues={initialValues}

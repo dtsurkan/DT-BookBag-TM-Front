@@ -22,7 +22,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
     label: t(`components:categories.${category.slug}`),
   }));
   const handleChange = (value) => {
-    form.setFieldsValue({ subcategories: undefined });
+    form.setFieldsValue({ subcategories: [] });
     if (value) {
       const subCategories = categories
         .filter((item) => item.id === value)
@@ -36,7 +36,7 @@ const DepandantCategorySelect = ({ options: categories, form }) => {
       setSubCategories(subCategories[0]);
       setIsDisabled(false);
     } else {
-      setSubCategories(undefined);
+      setSubCategories([]);
       setIsDisabled(true);
     }
   };

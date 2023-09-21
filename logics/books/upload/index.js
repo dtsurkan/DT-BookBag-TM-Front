@@ -27,7 +27,6 @@ export const uploadBookLogic = async (session, values) => {
     ...otherValues,
     book_name: parsedBookName,
     seller: profile.id,
-    book_status: 'added',
     photos: newImageIDs,
     slug: getSlugifyValue(values.book_name),
   };

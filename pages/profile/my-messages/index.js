@@ -75,11 +75,14 @@ const MyMessages = () => {
       align: 'center',
       dataIndex: ['channelState'],
       render: (record) => {
-        // NOTE! Message index begins at position 0
-        const lastMessageIndex = record.lastMessage ? record.lastMessage.index + 1 : 0;
-        const lastReadMessageIndex = record.lastReadMessageIndex
-          ? record.lastReadMessageIndex + 1
-          : 0;
+        // NOTE! Message index begins at position 0. if first message doesn't read --- null
+        const lastMessageIndex = record.lastMessage.index ? record.lastMessage.index + 1 : 1;
+        const lastReadMessageIndex =
+          record.lastReadMessageIndex === null
+            ? 0
+            : record.lastReadMessageIndex
+            ? record.lastReadMessageIndex + 1
+            : 1;
         const count = lastMessageIndex - lastReadMessageIndex;
         return (
           <Badge count={count}>

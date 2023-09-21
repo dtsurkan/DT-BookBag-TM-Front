@@ -6,12 +6,13 @@ import Title from 'antd/lib/typography/Title';
 import AppLayout from 'components/Layout/AppLayout';
 import MainContent from 'components/Layout/MainContent';
 import BooksList from 'components/Lists/BooksList';
+import { getSellerBooks } from 'lib/swr/mutate/books';
 
 const SellerPage = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { response: books, isLoading: isLoadingUserProfile } = useCustomSwr({
-    url: `/books?seller.id=${router?.query?.id}&_sort=created_at:DESC&book_status=added`,
+    url: getSellerBooks(router?.query?.id, ''),
   });
 
   return (

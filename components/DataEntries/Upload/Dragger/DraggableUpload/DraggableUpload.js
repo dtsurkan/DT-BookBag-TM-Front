@@ -53,7 +53,7 @@ const DraggableUpload = memo(({ children, ...props }) => {
           <Dragger
             disabled={fileList?.length < props.maxCount ? false : true}
             showUploadList={false}
-            height={200}
+            style={{ minHeight: '200px' }}
             {...props}
           >
             {children}

@@ -6,6 +6,7 @@ import {
   BookOutlined,
   CarryOutOutlined,
   CloseOutlined,
+  DeliveredProcedureOutlined,
   InfoCircleOutlined,
   LikeOutlined,
   LogoutOutlined,
@@ -111,7 +112,7 @@ export const MENU_LIST = [
   },
 ];
 
-export const PROFILE_DROPDOWN_LIST = [
+export const getProfileDropdownList = ({ processingBooksCount = 0, messagesCount = 0 }) => [
   {
     id: uuidv4(),
     key: '/profile/added-books',
@@ -125,6 +126,15 @@ export const PROFILE_DROPDOWN_LIST = [
     href: '/profile/sold-books',
     icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.profile.sold-books',
+  },
+  {
+    id: uuidv4(),
+    key: '/profile/processing-books',
+    href: '/profile/processing-books',
+    icon: <DeliveredProcedureOutlined style={{ fontSize: 18 }} />,
+    title: 'components:lists.profile.processing-books',
+    hasBadge: true,
+    count: processingBooksCount,
   },
   {
     id: uuidv4(),
@@ -146,6 +156,8 @@ export const PROFILE_DROPDOWN_LIST = [
     href: '/profile/my-messages',
     icon: <MessageOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.profile.my-messages',
+    hasBadge: true,
+    count: messagesCount,
   },
   {
     id: uuidv4(),
@@ -163,7 +175,7 @@ export const PROFILE_DROPDOWN_LIST = [
   },
 ];
 
-export const PROFILE_ASIDE_TOP_LIST = [
+export const getProfileAsideTopList = ({ processingBooksCount = 0, messagesCount = 0 }) => [
   {
     id: uuidv4(),
     key: '/profile/added-books',
@@ -177,6 +189,15 @@ export const PROFILE_ASIDE_TOP_LIST = [
     href: '/profile/sold-books',
     icon: <CarryOutOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.profile.sold-books',
+  },
+  {
+    id: uuidv4(),
+    key: '/profile/processing-books',
+    href: '/profile/processing-books',
+    icon: <DeliveredProcedureOutlined style={{ fontSize: 18 }} />,
+    title: 'components:lists.profile.processing-books',
+    hasBadge: true,
+    count: processingBooksCount,
   },
   {
     id: uuidv4(),
@@ -198,6 +219,8 @@ export const PROFILE_ASIDE_TOP_LIST = [
     href: '/profile/my-messages',
     icon: <MessageOutlined style={{ fontSize: 18 }} />,
     title: 'components:lists.profile.my-messages',
+    hasBadge: true,
+    count: messagesCount,
   },
 ];
 
@@ -301,15 +324,168 @@ export const FOOTER_CONTACTS_LIST = [
 export const RESTRICTED_PATHS = [
   { route: '/profile/added-books' },
   { route: '/profile/bought-books' },
+  { route: '/profile/processing-books' },
   { route: '/profile/sold-books' },
   { route: '/profile/liked-books' },
   { route: '/profile/my-messages/[sid]' },
   { route: '/profile/setup-profile' },
   { route: '/profile/my-messages' },
+  { route: '/books/[slug]/chat' },
 ];
 export const ONLY_UNREGISTERED_PATHS = [
   { route: '/auth/login' },
   { route: '/auth/register' },
   { route: '/auth/forgot-password' },
   { route: '/auth/reset-password' },
+];
+
+export const PRIVACY_POLICY = [
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.title',
+    paragraphs: [
+      'components:privacy-policy.first-paragraph',
+      'components:privacy-policy.second-paragraph',
+      'components:privacy-policy.third-paragraph',
+    ],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.agreement.title',
+    paragraphs: ['components:privacy-policy.agreement.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.info-collection.title',
+    paragraphs: [
+      'components:privacy-policy.info-collection.first-paragraph',
+      'components:privacy-policy.info-collection.second-paragraph',
+      'components:privacy-policy.info-collection.third-paragraph',
+    ],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.use-info.title',
+    paragraphs: ['components:privacy-policy.use-info.first-paragraph'],
+    list: [
+      'components:privacy-policy.use-info.list.first',
+      'components:privacy-policy.use-info.list.second',
+      'components:privacy-policy.use-info.list.third',
+      'components:privacy-policy.use-info.list.fourth',
+      'components:privacy-policy.use-info.list.fifth',
+      'components:privacy-policy.use-info.list.sixth',
+      'components:privacy-policy.use-info.list.seventh',
+    ],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.logs.title',
+    paragraphs: ['components:privacy-policy.logs.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.cookies.title',
+    paragraphs: [
+      'components:privacy-policy.cookies.first-paragraph',
+      'components:privacy-policy.cookies.second-paragraph',
+    ],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.ads.title',
+    paragraphs: [
+      'components:privacy-policy.ads.first-paragraph',
+      'components:privacy-policy.ads.second-paragraph',
+      'components:privacy-policy.ads.third-paragraph',
+    ],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.third-party.title',
+    paragraphs: ['components:privacy-policy.third-party.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.ccpa-privacy.title',
+    paragraphs: [
+      'components:privacy-policy.ccpa-privacy.first-paragraph',
+      'components:privacy-policy.ccpa-privacy.second-paragraph',
+      'components:privacy-policy.ccpa-privacy.third-paragraph',
+      'components:privacy-policy.ccpa-privacy.fourth-paragraph',
+      'components:privacy-policy.ccpa-privacy.fifth-paragraph',
+      'components:privacy-policy.ccpa-privacy.sixth-paragraph',
+      'components:privacy-policy.ccpa-privacy.seventh-paragraph',
+      'components:privacy-policy.ccpa-privacy.eithth-paragraph',
+    ],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:privacy-policy.clild-info.title',
+    paragraphs: [
+      'components:privacy-policy.clild-info.first-paragraph',
+      'components:privacy-policy.clild-info.second-paragraph',
+    ],
+  },
+];
+
+export const TERMS_OF_USE = [
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.title',
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.conditions.title',
+    paragraphs: ['components:terms-of-use.conditions.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.use-licence.title',
+    paragraphs: [
+      'components:terms-of-use.use-licence.first-paragraph',
+      'components:terms-of-use.use-licence.second-paragraph',
+    ],
+    list: [
+      'components:terms-of-use.use-licence.list.first',
+      'components:terms-of-use.use-licence.list.second',
+      'components:terms-of-use.use-licence.list.third',
+      'components:terms-of-use.use-licence.list.fourth',
+      'components:terms-of-use.use-licence.list.fifth',
+    ],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.disclaimer.title',
+    paragraphs: ['components:terms-of-use.disclaimer.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.limitations.title',
+    paragraphs: ['components:terms-of-use.limitations.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.revisions.title',
+    paragraphs: ['components:terms-of-use.revisions.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.links.title',
+    paragraphs: ['components:terms-of-use.links.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.modifications.title',
+    paragraphs: ['components:terms-of-use.modifications.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.privacy.title',
+    paragraphs: ['components:terms-of-use.privacy.first-paragraph'],
+  },
+  {
+    id: uuidv4(),
+    title: 'components:terms-of-use.governing-law.title',
+    paragraphs: ['components:terms-of-use.governing-law.first-paragraph'],
+  },
 ];

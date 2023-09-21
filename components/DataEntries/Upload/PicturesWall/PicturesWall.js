@@ -107,7 +107,7 @@ const PicturesWall = ({
         {isDraggable ? (
           <DraggableUpload {...uploadProps}>{uploadDraggerChildren}</DraggableUpload>
         ) : isDragger ? (
-          <Dragger style={{ margin: '20px 0' }} height={200} {...uploadProps}>
+          <Dragger style={{ margin: '20px 0', minHeight: '200px' }} {...uploadProps}>
             {uploadDraggerChildren}
           </Dragger>
         ) : (

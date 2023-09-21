@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
-import { mutate } from 'swr';
+import { useSWRConfig } from 'swr';
 import useTranslation from 'next-translate/useTranslation';
 import { useSession } from 'next-auth/client';
 import useCustomSwr from 'hooks/useCustomSwr';
@@ -12,7 +12,6 @@ import Title from 'antd/lib/typography/Title';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
 import PicturesWall from 'components/DataEntries/Upload/PicturesWall';
 import MainSpinner from 'components/Loading/Spinners/MainSpinner';
-import MainBackdrop from 'components/Loading/Backdrops/MainBackdrop';
 import InfoModal from '../Info';
 import { getSlugifyValue } from 'lib/slugify';
 import { updateBook } from 'lib/strapi/services/books';
@@ -42,6 +41,7 @@ const ConfigBookModal = ({
   bookId,
 }) => {
   const { t } = useTranslation();
+  const { mutate } = useSWRConfig();
   const [session] = useSession();
   const [form] = Form.useForm();
   const [isProcessingBook, setIsProcessingBook] = useState(false);
@@ -183,7 +183,7 @@ const ConfigBookModal = ({
         // Before Modal opens, children elements do not exist in the view. You can set forceRender on Modal to pre-render its children.
         forceRender={forceRender}
       >
-        <Spin spinning={isLoading && isLoadingInitialValues}>
+        <Spin spinning={(isLoading && isLoadingInitialValues) || isProcessingBook}>
           <Form
             initialValues={initialValues}
             form={form}
@@ -262,7 +262,6 @@ const ConfigBookModal = ({
         visible={isSuccessfulConfigBook}
         title={followingModalTitle}
       />
-      <MainBackdrop isSpinning={isProcessingBook} />
     </>
   );
 };

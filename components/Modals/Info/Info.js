@@ -38,7 +38,7 @@ const InfoModal = ({
         textAlign: 'center',
       }}
     >
-      <Image src={OrderBookImg} alt="orderBook" />
+      <Image quality={100} placeholder="blur" src={OrderBookImg} alt="orderBook" />
       <Title>{t(title)}</Title>
       <Text>{t(text)}</Text>
     </Modal>

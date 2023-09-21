@@ -44,7 +44,7 @@ const DesktopHeader = ({ hasLogo = true, hasProfile = true, headerStyles }) => {
         bordered={false}
         style={{ background: '#EDF8F6' }}
       />
-      <MenuItems mode="horizontal" />
+      <MenuItems mode="horizontal" menuStyles={{ minWidth: '420px' }} />
       <Select
         onSelect={(locale) => {
           console.log(`locale`, locale);

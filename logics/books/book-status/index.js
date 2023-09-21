@@ -1,37 +1,53 @@
 import { message } from 'antd';
-import { updateBook } from 'lib/strapi/services/books';
+import {
+  editBuyingBook,
+  getBuyingByBuyerIdAndBookId,
+  getBuyingBySellerIdAndBookId,
+} from 'lib/strapi/services/buyings';
 import * as ga from 'lib/google/analytics';
 
-export const updateBookStatus = async (t, session, book, isChecked, buyer) => {
-  const { jwt } = session;
+// Functions for buyer/seller
 
-  const response = await updateBook(
-    book.id,
-    {
-      book_status: isChecked ? 'processing' : 'added',
-      buyer: isChecked ? buyer : null,
-    },
+export const updateBookStatusToProcessing = async (t, session, book, buyerID) => {
+  const { jwt, profile } = session;
+
+  const { data: buying } = await getBuyingBySellerIdAndBookId(profile.id, book.id, jwt);
+  console.log(`buying`, buying);
+  const response = await editBuyingBook(
+    buying[0]?.id,
+    { buying_status: 'processing', buyerID },
     jwt
   );
   if (response.status === 200) {
-    message.success(
-      isChecked
-        ? message.success(t('components:book.update-book-status-to-processing'))
-        : message.success(t('components:book.update-book-status-to-added'))
-    );
+    message.success(message.success(t('components:book.update-book-status-to-processing')));
+  }
+};
+
+export const updateBookStatusToAdded = async (t, session, book, isSeller = false) => {
+  const { jwt, profile } = session;
+
+  const userID = isSeller ? book.buyingID.buyerID : profile.id;
+  console.log(`userID`, userID);
+  const { data: buying } = await getBuyingByBuyerIdAndBookId(userID, book.id, jwt);
+  console.log(`buying`, buying);
+  const response = await editBuyingBook(
+    buying[0]?.id,
+    { buying_status: 'added', buyerID: null },
+    jwt
+  );
+  if (response.status === 200) {
+    message.success(t('components:book.update-book-status-to-added'));
   }
 };
 
 export const updateBookStatusToSold = async (t, session, book) => {
-  const { jwt } = session;
+  const { jwt, profile } = session;
 
-  const response = await updateBook(
-    book.id,
-    {
-      book_status: 'sold',
-    },
-    jwt
-  );
+  const { data: buying } = await getBuyingByBuyerIdAndBookId(profile.id, book.id, jwt);
+  console.log(`buying`, buying);
+
+  const response = await editBuyingBook(buying[0]?.id, { buying_status: 'sold' }, jwt);
+
   if (response.status === 200) {
     message.success(t('components:book.update-book-status-to-sold'));
     ga.event({

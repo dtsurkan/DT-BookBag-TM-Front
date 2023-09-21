@@ -10,11 +10,16 @@ import Title from 'antd/lib/typography/Title';
 import BookDescriptionItem from 'components/Book/BookDescriptionItem';
 import ProfileAvatar from 'components/Profile/ProfileAvatar';
 import PageHeaderLogo from 'components/Layout/PageHeaderLogo';
-import { updateBookStatus, updateBookStatusToSold } from 'logics/books/book-status';
+import {
+  updateBookStatusToAdded,
+  updateBookStatusToProcessing,
+  updateBookStatusToSold,
+} from 'logics/books/book-status';
 
 const AsideBookDescription = ({
   onlineStatus = false,
   book = {},
+  seller = {},
   buyer = null,
   hasHeaderLogo = true,
 }) => {
@@ -25,7 +30,7 @@ const AsideBookDescription = ({
 
   useEffect(() => {
     if (!_isEmpty(book)) {
-      const status = book.book_status === 'sold' ? true : false;
+      const status = book.buyingID.buying_status === 'sold' ? true : false;
       console.log(`status`, status);
       setIsChecked(status);
     }
@@ -51,7 +56,7 @@ const AsideBookDescription = ({
           <Skeleton avatar paragraph={{ rows: 10 }} />
         ) : (
           <>
-            <Col flex={2}>
+            <Col xs={24}>
               <Title level={2} type="secondary">
                 {t('components:others.seller')}
               </Title>
@@ -61,7 +66,7 @@ const AsideBookDescription = ({
                 isHasArrow={false}
                 isHasCity={true}
                 isChatSellerProfile={true}
-                sellerProfile={book.seller}
+                sellerProfile={seller}
                 onlineStatus={onlineStatus}
                 hasOnlineStatus={true}
               />
@@ -131,12 +136,12 @@ const AsideBookDescription = ({
             </Col>
             <Col xs={24}>
               <Title level={5}>
-                {book.seller.id === session?.profile.id
+                {seller?.id === session?.profile.id
                   ? t('components:book.owner-book')
                   : t('components:book.buyer-book')}
                 <Switch
                   checkedChildren={
-                    book.book_status === 'sold'
+                    book.buyingID.buying_status === 'sold'
                       ? t('components:book.sold')
                       : t('components:book.in-progress')
                   }
@@ -154,7 +159,11 @@ const AsideBookDescription = ({
                       zIndex: 1100,
                       cancelText: t('components:general.no'),
                       async onOk() {
-                        await updateBookStatus(t, session, book, checked, buyer.id);
+                        if (checked) {
+                          await updateBookStatusToProcessing(t, session, book, buyer.id);
+                        } else {
+                          await updateBookStatusToAdded(t, session, book, true);
+                        }
                         setIsChecked(checked);
                       },
                       onCancel() {
@@ -163,11 +172,13 @@ const AsideBookDescription = ({
                     });
                   }}
                   checked={isChecked}
-                  disabled={book.seller.id !== session?.profile.id || book.book_status === 'sold'}
+                  disabled={
+                    seller?.id !== session?.profile.id || book.buyingID.buying_status === 'sold'
+                  }
                 />
               </Title>
             </Col>
-            {book.seller.id !== session?.profile.id && book.book_status === 'processing' && (
+            {seller?.id !== session?.profile.id && book.buyingID.buying_status === 'processing' && (
               <Col xs={24}>
                 <Space align="center" style={{ color: 'white' }}>
                   <Button
@@ -183,7 +194,7 @@ const AsideBookDescription = ({
                         zIndex: 1100,
                         cancelText: t('components:general.no'),
                         async onOk() {
-                          await updateBookStatus(t, session, book, false);
+                          await updateBookStatusToAdded(t, session, book);
                           router.reload();
                         },
                         onCancel() {

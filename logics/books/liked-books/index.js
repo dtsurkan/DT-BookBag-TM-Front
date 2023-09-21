@@ -1,76 +1,34 @@
 import { message } from 'antd';
-import { updateBook } from 'lib/strapi/services/books';
+import {
+  addBookToLikedBooks,
+  deleteBookFromLikedBooks,
+  getBookFromLikedBooks,
+} from 'lib/strapi/services/liked-books';
 
 // Disable loader when liked the book
-export const toggleBookToLikedBooks = async (isChecked, session, book, t) => {
+export const handleAddBookToLikedBooks = async (session, book, t) => {
   const { jwt, profile } = session;
-  if (isChecked) {
-    const users = book.liked_by_users.map((user) => user.id);
-    const newLikedUsers = [...users, profile.id];
-    const response = await updateBook(
-      book.id,
-      {
-        liked_by_users: newLikedUsers,
-      },
-      jwt
-    );
-    if (response.status === 200) {
-      message.success(t('components:auth.success-add-to-liked-books-title'));
-    }
-  } else {
-    const filteredLikedUsers = book.liked_by_users
-      .map((user) => user.id)
-      .filter((userId) => userId !== profile.id);
-    const response = await updateBook(
-      book.id,
-      {
-        liked_by_users: filteredLikedUsers,
-      },
-      jwt
-    );
-    if (response.status === 200) {
-      message.success(t('components:auth.success-remove-from-liked-books-title'));
-    }
-  }
-};
-
-// Disable loader when liked the book
-export const addBookToLikedBooks = async (session, book, t) => {
-  const { jwt, profile } = session;
-  const users = book.liked_by_users.map((user) => user.id);
-  if (users.includes(profile.id)) {
+  const { data: likedBook } = await getBookFromLikedBooks(book.id, profile.id, jwt);
+  console.log(`likedBook`, likedBook);
+  if (likedBook.length) {
     message.success(t('components:auth.exist-book-in-liked-title'));
   } else {
-    const newLikedUsers = [...users, profile.id];
-    const response = await updateBook(
-      book.id,
-      {
-        liked_by_users: newLikedUsers,
-      },
-      jwt
-    );
-    if (response.status === 200) {
+    const addedBook = await addBookToLikedBooks({ bookID: book.id, userID: profile.id }, jwt);
+    console.log(`addedBook`, addedBook);
+    if (addedBook.status === 200) {
       message.success(t('components:auth.success-add-to-liked-books-title'));
     }
   }
 };
 
-// Disable loader when liked the book
-export const deleteBookFromLikedBooks = async (session, book, t) => {
+export const handleDeleteBookFromLikedBooks = async (session, book, t) => {
   const { jwt, profile } = session;
+  const { data: likedBook } = await getBookFromLikedBooks(book.id, profile.id, jwt);
+  console.log(`likedBook`, likedBook);
 
-  const filteredUsers = book.liked_by_users
-    .map((user) => user.id)
-    .filter((userId) => userId !== profile.id);
-
-  const response = await updateBook(
-    book.id,
-    {
-      liked_by_users: filteredUsers,
-    },
-    jwt
-  );
-  if (response.status === 200) {
+  const deletedLikedBook = await deleteBookFromLikedBooks(likedBook[0].id, jwt);
+  console.log(`deletedLikedBook`, deletedLikedBook);
+  if (deletedLikedBook.status === 200) {
     message.success(t('components:auth.success-remove-from-liked-books-title'));
   }
 };

@@ -1,7 +1,7 @@
 import useTranslation from 'next-translate/useTranslation';
 import { useSession } from 'next-auth/client';
 import _isEmpty from 'lodash/isEmpty';
-import { Avatar, Col, Row, Space } from 'antd';
+import { Avatar, Badge, Col, Row, Space } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { getStrapiMedia } from 'lib/strapi/shared/media';
@@ -15,6 +15,7 @@ const ProfileAvatar = ({
   isRotatingIcon = false,
   hasOnlineStatus = false,
   onlineStatus = false,
+  badgeCount = 0,
   rowProps = {
     flexDirection: 'row',
   },
@@ -61,17 +62,19 @@ const ProfileAvatar = ({
           </Space>
         </Col>
         <Col>
-          {!_isEmpty(userProfile?.avatar) ? (
-            <Avatar
-              style={{ background: '#EDF8F6', color: '#8D9DA4' }}
-              src={getStrapiMedia(userProfile?.avatar[0]?.url)}
-              {...avatarProps}
-            />
-          ) : (
-            <Avatar style={{ background: '#EDF8F6', color: '#8D9DA4' }} {...avatarProps}>
-              {!_isEmpty(userProfile) && getFirstLetter(userProfile.username)}
-            </Avatar>
-          )}
+          <Badge count={badgeCount}>
+            {!_isEmpty(userProfile?.avatar) ? (
+              <Avatar
+                style={{ background: '#EDF8F6', color: '#8D9DA4' }}
+                src={getStrapiMedia(userProfile?.avatar[0]?.url)}
+                {...avatarProps}
+              />
+            ) : (
+              <Avatar style={{ background: '#EDF8F6', color: '#8D9DA4' }} {...avatarProps}>
+                {!_isEmpty(userProfile) && getFirstLetter(userProfile.username)}
+              </Avatar>
+            )}
+          </Badge>
           {isHasArrow && (
             <ArrowDownOutlined style={{ marginLeft: '8px' }} rotate={isRotatingIcon ? 180 : 0} />
           )}

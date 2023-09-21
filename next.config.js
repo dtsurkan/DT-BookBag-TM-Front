@@ -9,7 +9,6 @@ const path = require('path');
 const runtimeConfig = require(path.join(__dirname, 'config', process.env.NODE_ENV));
 
 // You can choose which headers to add to the list
-// after learning more below.
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -45,6 +44,28 @@ const securityHeaders = [
   // }
 ];
 
+// next.js configuration
+const nextConfig = {
+  headers: async () => [
+    {
+      //NOTE regux expression! Apply these headers to all routes in your application.
+      source: '/(.*)',
+      headers: securityHeaders,
+    },
+    {
+      //NOTE! Apply these headers to base route in your application.
+      source: '/',
+      headers: securityHeaders,
+    },
+  ],
+
+  publicRuntimeConfig: runtimeConfig,
+  eslint: {
+    // Warning: Dangerously allow production builds to successfully complete even if your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
+};
+
 module.exports = withPlugins(
   [
     [
@@ -61,23 +82,5 @@ module.exports = withPlugins(
     [nextTranslate],
     [withBundleAnalyzer],
   ],
-  {
-    publicRuntimeConfig: runtimeConfig,
-    eslint: {
-      // Warning: Dangerously allow production builds to successfully complete even if your project has ESLint errors.
-      ignoreDuringBuilds: true,
-    },
-    async headers() {
-      return [
-        {
-          // Apply these headers to all routes in your application.
-          source: '/(.*)',
-          headers: securityHeaders,
-        },
-      ];
-    },
-  }
+  nextConfig
 );
-// module.exports = {
-//   distDir: ".next",
-// };

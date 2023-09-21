@@ -55,6 +55,7 @@ const AboutBookBag = () => {
             quality={100}
             placeholder="blur"
             priority={true}
+            alt="AboutBookBag"
           />
         </Col>
         <Col

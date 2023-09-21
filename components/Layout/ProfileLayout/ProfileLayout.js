@@ -28,7 +28,7 @@ const ProfileLayout = ({ children }) => {
               }}
             />
           )}
-          {children}
+          <div data-aos="fade-left">{children}</div>
         </Col>
       </Row>
     </AppLayout>

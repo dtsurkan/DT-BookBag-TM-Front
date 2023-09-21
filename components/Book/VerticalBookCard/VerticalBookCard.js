@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/client';
-import { mutate } from 'swr';
+import useCustomSwr from 'hooks/useCustomSwr';
+import { useSWRConfig } from 'swr';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import useTranslation from 'next-translate/useTranslation';
@@ -21,27 +22,29 @@ import InfoModal from 'components/Modals/Info';
 import ConfigBookModal from 'components/Modals/ConfigBook';
 import DoubleCheckIcon from 'components/Icons/DoubleCheckIcon';
 import CheckUserModal from 'components/Modals/CheckUser';
-import { updateBookStatus, updateBookStatusToSold } from 'logics/books/book-status';
-import { deleteBookFromLikedBooks, toggleBookToLikedBooks } from 'logics/books/liked-books';
+import { updateBookStatusToAdded, updateBookStatusToSold } from 'logics/books/book-status';
+import {
+  handleAddBookToLikedBooks,
+  handleDeleteBookFromLikedBooks,
+} from 'logics/books/liked-books';
 import {
   getUserAddedBooksSWR,
-  getUserBoughtOrProcessingBooksSWR,
+  getUserProcessingBooksSWR,
   getUserLikedBooksSWR,
+  getUserLikedBookSWR,
 } from 'lib/swr/mutate/books';
 import { getStrapiMedia } from 'lib/strapi/shared/media';
 import { getCapitalizedString } from 'utils/lodash/string';
 import useStyles from './styles';
 
 const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
+  const { mutate } = useSWRConfig();
   const [session] = useSession();
   const classes = useStyles();
   const router = useRouter();
   const { t } = useTranslation();
-  const {
-    isConfigBookModal,
-    showConfigBookModal,
-    handleCancelConfigBookModal,
-  } = useShowConfigModal();
+  const { isConfigBookModal, showConfigBookModal, handleCancelConfigBookModal } =
+    useShowConfigModal();
   const {
     isConfigBookModal: isCheckingUserModal,
     showConfigBookModal: showCheckingUserModal,
@@ -49,15 +52,12 @@ const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
   } = useShowConfigModal();
   const [isSuccessfulConfigBook, setIsSuccessfulConfigBook] = useState(false);
   const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
-  const [isChecked, setIsChecked] = useState(
-    book.liked_by_users.some((user) => user.id === session?.profile?.id)
-  );
-  // NOTE! Processing key helps better render case when book doesn't sell but in progress
-  const isProcessingBook =
-    book.book_status === 'processing' && book?.seller.id !== session?.profile?.id;
-  if (isProcessingBook) {
-    renderKey = 'processing';
-  }
+  const { response: likedBook } = useCustomSwr({
+    url: getUserLikedBookSWR(session?.profile.id, book?.id, ''),
+    token: session?.jwt,
+    shouldFetch: session?.profile.id ? true : false,
+  });
+
   const getProperlyBookRender = (renderKey) => {
     switch (renderKey) {
       case 'additional-settings':
@@ -83,87 +83,22 @@ const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
           </div>
         );
       case 'bought':
-        break;
-
-      case 'processing':
-        return (
-          <div className={classes.likedBooksCardHover}>
-            <Space align="center" style={{ color: 'white' }}>
-              <Tooltip title={t('components:book.reject-purchase')}>
-                <Button
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    message.error('No');
-                    confirm({
-                      centered: true,
-                      title: t('components:confirm.confirm-reject-buying-book'),
-                      icon: <ExclamationCircleOutlined />,
-                      okText: t('components:general.yes'),
-                      okType: 'primary',
-                      //   because dropdown z-index === 1050
-                      zIndex: 1100,
-                      cancelText: t('components:general.no'),
-                      async onOk() {
-                        await updateBookStatus(t, session, book, false);
-                        mutate([getUserBoughtOrProcessingBooksSWR(session?.profile?.id), false]);
-                        message.success('Ok');
-                      },
-                      onCancel() {
-                        message.info('Cancel');
-                      },
-                    });
-                  }}
-                  type="primary"
-                  shape="circle"
-                  icon={<CloseOutlined />}
-                />
-              </Tooltip>
-              <Tooltip title={t('components:book.confirm-purchase')}>
-                <Button
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    message.success('Yes');
-                    confirm({
-                      centered: true,
-                      title: t('components:confirm.confirm-buying-book'),
-                      icon: <ExclamationCircleOutlined />,
-                      okText: t('components:general.yes'),
-                      okType: 'primary',
-                      //   because dropdown z-index === 1050
-                      zIndex: 1100,
-                      cancelText: t('components:general.no'),
-                      async onOk() {
-                        await updateBookStatusToSold(t, session, book);
-                        mutate([getUserBoughtOrProcessingBooksSWR(session?.profile?.id), false]);
-                        message.success('Ok');
-                      },
-                      onCancel() {
-                        message.info('Cancel');
-                      },
-                    });
-                  }}
-                  type="primary"
-                  shape="circle"
-                  icon={<CheckOutlined />}
-                />
-              </Tooltip>
-            </Space>
-          </div>
-        );
       case 'sold':
-        if (book.book_status === 'processing') {
+        break;
+      case 'processing':
+        if (book?.buyingID.sellerID === session?.profile?.id) {
           return (
             <div
               className={classes.likedBooksCardHover}
               onClick={async (event) => {
                 event.stopPropagation();
-                await updateBookStatus(t, session, book, false);
-                mutate([getUserBoughtOrProcessingBooksSWR(session?.profile?.id), false]);
+                await updateBookStatusToAdded(t, session, book, true);
+                mutate([getUserProcessingBooksSWR(session?.profile?.id), false]);
               }}
               onKeyDown={async (event) => {
                 event.stopPropagation();
-                await updateBookStatus(t, session, book, false);
-                mutate([getUserBoughtOrProcessingBooksSWR(session?.profile?.id), false]);
+                await updateBookStatusToAdded(t, session, book, true);
+                mutate([getUserProcessingBooksSWR(session?.profile?.id), false]);
               }}
               role="button"
               tabIndex="0"
@@ -177,7 +112,70 @@ const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
             </div>
           );
         } else {
-          return;
+          return (
+            <div className={classes.likedBooksCardHover}>
+              <Space align="center" style={{ color: 'white' }}>
+                <Tooltip title={t('components:book.reject-purchase')}>
+                  <Button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      message.error('No');
+                      confirm({
+                        centered: true,
+                        title: t('components:confirm.confirm-reject-buying-book'),
+                        icon: <ExclamationCircleOutlined />,
+                        okText: t('components:general.yes'),
+                        okType: 'primary',
+                        //   because dropdown z-index === 1050
+                        zIndex: 1100,
+                        cancelText: t('components:general.no'),
+                        async onOk() {
+                          await updateBookStatusToAdded(t, session, book);
+                          mutate([getUserProcessingBooksSWR(session?.profile?.id), false]);
+                          message.success('Ok');
+                        },
+                        onCancel() {
+                          message.info('Cancel');
+                        },
+                      });
+                    }}
+                    type="primary"
+                    shape="circle"
+                    icon={<CloseOutlined />}
+                  />
+                </Tooltip>
+                <Tooltip title={t('components:book.confirm-purchase')}>
+                  <Button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      message.success('Yes');
+                      confirm({
+                        centered: true,
+                        title: t('components:confirm.confirm-buying-book'),
+                        icon: <ExclamationCircleOutlined />,
+                        okText: t('components:general.yes'),
+                        okType: 'primary',
+                        //   because dropdown z-index === 1050
+                        zIndex: 1100,
+                        cancelText: t('components:general.no'),
+                        async onOk() {
+                          await updateBookStatusToSold(t, session, book);
+                          mutate([getUserProcessingBooksSWR(session?.profile?.id), false]);
+                          message.success('Ok');
+                        },
+                        onCancel() {
+                          message.info('Cancel');
+                        },
+                      });
+                    }}
+                    type="primary"
+                    shape="circle"
+                    icon={<CheckOutlined />}
+                  />
+                </Tooltip>
+              </Space>
+            </div>
+          );
         }
       case 'liked':
         return (
@@ -185,12 +183,12 @@ const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
             className={classes.likedBooksCardHover}
             onClick={async (event) => {
               event.stopPropagation();
-              await deleteBookFromLikedBooks(session, book, t);
+              await handleDeleteBookFromLikedBooks(session, book, t);
               mutate([getUserLikedBooksSWR(session?.profile?.id), session.jwt]);
             }}
             onKeyDown={async (event) => {
               event.stopPropagation();
-              await deleteBookFromLikedBooks(session, book, t);
+              await handleDeleteBookFromLikedBooks(session, book, t);
               mutate([getUserLikedBooksSWR(session?.profile?.id), session.jwt]);
             }}
             role="button"
@@ -214,12 +212,16 @@ const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
             className={classes.dropdownBtn}
           >
             <Button
-              type={isChecked ? 'primary' : 'default'}
+              type={likedBook[0]?.userID === session?.profile?.id ? 'primary' : 'default'}
               shape="circle"
               icon={<LikeOutlined />}
               onClick={async () => {
-                setIsChecked(!isChecked);
-                await toggleBookToLikedBooks(!isChecked, session, book, t);
+                if (likedBook[0]?.userID !== session?.profile?.id) {
+                  await handleAddBookToLikedBooks(session, book, t);
+                } else {
+                  await handleDeleteBookFromLikedBooks(session, book, t);
+                }
+                mutate([getUserLikedBookSWR(session?.profile?.id, book.id), session.jwt]);
               }}
             />
           </div>
@@ -258,19 +260,19 @@ const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
                   <DoubleCheckIcon />
                   <Text style={{ color: '#6bbe9f' }}>{t('components:book.success-bought')}</Text>
                 </Space>
-              ) : renderKey === 'sold' && book.book_status === 'sold' ? (
+              ) : renderKey === 'sold' && book.buyingID.buying_status === 'sold' ? (
                 <Space>
                   <DoubleCheckIcon />
                   <Text style={{ color: '#6bbe9f' }}>{t('components:book.success-sold')}</Text>
                 </Space>
-              ) : renderKey === 'sold' && book.book_status === 'processing' ? (
+              ) : renderKey === 'sold' && book.buyingID.buying_status === 'processing' ? (
                 <Space>
                   <InfoCircleOutlined style={{ color: '#F37800' }} />
                   <Text style={{ color: '#F37800' }}>
                     {t('components:book.waiting-for-buy-sell')}
                   </Text>
                 </Space>
-              ) : renderKey === 'processing' && book?.seller.id !== session?.profile?.id ? (
+              ) : renderKey === 'processing' && book?.buyingID.sellerID !== session?.profile?.id ? (
                 <Space>
                   <InfoCircleOutlined style={{ color: '#F37800' }} />
                   <Text style={{ color: '#F37800' }}>
@@ -289,7 +291,12 @@ const VerticalBookCard = ({ book = {}, renderKey = '', client }) => {
                       ellipsis={{
                         tooltip: <Tooltip>{getCapitalizedString(book?.author)}</Tooltip>,
                       }}
-                      style={{ textTransform: 'capitalize', textAlign: 'end', marginLeft: '5px' }}
+                      style={{
+                        textTransform: 'capitalize',
+                        textAlign: 'end',
+                        marginLeft: '5px',
+                        width: '80%',
+                      }}
                     >
                       {book?.author}
                     </Text>

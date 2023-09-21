@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import useTranslation from 'next-translate/useTranslation';
+import useCustomSwr from 'hooks/useCustomSwr';
+import useBadgeProfileCount from 'hooks/useBadgeProfileCount';
 import { useSession } from 'next-auth/client';
 import { createUseStyles } from 'react-jss';
 import { Collapse, Drawer, Space } from 'antd';
@@ -8,7 +10,8 @@ import { ArrowDownOutlined, PlusOutlined } from '@ant-design/icons';
 import MenuItems from 'components/Navigation/Menu/MenuItems';
 import ProfileAvatar from 'components/Profile/ProfileAvatar';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
-import { PROFILE_ASIDE_BOTTOM_LIST, PROFILE_ASIDE_TOP_LIST } from 'utils/constants';
+import { getUserProcessingBooksSWR } from 'lib/swr/mutate/books';
+import { getProfileAsideTopList, PROFILE_ASIDE_BOTTOM_LIST } from 'utils/constants';
 
 const { Panel } = Collapse;
 const useStyles = createUseStyles((theme) => ({
@@ -42,6 +45,10 @@ const MobileDrawer = ({
   const { t } = useTranslation();
   const router = useRouter();
   const [session] = useSession();
+  const { response: processing_books } = useCustomSwr({
+    url: getUserProcessingBooksSWR(session?.profile?.id, ''),
+  });
+  const { messagesCount } = useBadgeProfileCount();
   return (
     <Drawer
       placement={placement}
@@ -79,7 +86,12 @@ const MobileDrawer = ({
                   {t('components:buttons.add-book')}
                 </Title>
               </Space>
-              <MenuItems menuList={PROFILE_ASIDE_TOP_LIST} />
+              <MenuItems
+                menuList={getProfileAsideTopList({
+                  processingBooksCount: processing_books.length,
+                  messagesCount,
+                })}
+              />
             </Panel>
           </Collapse>
         ) : (

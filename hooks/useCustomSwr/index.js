@@ -6,11 +6,15 @@ const useCustomSwr = ({
   url = '/books',
   token = false,
   extraSwrOpts = {},
+  shouldFetch = true,
 }) => {
-  console.log(`extraSwrOpts`, { ...extraSwrOpts });
-  const { data, error, mutate, isValidating } = useSWR([`${STRAPI_URL}${url}`, token], {
-    ...extraSwrOpts,
-  });
+  // console.log(`extraSwrOpts`, { ...extraSwrOpts });
+  const { data, error, mutate, isValidating } = useSWR(
+    shouldFetch ? [`${STRAPI_URL}${url}`, token] : null,
+    {
+      ...extraSwrOpts,
+    }
+  );
 
   return {
     response: data ? data : [],

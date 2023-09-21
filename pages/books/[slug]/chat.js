@@ -16,6 +16,7 @@ import MessagesList from 'components/Chat/Lists/MessagesList';
 import MobileHeader from 'components/Navigation/Mobile/MobileHeader';
 import PrimaryButton from 'components/Buttons/PrimaryButton';
 import { getBookBySlug } from 'lib/strapi/services/books';
+import { getUserByID } from 'lib/strapi/services/user';
 import {
   addUserToConversation,
   getMessagesFromConversation,
@@ -52,7 +53,7 @@ const useStyles = createUseStyles((theme) => ({
   },
 }));
 
-const ChatComponent = ({ book = {}, session }) => {
+const ChatComponent = ({ book = {}, session, seller = {} }) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1200 });
@@ -96,7 +97,7 @@ const ChatComponent = ({ book = {}, session }) => {
       console.log(`conversation`, conversation);
       if (conversation.channelState.status !== 'joined') {
         await joinToConversation(conversation);
-        await addUserToConversation(conversation, book.seller.email);
+        await addUserToConversation(conversation, seller.email);
       }
       const messages = await getMessagesFromConversation(conversation);
       const { items, ...messagesOptions } = messages;
@@ -139,8 +140,8 @@ const ChatComponent = ({ book = {}, session }) => {
       const slug = getLastElementInArray(router.query.slug);
       console.log(`router.query.slug`, parseInt(slug));
       console.log(`session?.profile?.id,`, session?.profile?.id);
-      console.log(`seller.id`, book.seller.id);
-      const roomId = session?.profile?.id + book.seller.id + parseInt(slug);
+      console.log(`seller.id`, seller.id);
+      const roomId = session?.profile?.id + seller.id + parseInt(slug);
       console.log(`roomId`, roomId);
       const stringifyRoomId = roomId.toString();
       console.log(`stringifyRoomId`, stringifyRoomId);
@@ -161,9 +162,9 @@ const ChatComponent = ({ book = {}, session }) => {
             friendlyName: book.book_name,
             attributes: {
               seller: {
-                email: book.seller.email,
-                userName: book.seller.username,
-                id: book.seller.id,
+                email: seller.email,
+                userName: seller.username,
+                id: seller.id,
               },
               buyer: {
                 email: session?.profile?.email,
@@ -195,11 +196,11 @@ const ChatComponent = ({ book = {}, session }) => {
     if (client) {
       initTwilioClient();
     }
-  }, [client, session, router.query.slug, book]);
+  }, [client, session, router.query.slug, book, seller]);
 
   useEffect(() => {
     const getUserOnlineStatus = async () => {
-      const user = await getUserByIdentity(client, book.seller.email);
+      const user = await getUserByIdentity(client, seller.email);
       console.log(`user`, user);
       const {
         state: { online },
@@ -216,7 +217,7 @@ const ChatComponent = ({ book = {}, session }) => {
     if (client) {
       getUserOnlineStatus();
     }
-  }, [client, book.seller.email]);
+  }, [client, seller.email]);
 
   useEffect(() => {
     scrollToBottom(scrollToBottomRef, true);
@@ -242,6 +243,7 @@ const ChatComponent = ({ book = {}, session }) => {
             <AsideBookDescription
               onlineStatus={onlineStatus}
               book={book}
+              seller={seller}
               buyer={{
                 email: session?.profile?.email,
                 userName: session?.profile?.username,
@@ -338,6 +340,7 @@ const ChatComponent = ({ book = {}, session }) => {
           hasHeaderLogo={false}
           onlineStatus={onlineStatus}
           book={book}
+          seller={seller}
           buyer={{
             email: session?.profile?.email,
             userName: session?.profile?.username,
@@ -353,6 +356,7 @@ export async function getServerSideProps({ params, req }) {
   console.log(`params`, params);
   const book = await getBookBySlug(params.slug);
   const session = await getSession({ req });
+  const seller = await getUserByID(book.data[0].buyingID.sellerID, session.jwt);
 
   if (!session) {
     return {
@@ -373,6 +377,7 @@ export async function getServerSideProps({ params, req }) {
     props: {
       book: book.data[0],
       session,
+      seller: seller.data,
     },
   };
 }
